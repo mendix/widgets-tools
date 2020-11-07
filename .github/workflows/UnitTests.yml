@@ -21,6 +21,16 @@ jobs:
       - run: export PARTIAL_BUILD=$(if [ "$CHANGED_GLOBAL_FILES" = "" ] && [ "$TRAVIS_PULL_REQUEST" != "false" ]; then echo "true"; else echo "false"; fi)
       - run: export SINCE_ARG=$(if [ "$PARTIAL_BUILD" = "true" ]; then echo "--since $GITHUB_SHA"; else echo ""; fi)
       - run: set -e
+      - uses: actions/cache@v2
+          env:
+            cache-name: cache-node-modules
+          with:
+            path: ~/.npm
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
       - run: npm install
       - run: npm run lint -- $SINCE_ARG
       - run: npm run test -- $SINCE_ARG
