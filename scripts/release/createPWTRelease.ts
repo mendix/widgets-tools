@@ -14,8 +14,8 @@ main().catch(e => {
 });
 
 async function main(): Promise<void> {
-    const pwtPath = join(process.cwd(), "packages/tools/pluggable-widgets-tools");
-    
+    const pwtPath = join(process.cwd(), "packages/pluggable-widgets-tools");
+
     // 1. Get widget info
     console.log(`Getting the widget release information for pluggable-widget-tools...`);
     console.log(`directory:`, pwtPath);
