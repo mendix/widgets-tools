@@ -78,6 +78,11 @@ function getRealCommand(cmd, toolsRoot) {
             return `jest --projects "${join(toolsRoot, "test-config/jest.config.js")}"`;
         case "test:unit:native":
             return `jest --projects "${join(toolsRoot, "test-config/jest.native.config.js")}"`;
+        case "test:e2e":
+        case "test:e2e:ts":
+        case "test:e2e:web:cypress":
+        case "test:e2e:web:cypress:local":
+            return "echo This command was not officially released and has been removed.";
         case "start:js":
         case "start:ts":
             return "echo This command has no effect, use pluggable-widgets-tools start:web instead!";
