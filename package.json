@@ -11,8 +11,11 @@
     "build:release:parser": "peggy -o ./scripts/release/utils/changelog-parser/parser/widget/widget.js ./scripts/release/utils/changelog-parser/parser/widget/widget.pegjs"
   },
   "devDependencies": {
-    "ts-node": "^10.9.1",
-    "typescript": "^4.8.4",
+    "@types/jest-image-snapshot": "^4.3.1",
+    "@types/node": "^16.11.19",
+    "@types/node-fetch": "2.6.1",
+    "@types/shelljs": "^0.8.9",
+    "@types/xml2js": "^0.4.5",
     "deepmerge": "^4.2.2",
     "fast-xml-parser": "^4.0.1",
     "identity-obj-proxy": "^3.0.0",
@@ -20,11 +23,8 @@
     "peggy": "^1.2.0",
     "prettier": "^2.5.1",
     "shelljs": "^0.8.4",
-    "@types/jest-image-snapshot": "^4.3.1",
-    "@types/node": "^16.11.19",
-    "@types/node-fetch": "2.6.1",
-    "@types/shelljs": "^0.8.9",
-    "@types/xml2js": "^0.4.5"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
   },
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
