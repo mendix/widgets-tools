@@ -29,11 +29,11 @@ jobs:
         if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
         uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1
         with:
-          package: "./packages/tools/pluggable-widgets-tools/package.json"
+          package: "./pluggable-widgets-tools/package.json"
           token: ${{ secrets.NPM_TOKEN }}
       - name: "Targeting Pluggable Widgets Generator"
         if: contains(steps.variables.outputs.tag, 'generator-widget-v')
         uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1
         with:
-          package: "./packages/tools/generator-widget/package.json"
+          package: "./generator-widget/package.json"
           token: ${{ secrets.NPM_TOKEN }}
