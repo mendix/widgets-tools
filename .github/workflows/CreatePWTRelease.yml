@@ -35,7 +35,7 @@ jobs:
       # and "prepare" step runs automatically after "npm install"
 
       - name: "Creating PWT release and MR"
-        run: "npm run release:pwt:ts"
+        run: "npm run release:pwt"
         env:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GH_EMAIL: ${{ secrets.GH_EMAIL }}
