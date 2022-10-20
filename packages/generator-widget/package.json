@@ -33,6 +33,7 @@
     "yeoman-generator": "^5.4.2"
   },
   "devDependencies": {
+    "@prettier/plugin-xml": "^2.2.0",
     "babel-eslint": "^10.1.0",
     "deepmerge": "^4.2.2",
     "eslint": "^7.20.0",
