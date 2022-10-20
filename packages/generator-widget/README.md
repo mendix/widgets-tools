@@ -2,10 +2,10 @@
 
 ![npm version](https://badge.fury.io/js/%40mendix%2Fgenerator-widget.svg)
 ![Mendix 8](https://img.shields.io/badge/mendix-8.0.0-brightgreen.svg)
-![Build Status](https://travis-ci.org/mendix/widgets-resources.svg?branch=master)
+![Build Status](https://travis-ci.org/mendix/widgets-tools.svg?branch=master)
 ![npm](https://img.shields.io/npm/dm/@mendix/generator-widget)
-![GitHub release](https://img.shields.io/github/release/mendix/widgets-resources)
-![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-resources)
+![GitHub release](https://img.shields.io/github/release/mendix/widgets-tools)
+![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-tools)
 
 > [Yeoman](http://yeoman.io) generator for Mendix Pluggable Widgets.
 
@@ -89,7 +89,7 @@ The tool will then create copied files, and run `npm install` to install develop
 
 ## Using the task runner
 
-The widget generator will include the necessary files and tasks to your package.json for running the tasks over the [Pluggable Widgets Tools](https://github.com/mendix/widgets-resources/tree/master/packages/tools/pluggable-widgets-tools).
+The widget generator will include the necessary files and tasks to your package.json for running the tasks over the [Pluggable Widgets Tools](https://github.com/mendix/widgets-tools/tree/master/packages/tools/pluggable-widgets-tools).
 
 If necessary you can run the tasks using the commands:
 
@@ -115,6 +115,8 @@ npm run release
 
 -   If you are running the generator through multiple operating systems (e.g. running a virtualized OS with Parallels on MacOS or any other virtualization software), make sure you have the right privileges and use the same OS for generation and file manipulation.
 
+-   If you want to test locally your changes to the Generator Widget, simply link the package running `npm link` inside the `packages/generator-widget/` folder and then you will be able to run `yo widget SomeWidgetName`
+
 ## Issues
 
-Issues can be reported on [Github](https://github.com/mendix/widgets-resources/issues).
+Issues can be reported on [Github](https://github.com/mendix/widgets-tools/issues).

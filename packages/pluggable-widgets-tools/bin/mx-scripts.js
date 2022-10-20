@@ -82,7 +82,7 @@ function getRealCommand(cmd, toolsRoot) {
         case "test:e2e:ts":
         case "test:e2e:web:cypress":
         case "test:e2e:web:cypress:local":
-            return "echo This command was not officially released and has been removed.";
+            return "echo This command has been removed.";
         case "start:js":
         case "start:ts":
             return "echo This command has no effect, use pluggable-widgets-tools start:web instead!";

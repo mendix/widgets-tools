@@ -2,10 +2,10 @@
 
 ![npm version](https://badge.fury.io/js/%40mendix%2Fpluggable-widgets-tools.svg)
 ![Mendix 8](https://img.shields.io/badge/mendix-8.0.0-brightgreen.svg)
-![Build Status](https://travis-ci.org/mendix/widgets-resources.svg?branch=master)
+![Build Status](https://travis-ci.org/mendix/widgets-tools.svg?branch=master)
 ![npm](https://img.shields.io/npm/dm/@mendix/pluggable-widgets-tools)
-![GitHub release](https://img.shields.io/github/release/mendix/widgets-resources)
-![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-resources)
+![GitHub release](https://img.shields.io/github/release/mendix/widgets-tools)
+![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-tools)
 
 ## About
 
@@ -33,7 +33,6 @@ In your `package.json` scripts, use the following command with the desired task:
 -   `format` Format your code using Prettier
 -   `test:unit:web` Run unit tests for your Web widget. Accepts option `--u` to update snapshots, `--no-cache` to remove existing caches, `--ci` assumes use of a CI environment, `--coverage` to support coverage test.
 -   `test:unit:native` Run unit tests for your Native widget. Accepts option `--u` to update snapshots, `--no-cache` to remove existing caches, `--ci` assumes use of a CI environment, `--coverage` to support coverage test.
--   `test:e2e` Execute end-to-end tests in your Web widget
 
 #### Example
 
