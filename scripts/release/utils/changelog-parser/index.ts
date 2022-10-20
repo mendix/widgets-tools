@@ -1,13 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { Version } from "../version";
 import { parse as parseWidgetChangelogFile } from "./parser/widget/widget";
-import {
-    LogSection,
-    ReleasedVersionEntry,
-    UnreleasedVersionEntry,
-    VersionEntry,
-    WidgetChangelogFile
-} from "./types";
+import { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, WidgetChangelogFile } from "./types";
 
 function formatHeader(header: string): string[] {
     return [
