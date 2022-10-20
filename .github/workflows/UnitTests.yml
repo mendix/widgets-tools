@@ -53,4 +53,4 @@ jobs:
         run: npm install
       - name: "Linting generator-widget"
         working-directory: ./packages/generator-widget
-        run: npm run test -- ${{ steps.variables.outputs.arg }}
+        run: npm run lint -- ${{ steps.variables.outputs.arg }}
