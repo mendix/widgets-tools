@@ -18,7 +18,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           global_files: |
-            !{packages/**/*,configs/e2e/*.json,scripts/**/*,data/**/*}
+            !{packages/**/*,scripts/**/*}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Checking-out code"
@@ -42,9 +42,15 @@ jobs:
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version-file: ".nvmrc"
-      - name: "Installing dependencies"
+      - name: "Installing pluggable-widgets-tools dependencies"
+        working-directory: ./packages/pluggable-widgets-tools
         run: npm install
-      - name: "Linting code"
-        run: npm run lint -- ${{ steps.variables.outputs.arg }}
-      - name: "Running unit tests"
+      - name: "Running pluggable-widgets-tools unit tests"
+        working-directory: ./packages/pluggable-widgets-tools
+        run: npm run test -- ${{ steps.variables.outputs.arg }}
+      - name: "Installing generator-widget dependencies"
+        working-directory: ./packages/generator-widget
+        run: npm install
+      - name: "Linting generator-widget"
+        working-directory: ./packages/generator-widget
         run: npm run test -- ${{ steps.variables.outputs.arg }}
