@@ -9,15 +9,7 @@ on:
 jobs:
   test:
     name: "Script tests (Node ${{ matrix.node }}, ${{ matrix.os }})"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node: [16]
-        os: [windows-latest, ubuntu-latest]
-        include:
-          - node: 14
-            os: ubuntu-latest
-            experimental: true
+    runs-on: ubuntu-latest
 
     steps:
       - name: "Checking changed files"
@@ -66,4 +58,4 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: "Running PIW-Tools commands tests"
         working-directory: ./packages/pluggable-widgets-tools
-        run: npm run test:scripts -- ${{ steps.variablesLinux.outputs.arg }} ${{ steps.variablesWindows.outputs.arg }}
+        run: npm run test:scripts

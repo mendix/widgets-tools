@@ -53,7 +53,7 @@ jobs:
         run: npm install
       - name: "Running pluggable-widgets-tools unit tests"
         working-directory: ./packages/pluggable-widgets-tools
-        run: npm run test -- ${{ steps.variables.outputs.arg }}
+        run: npm run test
       - name: "Linting generator-widget"
         working-directory: ./packages/generator-widget
-        run: npm run lint -- ${{ steps.variables.outputs.arg }}
+        run: npm run lint
