@@ -27,7 +27,7 @@ contact us directly via this GitHub issue.
 **Screenshots, gif animation** If applicable, add screenshots to illustrate your problem. For bugs which feature objects
 in motion, record your issue with a free tool like https://www.screentogif.com/.
 
-**Add sample project** Create a minimalistic test Mendix test project which only contains the issue case. Please do not
+**Add sample project** Create a minimalistic Mendix test project which only contains the issue case. Please do not
 post any `private` data in public tickets.
 
 Thank you
