@@ -19,7 +19,6 @@ module.exports = {
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!.*react-native)(?!victory-)"],
     transform: {
-        "node_modules.*\\.jsx?$": "react-native/jest/preprocessor.js",
         "\\.tsx?$": "ts-jest",
         "\\.jsx?$": join(__dirname, "transform-native.js")
     },
