@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### removed
+
+-   We removed `cypress` dependencies from the pluggable-widgets-tools and the script `test:e2e`. In case if you want to continue using Cypress, please install the dependencies manually.
+
 ## [9.17.0] - 2022-09-02
 
 ### Added
