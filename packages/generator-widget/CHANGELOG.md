@@ -8,7 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--   We updated templates to use Cypress directly without the pluggable-widgets-tools scripts.
+-   We updated package.json web template to use Cypress directly without the pluggable-widgets-tools scripts.
+-   We updated pluggable-widgets-tools dependencie from ^9.0.0 to ^9.18.0
+
+## [9.3.0] - 2022-09-22
+
+-   We updated templates to use Cypress instead of Wdio for e2e testing purposes.
 -   We updated templates to provide the latest available functionalities.
 
 ## [9.2.3] - 2022-07-04
