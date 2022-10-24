@@ -6,7 +6,7 @@ ChangelogFile
   = header:ChangelogHead _ content:(VersionEntry/OtherNotes)+  _ { return { header, content } }
 
 VersionEntry
-  = header:(VersionHeader/UnreleasedVersionHeader) _ sections:WidgetSection* _ { return { ...header, sections } }
+  = header:(VersionHeader/UnreleasedVersionHeader) _ sections:Section* _ { return { ...header, sections } }
 
 VersionHeader
   = "##" _ "[" version:SemVer "]" _ "-" _ date:Date { return { type: "normal", version, date }}
@@ -18,7 +18,7 @@ OtherNotes
   = "##" _ title:OneLineSentence _ txt:OneLineSentence _ { return { type: "note", title, text: txt }}
 
 // Logs section #### Changed and its entries
-WidgetSection
+Section
   = _ "###" _ type:(SectionType) _ logs:LogLine* { return { type, logs } }
 
 LogLine

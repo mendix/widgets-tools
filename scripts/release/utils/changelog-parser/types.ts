@@ -31,28 +31,12 @@ export type SubComponentEntry =
           sections: LogSection[];
       };
 
-export interface ModuleReleasedVersionEntry extends ReleasedVersionEntry {
-    name: string;
-    subcomponents: SubComponentEntry[];
-}
-
-export interface ModuleUnreleasedVersionEntry extends UnreleasedVersionEntry {
-    subcomponents: SubComponentEntry[];
-}
-
 export interface LogSection {
     type: "Fixed" | "Added" | "Changed" | "Removed";
     logs: string[];
 }
 
-// Files
-export interface ModuleChangelogFile {
-    header: string;
-    moduleName: string;
-    content: [ModuleUnreleasedVersionEntry, ...Array<ModuleReleasedVersionEntry | NoteEntry>];
-}
-
-export interface WidgetChangelogFile {
+export interface ChangelogFile {
     header: string;
     content: [UnreleasedVersionEntry, ...Array<ReleasedVersionEntry | NoteEntry>];
 }

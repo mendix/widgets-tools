@@ -1,4 +1,4 @@
-import { WidgetChangelogFile } from "../../types";
+import { ChangelogFile } from "./types";
 
 declare interface Location {
     line: number;
@@ -22,4 +22,4 @@ export declare class SyntaxError {
     message: string;
 }
 
-export declare function parse(fileContent: string, options: object): WidgetChangelogFile;
+export declare function parse(fileContent: string, options: object): ChangelogFile;

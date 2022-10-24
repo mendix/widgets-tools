@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { Version } from "../version";
-import { parse as parseWidgetChangelogFile } from "./parser/widget/widget";
-import { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, WidgetChangelogFile } from "./types";
+import { parse as parseChangelogFile } from "./changelog";
+import { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, ChangelogFile } from "./types";
 
 function formatHeader(header: string): string[] {
     return [
@@ -39,10 +39,10 @@ function formatDate(date: Date): string {
         .padStart(2, "0")}`;
 }
 
-export class WidgetChangelogFileWrapper {
-    changelog: WidgetChangelogFile;
+export class ChangelogFileWrapper {
+    changelog: ChangelogFile;
 
-    private constructor(changelog: WidgetChangelogFile, public changelogPath: string) {
+    private constructor(changelog: ChangelogFile, public changelogPath: string) {
         this.changelog = Object.freeze(changelog);
     }
 
@@ -63,7 +63,7 @@ export class WidgetChangelogFileWrapper {
         return this.changelog.content[0].sections.length !== 0;
     }
 
-    moveUnreleasedToVersion(newVersion: Version): WidgetChangelogFileWrapper {
+    moveUnreleasedToVersion(newVersion: Version): ChangelogFileWrapper {
         const unreleased = this.changelog.content[0];
 
         if (unreleased.sections.length === 0) {
@@ -82,7 +82,7 @@ export class WidgetChangelogFileWrapper {
             sections: unreleased.sections
         };
 
-        return new WidgetChangelogFileWrapper(
+        return new ChangelogFileWrapper(
             {
                 header: this.changelog.header,
                 content: [emptyUnreleased, newRelease, ...(this.changelog.content.slice(1) as ReleasedVersionEntry[])]
@@ -91,10 +91,7 @@ export class WidgetChangelogFileWrapper {
         );
     }
 
-    static fromFile(filePath: string): WidgetChangelogFileWrapper {
-        return new WidgetChangelogFileWrapper(
-            parseWidgetChangelogFile(readFileSync(filePath).toString(), { Version }),
-            filePath
-        );
+    static fromFile(filePath: string): ChangelogFileWrapper {
+        return new ChangelogFileWrapper(parseChangelogFile(readFileSync(filePath).toString(), { Version }), filePath);
     }
 }

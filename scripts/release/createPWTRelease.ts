@@ -5,7 +5,7 @@ import {
     getPackageInfo,
     gh,
     PackageInfo,
-    WidgetChangelogFileWrapper
+    ChangelogFileWrapper
 } from "./utils";
 
 main().catch(e => {
@@ -16,15 +16,15 @@ main().catch(e => {
 async function main(): Promise<void> {
     const pwtPath = join(process.cwd(), "packages/pluggable-widgets-tools");
 
-    // 1. Get widget info
-    console.log(`Getting the widget release information for pluggable-widget-tools...`);
+    // 1. Get release info
+    console.log(`Getting the release information for pluggable-widgets-tools...`);
     console.log(`directory:`, pwtPath);
 
     const packageInfo = await getPackageInfo(pwtPath);
     packageInfo.packageName = "pluggable-widgets-tools";
     packageInfo.packageFullName = "Pluggable Widgets Tools";
     const releaseTag = `pluggable-widgets-tools-v${packageInfo.version.format()}`;
-    const changelog = WidgetChangelogFileWrapper.fromFile(`${pwtPath}/CHANGELOG.md`);
+    const changelog = ChangelogFileWrapper.fromFile(`${pwtPath}/CHANGELOG.md`);
 
     // 2. Check prerequisites
     // 2.1. Check if current version is already in CHANGELOG
@@ -48,7 +48,7 @@ async function main(): Promise<void> {
     }
 
     // 4. Do release
-    console.log("Preparing pluggable-widget-tools release...");
+    console.log("Preparing pluggable-widgets-tools release...");
 
     const remoteName = `origin-${packageInfo.packageName}-v${packageInfo.version.format()}-${Date.now()}`;
 
@@ -77,7 +77,7 @@ async function main(): Promise<void> {
 
 async function updateChangelogsAndCreatePR(
     packageInfo: PackageInfo,
-    changelog: WidgetChangelogFileWrapper,
+    changelog: ChangelogFileWrapper,
     releaseTag: string,
     remoteName: string
 ): Promise<void> {

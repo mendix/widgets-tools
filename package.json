@@ -7,7 +7,7 @@
     "prettier": "prettier --config \"./prettier.config.js\" --write \"**/*.{js,jsx,ts,tsx,scss,html,xml,yml,yaml}\"",
     "lint:scripts": "eslint --fix --config .eslintrc.js --ext .jsx,.js,.ts,.tsx scripts",
     "release:pwt": "ts-node --project ./scripts/tsconfig.json ./scripts/release/createPWTRelease.ts",
-    "build:release:parser": "peggy -o ./scripts/release/utils/changelog-parser/parser/widget/widget.js ./scripts/release/utils/changelog-parser/parser/widget/widget.pegjs"
+    "build:release:parser": "peggy -o ./scripts/release/utils/changelog-parser/changelog.js ./scripts/release/utils/changelog-parser/changelog.pegjs"
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^2.2.0",
