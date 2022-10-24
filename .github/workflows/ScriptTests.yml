@@ -1,10 +1,6 @@
 name: Script tests
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -14,6 +10,10 @@ jobs:
       matrix:
         node: [16]
         os: [windows-latest, ubuntu-latest]
+        include:
+          - node: 14
+            os: ubuntu-latest
+            experimental: true
 
     steps:
       - name: "Checking changed files"
@@ -22,7 +22,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           global_files: |
-            !{packages/**/*,,scripts/**/*}
+            !{packages/**/*,scripts/**/*}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Checking-out code"
@@ -32,16 +32,6 @@ jobs:
       - name: "Fetching master to compare"
         if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-      - name: "Defining environment variables"
-        if: startsWith(matrix.os, 'windows')
-        id: variablesWindows
-        run: |
-          echo "::set-output name=arg::$(If ('${{ steps.files.outputs.global_files }}' -eq '' -AND '${{ github.event_name == 'pull_request' }}' -eq 'true'){ echo '--since origin/${{ github.base_ref }}' } Else { echo '' })"
-      - name: "Defining environment variables"
-        if: startsWith(matrix.os, 'ubuntu')
-        id: variablesLinux
-        run: |
-          echo "::set-output name=arg::$(if [ "${{ steps.files.outputs.global_files }}" = "" ] && ${{ github.event_name == 'pull_request' }}; then echo '--since origin/${{ github.base_ref }}'; else echo ''; fi)"
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
         env:
@@ -61,4 +51,4 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: "Running PIW-Tools commands tests"
         working-directory: ./packages/pluggable-widgets-tools
-        run: npm run test:scripts -- ${{ steps.variablesLinux.outputs.arg }} ${{ steps.variablesWindows.outputs.arg }}
+        run: npm run test:scripts

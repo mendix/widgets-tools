@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We updated package.json web template to use Cypress directly without the pluggable-widgets-tools scripts.
--   We updated pluggable-widgets-tools dependencie from ^9.0.0 to ^9.18.0
+-   We updated pluggable-widgets-tools dependency from ^9.0.0 to ^9.18.0
 
 ## [9.3.0] - 2022-09-22
 
