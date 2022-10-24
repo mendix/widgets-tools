@@ -28,9 +28,6 @@ jobs:
       - name: "Fetching master to compare"
         if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-      - name: "Defining environment variables"
-        id: variables
-        run: echo "::set-output name=arg::$(if [ "${{ steps.files.outputs.global_files }}" = "" ] && ${{ github.event_name == 'pull_request' }}; then echo '--since origin/${{ github.base_ref }}'; else echo ''; fi)"
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
         env:
