@@ -14,16 +14,36 @@ main().catch(e => {
 });
 
 async function main(): Promise<void> {
-    const pwtPath = join(process.cwd(), "packages/pluggable-widgets-tools");
+    const packages = new Map([
+        [
+            "pwt",
+            {
+                name: "pluggable-widgets-tools",
+                fullName: "Pluggable Widgets Tools"
+            }
+        ],
+        [
+            "gw",
+            {
+                name: "generator-widget",
+                fullName: "Pluggable Widgets Generator"
+            }
+        ]
+    ]);
+    const arg = process.argv[2];
+    const mendixPackage = packages.get(arg);
+    if (!mendixPackage) throw new Error(`Argument "${arg}" is not a valid package name`);
+
+    const pwtPath = join(process.cwd(), `packages/${mendixPackage.name}`);
 
     // 1. Get release info
-    console.log(`Getting the release information for pluggable-widgets-tools...`);
+    console.log(`Getting the release information for ${mendixPackage.name}...`);
     console.log(`directory:`, pwtPath);
 
     const packageInfo = await getPackageInfo(pwtPath);
-    packageInfo.packageName = "pluggable-widgets-tools";
-    packageInfo.packageFullName = "Pluggable Widgets Tools";
-    const releaseTag = `pluggable-widgets-tools-v${packageInfo.version.format()}`;
+    packageInfo.packageName = mendixPackage.name;
+    packageInfo.packageFullName = mendixPackage.fullName;
+    const releaseTag = `${packageInfo.packageName}-v${packageInfo.version.format()}`;
     const changelog = ChangelogFileWrapper.fromFile(`${pwtPath}/CHANGELOG.md`);
 
     // 2. Check prerequisites
@@ -48,7 +68,7 @@ async function main(): Promise<void> {
     }
 
     // 4. Do release
-    console.log("Preparing pluggable-widgets-tools release...");
+    console.log(`Preparing ${packageInfo.packageName}...`);
 
     const remoteName = `origin-${packageInfo.packageName}-v${packageInfo.version.format()}-${Date.now()}`;
 
