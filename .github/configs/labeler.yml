@@ -1,0 +1,4 @@
+pluggable-widgets-tools:
+  - packages/pluggable-widgets-tools/**/*
+generator-widget:
+  - packages/generator-widget/**/*
