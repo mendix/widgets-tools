@@ -36,16 +36,6 @@ jobs:
       - name: "Fetching master to compare"
         if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-      - name: "Defining environment variables"
-        if: startsWith(matrix.os, 'windows')
-        id: variablesWindows
-        run: |
-          echo "::set-output name=arg::$(If ('${{ steps.files.outputs.global_files }}' -eq '' -AND '${{ github.event_name == 'pull_request' }}' -eq 'true'){ echo '--since origin/${{ github.base_ref }}' } Else { echo '' })"
-      - name: "Defining environment variables"
-        if: startsWith(matrix.os, 'ubuntu')
-        id: variablesLinux
-        run: |
-          echo "::set-output name=arg::$(if [ "${{ steps.files.outputs.global_files }}" = "" ] && ${{ github.event_name == 'pull_request' }}; then echo '--since origin/${{ github.base_ref }}'; else echo ''; fi)"
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
         env:
@@ -57,6 +47,10 @@ jobs:
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version: ${{ matrix.node }}
+      - name: "Removing package-lock and installing dependencies"
+        working-directory: ./packages/pluggable-widgets-tools
+        if: matrix.node == '14'
+        run: rm -f package-lock.json && npm install
       - name: "Installing dependencies"
         working-directory: ./packages/pluggable-widgets-tools
         if: matrix.node != '14'
@@ -66,4 +60,4 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: "Running PIW-Tools commands tests"
         working-directory: ./packages/pluggable-widgets-tools
-        run: npm run test:scripts -- ${{ steps.variablesLinux.outputs.arg }} ${{ steps.variablesWindows.outputs.arg }}
+        run: npm run test:scripts

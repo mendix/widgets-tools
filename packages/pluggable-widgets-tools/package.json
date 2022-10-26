@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "9.17.0",
+  "version": "9.18.0",
   "description": "Mendix Pluggable Widgets Tools",
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
@@ -118,15 +118,13 @@
     "@mendix/generator-widget": ">=8.9.0",
     "@types/xml2js": "^0.4.5",
     "async-mutex": "^0.2.4",
-    "cross-env": "^7.0.2",
     "shx": "^0.3.3",
     "tree-kill": "^1.2.2",
     "yeoman-test": "^6.2.0"
   },
   "scripts": {
     "prepare": "shx rm -rf dist && tsc",
-    "test": "npm run test:src && cross-env LIMIT_TESTS=true npm run test:scripts",
-    "test:src": "jest",
+    "test": "jest",
     "test:scripts": "npm run prepare && node tests/commands.js"
   },
   "overrides": {

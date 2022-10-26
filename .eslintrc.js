@@ -1,5 +1,5 @@
 module.exports = {
-    ignorePatterns: ["scripts/release/utils/changelog-parser/parser/widget/widget.js"],
+    ignorePatterns: ["scripts/release/utils/changelog-parser/changelog.js"],
     rules: {
         "@typescript-eslint/ban-ts-ignore": "off",
         "no-unused-expressions": "off",

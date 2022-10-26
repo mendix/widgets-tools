@@ -435,10 +435,10 @@ function peg$parse(input, options) {
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       s3 = [];
-      s4 = peg$parseWidgetSection();
+      s4 = peg$parseSection();
       while (s4 !== peg$FAILED) {
         s3.push(s4);
-        s4 = peg$parseWidgetSection();
+        s4 = peg$parseSection();
       }
       s4 = peg$parse_();
       peg$savedPos = s0;
@@ -597,7 +597,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseWidgetSection() {
+  function peg$parseSection() {
     var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
