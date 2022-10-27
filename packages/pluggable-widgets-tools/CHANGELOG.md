@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We removed `cypress` dependencies from the pluggable-widgets-tools and the script `test:e2e`. In case if you want to continue using Cypress, please install the dependencies manually.
 
+### Deprecated
+
+-   We've deprecated the `className` preview property. From now on, you have to use `class` property instead.
+
 ## [9.17.0] - 2022-09-02
 
 ### Added
