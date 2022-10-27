@@ -21,3 +21,5 @@ jobs:
           submodules: false
       - name: "Ensure SHA pinned actions"
         uses: zgosalvez/github-actions-ensure-sha-pinned-actions@0b552a197e44b819629237e065d781f5ca691460 # v1.1.1
+        with:
+          token: ${{ secrets.GH_PAT }}
