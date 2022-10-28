@@ -23,7 +23,16 @@ jobs:
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version-file: ".nvmrc"
-      - name: "Installing dependencies"
+      - name: "Installing root dependencies"
+        working-directory: ./
+        run: npm install
+      - name: "Installing pluggable-widgets-tools dependencies"
+        working-directory: ./packages/pluggable-widgets-tools
+        if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
+        run: npm install
+      - name: "Installing generator-widget dependencies"
+        working-directory: ./packages/generator-widget
+        if: contains(steps.variables.outputs.tag, 'generator-widget-v')
         run: npm install
       - name: "Targeting Pluggable Widgets Tools"
         if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
