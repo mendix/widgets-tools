@@ -3,12 +3,8 @@ name: Ensure SHA pinned actions
 on:
   push:
     branches: [master]
-    paths:
-      - ".github/workflows/*.yml"
   pull_request:
     branches: [master]
-    paths:
-      - ".github/workflows/*.yml"
 
 jobs:
   harden_security:
