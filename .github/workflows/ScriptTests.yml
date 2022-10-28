@@ -28,7 +28,7 @@ jobs:
           global_files: |
             !{packages/**/*,scripts/**/*}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
@@ -49,15 +49,16 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: "Removing package-lock and installing dependencies"
         working-directory: ./packages/pluggable-widgets-tools
-        if: matrix.node == '14'
+        if: steps.files.outputs.global_files != '' && matrix.node == '14'
         run: rm -f package-lock.json && npm install
       - name: "Installing dependencies"
         working-directory: ./packages/pluggable-widgets-tools
-        if: matrix.node != '14'
+        if: steps.files.outputs.global_files != '' && matrix.node != '14'
         run: npm install
       - name: Increase number of watchers
         if: startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: "Running PIW-Tools commands tests"
         working-directory: ./packages/pluggable-widgets-tools
+        if: steps.files.outputs.global_files != ''
         run: npm run test:scripts
