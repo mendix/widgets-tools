@@ -113,7 +113,7 @@ async function updateChangelogsAndCreatePR(
     console.log(`Committing CHANGELOG.md to '${releaseBranchName}' and pushing to remote...`);
     await execShellCommand([
         `git add ${changelog.changelogPath}`,
-        `git commit -m "chore(${packageInfo.packageName}): update changelog"`,
+        `git commit -m "Update changelog for ${packageInfo.packageName}"`,
         `git push ${remoteName} ${releaseBranchName}`
     ]);
 
