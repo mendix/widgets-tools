@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the @author in the typings generator from `Mendix UI Content Team` to `Mendix Widgets Framework Team`.
+
 ## [9.18.0] - 2022-10-27
 
 ### Removed
