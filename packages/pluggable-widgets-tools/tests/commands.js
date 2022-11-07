@@ -156,8 +156,9 @@ async function main() {
                 let generatedWidget;
                 const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
                 try {
+                    const generatorWidgetModule = require.resolve("../../generator-widget/generators/app");
                     generatedWidget = (
-                        await YeomanTest.run(require.resolve("@mendix/generator-widget/generators/app"))
+                        await YeomanTest.run(generatorWidgetModule)
                             .inTmpDir()
                             .withPrompts(promptAnswers)
                             .withArguments("Generated")
