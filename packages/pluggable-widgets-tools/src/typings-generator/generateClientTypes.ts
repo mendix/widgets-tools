@@ -218,21 +218,21 @@ export function toExpressionClientType(
         );
     }
 
-    if (resolvedProperty.$.type != "attribute") {
+    if (resolvedProperty.$.type !== "attribute") {
         throw new Error(
             `[XML] Invalid return type for expression property: assignableTo property '${assignableTo}' must be of type Attribute.`
         );
     }
 
-    const allowedTypes = ["Boolean", "DateTime", "Enum", "Integer", "Long", "String", "Decimal"];
-
-    if (!resolvedProperty.attributeTypes?.length || !resolvedProperty.attributeTypes[0]) {
+    const { attributeTypes } = resolvedProperty;
+    if (!attributeTypes?.[0]?.attributeType) {
         throw new Error(
             `[XML] Invalid return type for expression property: assignableTo property '${assignableTo}' must have attribute types.`
         );
     }
 
-    const types = resolvedProperty.attributeTypes
+    const allowedTypes = ["Boolean", "DateTime", "Enum", "Integer", "Long", "String", "Decimal"];
+    const types = attributeTypes
         .map(ats => ats.attributeType)
         .reduce((a, i) => a.concat(i), [])
         .map(at => at.$.name);
