@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We updated the @author in the typings generator from `Mendix UI Content Team` to `Mendix Widgets Framework Team`.
 
+### Added
+
+-   We added support to the typings generator for the `assignableTo` return type of an [expression property](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-property-types/#expression), introduced in Mendix 9.20. This feature allows the expected return type of the expression to be derived from an attribute property.
+
 ## [9.18.0] - 2022-10-27
 
 ### Removed

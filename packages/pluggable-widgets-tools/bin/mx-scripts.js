@@ -93,7 +93,7 @@ function getRealCommand(cmd, toolsRoot) {
 }
 
 function findNodeModulesBin() {
-    let parentDir = join(__dirname, "../..");
+    let parentDir = join(__dirname, "..");
     while (parse(parentDir).root !== parentDir) {
         const candidate = join(parentDir, "node_modules/.bin");
         if (existsSync(candidate)) {
