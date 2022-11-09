@@ -44,8 +44,9 @@ main().catch(e => {
 async function main() {
     console.log("Preparing...");
 
-    const { stdout: packOutput } = await execAsync("npm pack", join(__dirname, ".."));
-    const toolsPackagePath = join(__dirname, "..", packOutput.trim().split(/\n/g).pop());
+    const pluggableWidgetsToolsPath = "../packages/pluggable-widgets-tools";
+    const { stdout: packOutput } = await execAsync("npm pack", join(__dirname, pluggableWidgetsToolsPath));
+    const toolsPackagePath = join(__dirname, pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
 
     const workDirs = [];
     const workDirSemaphore = new Semaphore(PARALLELISM);
@@ -156,7 +157,7 @@ async function main() {
                 let generatedWidget;
                 const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
                 try {
-                    const generatorWidgetModule = require.resolve("../../generator-widget/generators/app");
+                    const generatorWidgetModule = require.resolve("../packages/generator-widget/generators/app");
                     generatedWidget = (
                         await YeomanTest.run(generatorWidgetModule)
                             .inTmpDir()

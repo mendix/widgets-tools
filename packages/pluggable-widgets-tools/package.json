@@ -11,13 +11,11 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "prepare": "shx rm -rf dist && tsc",
-    "test": "jest",
-    "test:scripts": "npm run prepare && node tests/commands.js"
+    "build": "shx rm -rf dist && tsc",
+    "test": "jest"
   },
   "files": [
     "bin",
-    "scripts",
     "configs",
     "test-config",
     "dist",
@@ -105,11 +103,7 @@
   },
   "devDependencies": {
     "@mendix/generator-widget": ">=8.9.0",
-    "@types/xml2js": "^0.4.5",
-    "async-mutex": "^0.2.4",
-    "shx": "^0.3.3",
-    "tree-kill": "^1.2.2",
-    "yeoman-test": "^6.2.0"
+    "@types/xml2js": "^0.4.5"
   },
   "overrides": {
     "colors": "1.4.0"
