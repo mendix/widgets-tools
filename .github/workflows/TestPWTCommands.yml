@@ -1,4 +1,4 @@
-name: Script tests
+name: Test PWT commands
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: "Script tests (Node ${{ matrix.node }}, ${{ matrix.os }})"
+    name: "Test PWT commands (Node ${{ matrix.node }}, ${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -29,13 +29,16 @@ jobs:
             packages/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
+
       - name: "Fetching master to compare"
         if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
         env:
@@ -43,34 +46,27 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
       - name: "Defining node version"
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version: ${{ matrix.node }}
-      - name: "Node 14 PWT - Removing package-lock and installing dependencies"
-        working-directory: ./packages/pluggable-widgets-tools
+
+      - name: "Node 14 - Removing package-lock and installing dependencies"
+        working-directory: ./
         if: steps.files.outputs.global_files != '' && matrix.node == '14'
-        run: rm -f package-lock.json && npm install
+        run: rm -f package-lock.json packages/generator-widget/package-lock.json packages/pluggable-widgets-tools/package-lock.json && npm install
 
-      - name: "Node 14 GW - Removing package-lock and installing dependencies"
-        working-directory: ./packages/generator-widget
-        if: steps.files.outputs.global_files != '' && matrix.node == '14'
-        run: rm -f package-lock.json && npm install
-
-      - name: "Node 16 PWT - Installing dependencies"
-        working-directory: ./packages/pluggable-widgets-tools
-        if: steps.files.outputs.global_files != '' && matrix.node == '16'
-        run: npm install
-
-      - name: "Node 16 GW - Installing dependencies"
-        working-directory: ./packages/generator-widget
+      - name: "Node 16 - Installing dependencies"
+        working-directory: ./
         if: steps.files.outputs.global_files != '' && matrix.node == '16'
         run: npm install
 
       - name: Increase number of watchers
         if: steps.files.outputs.global_files != '' && startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - name: "Running PIW-Tools commands tests"
-        working-directory: ./packages/pluggable-widgets-tools
+
+      - name: "Testing PWT commands"
+        working-directory: ./
         if: steps.files.outputs.global_files != ''
-        run: npm run test:scripts
+        run: npm run test:pwt:commands
