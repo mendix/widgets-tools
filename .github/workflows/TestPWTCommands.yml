@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: "Test PWT commands (Node ${{ matrix.node }}, ${{ matrix.os }})"
+    name: "(Node ${{ matrix.node }}, ${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
         uses: softprops/diffset@3aeca0719d5043522e155012d3c9f7470fdd2dc6 # v1
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
-          global_files: |
+          packages_files: |
             packages/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
           submodules: false
 
       - name: "Fetching master to compare"
-        if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
+        if: github.event_name == 'pull_request' && steps.files.outputs.packages_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
 
       - name: "Defining cache"
@@ -54,19 +54,19 @@ jobs:
 
       - name: "Node 14 - Removing package-lock and installing dependencies"
         working-directory: ./
-        if: steps.files.outputs.global_files != '' && matrix.node == '14'
+        if: steps.files.outputs.packages_files != '' && matrix.node == '14'
         run: rm -f package-lock.json packages/generator-widget/package-lock.json packages/pluggable-widgets-tools/package-lock.json && npm install
 
       - name: "Node 16 - Installing dependencies"
         working-directory: ./
-        if: steps.files.outputs.global_files != '' && matrix.node == '16'
+        if: steps.files.outputs.packages_files != '' && matrix.node == '16'
         run: npm install
 
       - name: Increase number of watchers
-        if: steps.files.outputs.global_files != '' && startsWith(matrix.os, 'ubuntu')
+        if: steps.files.outputs.packages_files != '' && startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: "Testing PWT commands"
         working-directory: ./
-        if: steps.files.outputs.global_files != ''
+        if: steps.files.outputs.packages_files != ''
         run: npm run test:pwt:commands
