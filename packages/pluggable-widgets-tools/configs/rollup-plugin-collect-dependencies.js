@@ -63,7 +63,8 @@ export function collectDependencies({
                 }
                 const transitiveDependencies = await getTransitiveDependencies(
                     dependency.packagePath,
-                    rollupOptions.external
+                    rollupOptions.external,
+                    licenseOptions?.excludeDependencies
                 );
                 for (const transitiveDependency of transitiveDependencies) {
                     if (!dependencies.some(s => s.packagePath === transitiveDependency)) {
@@ -85,7 +86,11 @@ export function collectDependencies({
                 const destinationPath = join(outputDir, "node_modules", getModuleName(dependency));
                 await copyJsModule(dependency, destinationPath);
 
-                const transitiveDependencies = await getTransitiveDependencies(dependency, rollupOptions.external);
+                const transitiveDependencies = await getTransitiveDependencies(
+                    dependency,
+                    rollupOptions.external,
+                    licenseOptions?.excludeDependencies
+                );
                 for (const transitiveDependency of transitiveDependencies) {
                     if (await hasNativeCode(transitiveDependency)) {
                         nativeDependencies.add(dependency);
@@ -128,12 +133,12 @@ async function hasNativeCode(dir) {
     return (await fg(["**/{android,ios}/*", "**/*.podspec"], { cwd: dir })).length > 0;
 }
 
-async function getTransitiveDependencies(packagePath, isExternal) {
+async function getTransitiveDependencies(packagePath, isExternal, excludeDependencies) {
     const queue = [packagePath];
     const result = new Set();
     while (queue.length) {
         const nextPath = queue.shift();
-        if (result.has(nextPath)) {
+        if (result.has(nextPath) || excludeDependencies?.some(e => nextPath.endsWith(e))) {
             continue;
         }
         result.add(nextPath);
@@ -236,16 +241,7 @@ class LicensePlugin {
     }
 
     config() {
-        if (!this._options) {
-            return;
-        }
-        const thirdParty = this._options.thirdParty;
-        if (!thirdParty) {
-            return;
-        }
-
-        const thirdPartyOutput = thirdParty.output;
-
+        const thirdPartyOutput = this._options?.thirdParty?.output;
         if (thirdPartyOutput) {
             _.forEach(_.castArray(thirdPartyOutput), output => {
                 this._exportThirdPartiesToOutput(_.chain(this._dependencies).values().value(), output);

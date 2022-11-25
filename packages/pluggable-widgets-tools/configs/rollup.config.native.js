@@ -81,7 +81,8 @@ export default async args => {
                                               template: licenseCustomTemplate
                                           }
                                       ]
-                                  }
+                                  },
+                                  excludeDependencies: ["@mendix/pluggable-widgets-tools"]
                               }
                           }
                         : null)
