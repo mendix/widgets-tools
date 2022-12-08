@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- We have updated the signature of the structure mode preview function to include the Studio Pro version, which is passed in Mendix 9.20 and above (and in 9.18.3+, but not 9.19).
+- We have added support to the `DropZoneProps` type for the ability to make dropzone headers in structure mode previews optional, which was added in Mendix 9.20.
+
 ## [9.18.0] - 2022-10-27
 
 ### Changed
