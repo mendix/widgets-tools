@@ -74,6 +74,8 @@ type TextProps = BaseProps & {
 type DropZoneProps = BaseProps & {
   type: "DropZone";
   property: object; // widgets property object from Values API
+  placeholder: string; // text to be shown inside the dropzone when empty
+  showDataSourceHeader?: boolean; // true by default. Toggles whether to show a header containing information about the datasource
 }
 
 
@@ -116,7 +118,7 @@ export function getProperties(_values: <%- name %>PreviewProps, defaultPropertie
 //     return errors;
 // }
 
-// export function getPreview(values: <%- name %>PreviewProps, isDarkMode: boolean): PreviewProps {
+// export function getPreview(values: <%- name %>PreviewProps, isDarkMode: boolean, version: number[]): PreviewProps {
 //     // Customize your pluggable widget appearance for Studio Pro.
 //     return {
 //         type: "Container",
