@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.20.0] - 2022-12-12
+
 ### Changed
 
 -   We updated the @author in the typings generator from `Mendix UI Content Team` to `Mendix Widgets Framework Team`.
+
 -   We updated babel-jest configuration to prevent warnings during unit test execution.
 
 ### Added
