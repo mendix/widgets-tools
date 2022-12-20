@@ -33,7 +33,7 @@
             "warn",
             {
                 "varsIgnorePattern": "createElement",
-                "args":  "none"
+                "args": "none"
             }
         ],
 
@@ -279,5 +279,5 @@
         "vars-on-top": "off",
         "wrap-iife": "error",
         "yield-star-spacing": "error"
-        }
+    }
 }

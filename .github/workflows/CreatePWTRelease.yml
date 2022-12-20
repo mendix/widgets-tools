@@ -31,9 +31,6 @@ jobs:
       - name: "Installing dependencies"
         run: npm install
 
-      # no separate build step as PWT is ready to use after "prepare" step
-      # and "prepare" step runs automatically after "npm install"
-
       - name: "Creating PWT release and MR"
         run: "npm run release:pwt"
         env:

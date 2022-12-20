@@ -17,17 +17,20 @@ jobs:
         uses: softprops/diffset@3aeca0719d5043522e155012d3c9f7470fdd2dc6 # v1
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
-          global_files: |
-            !{packages/**/*,scripts/**/*}
+          packages_files: |
+            packages/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
+
       - name: "Fetching master to compare"
-        if: github.event_name == 'pull_request' && steps.files.outputs.global_files == ''
+        if: github.event_name == 'pull_request' && steps.files.outputs.packages_files == ''
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
         env:
@@ -35,22 +38,23 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
       - name: "Defining node version"
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version-file: ".nvmrc"
-      - name: "Installing root dependencies"
+
+      - name: "Installing dependencies"
         working-directory: ./
+        if: steps.files.outputs.packages_files != ''
         run: npm install
-      - name: "Installing pluggable-widgets-tools dependencies"
-        working-directory: ./packages/pluggable-widgets-tools
-        run: npm install
-      - name: "Installing generator-widget dependencies"
-        working-directory: ./packages/generator-widget
-        run: npm install
+
       - name: "Running pluggable-widgets-tools unit tests"
         working-directory: ./packages/pluggable-widgets-tools
+        if: steps.files.outputs.packages_files != ''
         run: npm run test
+
       - name: "Linting generator-widget"
         working-directory: ./packages/generator-widget
+        if: steps.files.outputs.packages_files != ''
         run: npm run lint
