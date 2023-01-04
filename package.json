@@ -1,7 +1,7 @@
 {
   "name": "widgets-tools",
   "engines": {
-    "node": ">=16"
+    "node": ">=14"
   },
   "scripts": {
     "prettier": "prettier --config \"./prettier.config.js\" --write \"**/*.{js,jsx,ts,tsx,scss,html,xml,yml,yaml}\"",
