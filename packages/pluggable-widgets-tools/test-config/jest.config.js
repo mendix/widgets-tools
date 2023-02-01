@@ -4,20 +4,15 @@ const projectDir = process.cwd();
 
 module.exports = {
     clearMocks: true,
+    testRunner: "jest-jasmine2",
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
     snapshotSerializers: ["enzyme-to-json/serializer"],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transform: {
-        "\\.tsx?$": [
-            "ts-jest",
-            {
-                isolatedModules: true,
-                tsconfig: { module: "commonjs" }
-            }
-        ],
-        "\\.jsx?$": join(__dirname, "transform.js"),
-        "^.+\\.svg$": "jest-svg-transformer"
+        "^.+\\.tsx?$": ["ts-jest", { tsconfig: { module: "commonjs" } }],
+        "^.+\\.jsx?$": join(__dirname, "transform.js"),
+        "^.+\\.svg$": join(__dirname, "jest-svg-transformer")
     },
     moduleNameMapper: {
         "\\.(css|less|scss|sass)$": "identity-obj-proxy",
@@ -25,7 +20,8 @@ module.exports = {
         "mendix/filters/builders": join(__dirname, "__mocks__/FilterBuilders"),
         "\\.png$": join(__dirname, "assetsTransformer.js")
     },
+    moduleDirectories: ["node_modules", join(projectDir, "node_modules"), join(__dirname, "../../../")],
     collectCoverage: !process.env.CI,
-    coverageDirectory: "<rootDir>/../dist/coverage",
+    coverageDirectory: join(projectDir, "dist/coverage")
     testEnvironment: "jsdom"
 };
