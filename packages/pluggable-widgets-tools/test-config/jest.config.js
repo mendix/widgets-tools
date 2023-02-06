@@ -8,6 +8,7 @@ module.exports = {
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
     snapshotSerializers: ["enzyme-to-json/serializer"],
+    testEnvironment: "jsdom",
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transform: {
         "^.+\\.tsx?$": ["ts-jest", { tsconfig: { module: "commonjs" } }],

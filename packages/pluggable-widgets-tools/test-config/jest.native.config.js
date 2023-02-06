@@ -18,7 +18,7 @@ module.exports = {
     ],
     snapshotSerializers: ["enzyme-to-json/serializer"],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
-    transformIgnorePatterns: ["node_modules/(?!(.*react-native|@?react-native-.*|victory-)/)"],
+    transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
     transform: {
         "^.+\\.tsx?$": ["ts-jest", { tsconfig: { module: "commonjs" } }],
         "^.+\\.jsx?$": join(__dirname, "transform-native.js")
