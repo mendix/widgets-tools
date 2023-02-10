@@ -60,7 +60,7 @@ function toPreviewPropType(
         case "decimal":
             return "number | null";
         case "icon":
-            return '{ type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | { type: "icon"; iconClass: string; } | null';
+            return '{ type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | null';
         case "image":
             return '{ type: "static"; imageUrl: string; } | { type: "dynamic"; entity: string; } | null';
         case "file":
