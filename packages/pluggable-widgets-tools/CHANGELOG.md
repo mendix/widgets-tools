@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
 -   We pinned our version of Typescript to 4.9.5
+-   We updated the typings generator for icon properties to support icon collections, introduced in Mendix 9.24.
 
 ### Fixed
 
@@ -18,6 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Removed
 
 -   We removed the dependency for react-hot-loader as it's not being used since Pluggable Widgets Tools v9.0.0.
+
+### Breaking changes
+
+-   Icon properties now use `undefined` instead of `null` when no icon is selected.
 
 ## [9.23.2] - 2023-03-07
 
