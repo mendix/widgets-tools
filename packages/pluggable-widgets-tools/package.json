@@ -2,38 +2,25 @@
   "name": "@mendix/pluggable-widgets-tools",
   "version": "9.20.0",
   "description": "Mendix Pluggable Widgets Tools",
-  "license": "Apache-2.0",
-  "copyright": "© Mendix Technology BV 2022. All rights reserved.",
-  "homepage": "https://github.com/mendix/widgets-tools/tree/master/packages/pluggable-widgets-tools",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mendix/widgets-tools/"
-  },
-  "keywords": [
-    "typings",
-    "typescript",
-    "build",
-    "automation",
-    "test",
-    "jest",
-    "mendix"
-  ],
   "engines": {
     "node": ">=16"
   },
-  "files": [
-    "bin",
-    "scripts",
-    "configs",
-    "test-config",
-    "dist",
-    "typings"
-  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc",
+    "test": "jest"
+  },
+  "files": [
+    "bin",
+    "configs",
+    "test-config",
+    "dist",
+    "typings"
+  ],
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
@@ -116,21 +103,28 @@
   },
   "devDependencies": {
     "@mendix/generator-widget": ">=8.9.0",
-    "@types/xml2js": "^0.4.5",
-    "async-mutex": "^0.2.4",
-    "shx": "^0.3.3",
-    "tree-kill": "^1.2.2",
-    "yeoman-test": "^6.2.0"
-  },
-  "scripts": {
-    "prepare": "shx rm -rf dist && tsc",
-    "test": "jest",
-    "test:scripts": "npm run prepare && node tests/commands.js"
+    "@types/xml2js": "^0.4.5"
   },
   "overrides": {
     "colors": "1.4.0"
   },
   "resolutions": {
     "colors": "1.4.0"
+  },
+  "keywords": [
+    "typings",
+    "typescript",
+    "build",
+    "automation",
+    "test",
+    "jest",
+    "mendix"
+  ],
+  "license": "Apache-2.0",
+  "copyright": "© Mendix Technology BV 2022. All rights reserved.",
+  "homepage": "https://github.com/mendix/widgets-tools/tree/master/packages/pluggable-widgets-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mendix/widgets-tools/"
   }
 }
