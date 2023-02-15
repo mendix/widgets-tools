@@ -25,5 +25,6 @@ module.exports = {
         "\\.png$": join(__dirname, "assetsTransformer.js")
     },
     collectCoverage: !process.env.CI,
-    coverageDirectory: "<rootDir>/../dist/coverage"
+    coverageDirectory: "<rootDir>/../dist/coverage",
+    testEnvironment: "node"
 };
