@@ -52,8 +52,8 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
-    contentSource: {} | { type: string } | null;
-    optionalSource: {} | { type: string } | null;
+    contentSource: {} | { caption: string } | { type: string } | null;
+    optionalSource: {} | { caption: string } | { type: string } | null;
     content: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     markerDataAttribute: string;
     actionAttribute: {} | null;
