@@ -29,7 +29,7 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    myDataSource: {} | { type: string } | null;
+    myDataSource: {} | { caption: string } | { type: string } | null;
     expressionReturnTypeType: string;
     expressionReturnTypeTypeDataSource: string;
     expressionReturnTypeAssignableTo: string;

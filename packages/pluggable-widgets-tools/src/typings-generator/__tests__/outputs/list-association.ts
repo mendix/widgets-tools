@@ -28,11 +28,11 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    dataSource: {} | { type: string } | null;
+    dataSource: {} | { caption: string } | { type: string } | null;
     reference: string;
     referenceSet: string;
     referenceOrSet: string;
-    optionsSource: {} | { type: string } | null;
+    optionsSource: {} | { caption: string } | { type: string } | null;
     displayValue: string;
 }
 `;

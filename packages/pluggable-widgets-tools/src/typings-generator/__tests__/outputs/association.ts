@@ -30,7 +30,7 @@ export interface MyWidgetPreviewProps {
     reference: string;
     referenceSet: string;
     referenceOrSet: string;
-    optionsSource: {} | { type: string } | null;
+    optionsSource: {} | { caption: string } | { type: string } | null;
     displayValue: string;
     referenceOnChange: {} | null;
 }
