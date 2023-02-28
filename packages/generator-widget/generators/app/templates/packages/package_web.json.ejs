@@ -28,18 +28,26 @@
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.18.0"<% if (isLanguageTS) { %>,
+    "@mendix/pluggable-widgets-tools": "^9.24.0"<% if (isLanguageTS) { %>,
     "@types/big.js": "^6.0.2",<% if (hasUnitTests || hasE2eTests) { %>
     "@types/enzyme": "^3.10.8",
     "@types/enzyme-adapter-react-16": "^1.0.6",<% } %><% if (hasE2eTests) { %>
     "@types/jasmine": "^3.6.9",<% } %><% if (hasUnitTests) { %>
-    "@types/jest": "^26.0.22",<% } %>
-    "@types/react": "~17.0.1",
-    "@types/react-dom": "~17.0.1"<% if (hasUnitTests) { %>,
-    "@types/react-test-renderer": "~17.0.1"<% } %><% } %><% if (hasE2eTests) { %>,
+    "@types/jest": "^29.0.0",<% } %>
+    "@types/react": "~18.0.0",
+    "@types/react-dom": "~18.0.0"<% if (hasUnitTests) { %>,
+    "@types/react-test-renderer": "~18.0.0"<% } %><% } %><% if (hasE2eTests) { %>,
     "cypress": "^10.10.0"<% } %>
   },
   "dependencies": {
     "classnames": "^2.2.6"
+  },
+  "resolutions": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
   }
 }

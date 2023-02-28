@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "9.24.0-beta.1",
+  "version": "9.24.0",
   "description": "Mendix Pluggable Widgets Tools",
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
@@ -93,7 +93,6 @@
     "prettier": "^2.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hot-loader": "^4.13.0",
     "react-native": "0.70.7",
     "react-test-renderer": "18.2.0",
     "recursive-copy": "^2.0.11",
