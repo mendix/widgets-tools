@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.23.0] - 2023-03-01
+
 ### Changed
 
 -   We updated the Mendix package to version 9.23.621.
