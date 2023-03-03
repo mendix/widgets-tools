@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.23.1] - 2023-03-03
+
 ### Fixed
 
 -   We fixed an issue that prevented pluggable-widgets-tools commands to execute on 9.23.0.
