@@ -8,7 +8,7 @@
     "install:pwt": "cd ./packages/pluggable-widgets-tools && npm install",
     "postinstall": "npm run install:gw && npm run install:pwt",
     "reinstall": "shx rm -rf ./node_modules \"./packages/{generator-widget,pluggable-widgets-tools}/node_modules\" && npm install",
-    "test:pwt:commands": "npm run build --prefix ./packages/pluggable-widgets-tools && node tests/commands.js",
+    "test:pwt:commands": "node tests/commands.js",
     "prettier": "prettier --config \"./prettier.config.js\" --write \"**/*.{js,jsx,ts,tsx,scss,html,xml,yml,yaml}\"",
     "lint:scripts": "eslint --fix --config .eslintrc.js --ext .jsx,.js,.ts,.tsx scripts",
     "release:pwt": "ts-node --project ./scripts/tsconfig.json ./scripts/release/createRelease.ts pwt",
