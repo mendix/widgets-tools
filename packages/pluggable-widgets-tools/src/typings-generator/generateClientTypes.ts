@@ -40,14 +40,14 @@ ${generateClientTypeBody(properties, false, results, resolveProp)}
     return results;
 }
 
-function actionIsLinkedInAnAttribute(propertyPath: string, properties: Property[]): boolean {
+function isEmbeddedOnChangeAction(propertyPath: string, properties: Property[]): boolean {
     return properties.some(prop => {
-        if (prop.$.type === "attribute" && prop.$.onChange === propertyPath) {
+        if (prop.$.onChange === propertyPath) {
             return true;
         }
         if (prop.$.type === "object" && prop.properties && prop.properties.length > 0) {
             return prop.properties.some(prop =>
-                actionIsLinkedInAnAttribute(`../${propertyPath}`, extractProperties(prop))
+                isEmbeddedOnChangeAction(`../${propertyPath}`, extractProperties(prop))
             );
         }
         return false;
@@ -62,7 +62,7 @@ function generateClientTypeBody(
 ) {
     return properties
         .map(prop => {
-            if (prop.$.type === "action" && actionIsLinkedInAnAttribute(prop.$.key, properties)) {
+            if (prop.$.type === "action" && isEmbeddedOnChangeAction(prop.$.key, properties)) {
                 return undefined;
             }
 

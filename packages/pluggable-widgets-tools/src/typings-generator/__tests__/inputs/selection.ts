@@ -4,7 +4,7 @@ export const selectionInput = `<?xml version="1.0" encoding="utf-8"?>
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
         <propertyGroup caption="General">
-            <property key="selectionAll" type="selection" dataSource="requiredDataSource">
+            <property key="selectionAll" type="selection" dataSource="requiredDataSource" onChange="onSelectionAllChange">
                 <caption>Selection (all types)</caption>
                 <description/>
                 <selectionTypes>
@@ -59,6 +59,10 @@ export const selectionInput = `<?xml version="1.0" encoding="utf-8"?>
              <property key="requiredDataSource" type="datasource" isList="true">
                 <caption>Optional data source</caption>
                 <description />
+            </property>
+            <property key="onSelectionAllChange" type="action">
+                <caption>On selection change</caption>
+                <description/>
             </property>
         </propertyGroup>
     </properties>
@@ -70,7 +74,7 @@ export const selectionInputNative = `<?xml version="1.0" encoding="utf-8"?>
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
         <propertyGroup caption="General">
-            <property key="selectionAll" type="selection" dataSource="requiredDataSource">
+            <property key="selectionAll" type="selection" dataSource="requiredDataSource" onChange="onSelectionAllChange">
                 <caption>Selection (all types)</caption>
                 <description/>
                 <selectionTypes>
@@ -125,6 +129,10 @@ export const selectionInputNative = `<?xml version="1.0" encoding="utf-8"?>
              <property key="requiredDataSource" type="datasource" isList="true">
                 <caption>Optional data source</caption>
                 <description />
+            </property>
+            <property key="onSelectionAllChange" type="action">
+                <caption>On selection change</caption>
+                <description/>
             </property>
         </propertyGroup>
     </properties>
