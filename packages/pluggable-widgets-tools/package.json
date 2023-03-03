@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "9.23.0",
+  "version": "9.23.1",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=16"
@@ -11,7 +11,7 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc",
+    "prepare": "shx rm -rf dist && tsc",
     "test": "jest"
   },
   "files": [
