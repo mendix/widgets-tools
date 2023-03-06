@@ -7,6 +7,7 @@ module.exports = {
     rootDir: join(projectDir, "src"),
     globals: {
         "ts-jest": {
+            isolatedModules: true,
             tsconfig: { module: "commonjs" }
         }
     },
