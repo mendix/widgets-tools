@@ -26,5 +26,5 @@ module.exports = {
     },
     collectCoverage: !process.env.CI,
     coverageDirectory: "<rootDir>/../dist/coverage",
-    testEnvironment: "node"
+    testEnvironment: "jsdom"
 };
