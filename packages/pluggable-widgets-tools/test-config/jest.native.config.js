@@ -6,11 +6,6 @@ module.exports = {
     preset: "react-native",
     clearMocks: true,
     rootDir: join(projectDir, "src"),
-    globals: {
-        "ts-jest": {
-            tsconfig: { module: "commonjs" }
-        }
-    },
     setupFilesAfterEnv: [
         join(__dirname, "test-index-native.js"),
         ...(hasDependency("react-native-gesture-handler") ? ["react-native-gesture-handler/jestSetup.js"] : [])
@@ -19,7 +14,13 @@ module.exports = {
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!.*react-native)(?!victory-)"],
     transform: {
-        "\\.tsx?$": "ts-jest",
+        "\\.tsx?$": [
+            "ts-jest",
+            {
+                isolatedModules: true,
+                tsconfig: { module: "commonjs" }
+            }
+        ],
         "\\.jsx?$": join(__dirname, "transform-native.js")
     },
     moduleNameMapper: {
@@ -29,7 +30,7 @@ module.exports = {
     },
     collectCoverage: !process.env.CI,
     coverageDirectory: "<rootDir>/../dist/coverage",
-    testEnvironment: "node"
+    testEnvironment: "jsdom"
 };
 
 function hasDependency(name) {

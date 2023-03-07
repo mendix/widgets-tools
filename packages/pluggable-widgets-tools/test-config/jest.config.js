@@ -5,16 +5,17 @@ const projectDir = process.cwd();
 module.exports = {
     clearMocks: true,
     rootDir: join(projectDir, "src"),
-    globals: {
-        "ts-jest": {
-            tsconfig: { module: "commonjs" }
-        }
-    },
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
     snapshotSerializers: ["enzyme-to-json/serializer"],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transform: {
-        "\\.tsx?$": "ts-jest",
+        "\\.tsx?$": [
+            "ts-jest",
+            {
+                isolatedModules: true,
+                tsconfig: { module: "commonjs" }
+            }
+        ],
         "\\.jsx?$": join(__dirname, "transform.js"),
         "^.+\\.svg$": "jest-svg-transformer"
     },
@@ -26,5 +27,5 @@ module.exports = {
     },
     collectCoverage: !process.env.CI,
     coverageDirectory: "<rootDir>/../dist/coverage",
-    testEnvironment: "node"
+    testEnvironment: "jsdom"
 };
