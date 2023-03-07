@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.23.2] - 2023-03-07
+
 ### Fixed
 
 -   We fixed an issue with jest configuration which was causing `pluggable-widgets-tools test:unit`, `pluggable-widgets-tools test:unit:web` and `pluggable-widgets-tools test:unit:native` to fail incorrectly.
