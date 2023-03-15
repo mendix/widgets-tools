@@ -22,6 +22,9 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "useUnknownInCatchVariables": false,
-        "exactOptionalPropertyTypes": false
+        "exactOptionalPropertyTypes": false,
+        "paths": {
+            "react-hot-loader/root": ["./hot-typescript.ts"]
+        }
     }
 }
