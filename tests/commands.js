@@ -374,6 +374,7 @@ function fixPackageJson(json) {
     const devDependencies = {
         "@types/jest": "^29.0.0",
         "@types/react": "~18.0.0",
+        "@types/react-native": "~0.70.0",
         "@types/react-dom": "~18.0.0",
         "@types/react-test-renderer": "~18.0.0",
     }
