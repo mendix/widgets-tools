@@ -12,10 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [16]
+        node: [18]
         os: [windows-latest, ubuntu-latest]
         include:
-          - node: 14
+          - node: 16
             os: ubuntu-latest
             experimental: true
 
@@ -52,14 +52,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: "Node 14 - Removing package-lock and installing dependencies"
+      - name: "Installing dependencies"
         working-directory: ./
-        if: steps.files.outputs.packages_files != '' && matrix.node == '14'
-        run: rm -f package-lock.json packages/generator-widget/package-lock.json packages/pluggable-widgets-tools/package-lock.json && npm install
-
-      - name: "Node 16 - Installing dependencies"
-        working-directory: ./
-        if: steps.files.outputs.packages_files != '' && matrix.node == '16'
+        if: steps.files.outputs.packages_files != ''
         run: npm install
 
       - name: Increase number of watchers
