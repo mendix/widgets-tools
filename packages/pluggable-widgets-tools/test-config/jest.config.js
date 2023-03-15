@@ -21,7 +21,7 @@ module.exports = {
         "mendix/filters/builders": join(__dirname, "__mocks__/FilterBuilders"),
         "\\.png$": join(__dirname, "assetsTransformer.js")
     },
-    moduleDirectories: ["node_modules", join(projectDir, "node_modules"), join(__dirname, "../../../")],
+    moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
     collectCoverage: !process.env.CI,
     coverageDirectory: join(projectDir, "dist/coverage")
     testEnvironment: "jsdom"
