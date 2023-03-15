@@ -24,7 +24,8 @@ module.exports = {
         "\\.(css|less|scss|sass)$": "identity-obj-proxy",
         "mendix/components/web/Icon": join(__dirname, "__mocks__/WebIcon"),
         "mendix/filters/builders": join(__dirname, "__mocks__/FilterBuilders"),
-        "\\.png$": join(__dirname, "assetsTransformer.js")
+        "\\.png$": join(__dirname, "assetsTransformer.js"),
+        "react-hot-loader/root": join(__dirname, "__mocks__/hot")
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
     collectCoverage: !process.env.CI,

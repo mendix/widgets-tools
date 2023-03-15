@@ -32,7 +32,8 @@ module.exports = {
     moduleNameMapper: {
         "mendix/components/native/Icon": join(__dirname, "__mocks__/NativeIcon"),
         "mendix/components/native/Image": join(__dirname, "__mocks__/NativeImage"),
-        "mendix/filters/builders": join(__dirname, "__mocks__/FilterBuilders")
+        "mendix/filters/builders": join(__dirname, "__mocks__/FilterBuilders"),
+        "react-hot-loader/root": join(__dirname, "__mocks__/hot")
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
     collectCoverage: !process.env.CI,
