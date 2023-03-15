@@ -30,7 +30,7 @@ module.exports = {
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
     collectCoverage: !process.env.CI,
-    coverageDirectory: join(projectDir, "dist/coverage")
+    coverageDirectory: join(projectDir, "dist/coverage"),
     testEnvironment: "jsdom"
 };
 
