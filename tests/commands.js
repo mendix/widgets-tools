@@ -176,6 +176,9 @@ async function main() {
             widgetPackageJson = await readJson(join(workDir, "package.json"));
             widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = toolsPackagePath;
 
+            // Adds compatibility to new React 18 and React native 0.70
+            fixPackageJson(widgetPackageJson)
+
             // Check native dependency management
             if (isNative) {
                 widgetPackageJson.dependencies["react-native-maps"] = "0.27.0";
@@ -365,4 +368,22 @@ async function execFailedAsync(command, workDir) {
         return;
     }
     throw new Error(`Expected '${command}' to fail, but it didn't!`);
+}
+
+function fixPackageJson(json) {
+    const devDependencies = {
+        "@types/jest": "^29.0.0",
+        "@types/react": "~18.0.0",
+        "@types/react-dom": "~18.0.0",
+        "@types/react-test-renderer": "~18.0.0",
+    }
+    const overrides = {
+        "react": "18.2.0",
+        "react-native": "0.70.7"
+    };
+
+    Object.keys(devDependencies).filter(dep => !!json.devDependencies[dep]).forEach(dep => json.devDependencies[dep] = devDependencies[dep])
+
+    json.overrides = overrides;
+    json.resolutions = overrides;
 }
