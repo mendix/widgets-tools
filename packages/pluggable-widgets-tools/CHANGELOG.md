@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- We updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7
+- We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7
 
 ## [9.23.2] - 2023-03-07
 
