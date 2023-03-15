@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We added support to the typings generator for the data source caption (`{caption: string}`), introduced in version 9.24.0. This feature will give widget developers the ability to display the same caption for a data source, that Mendix uses in the Page Explorer, within a widget preview.
 
+### Added
+
+- We've added an option to automatically migrate known libraries to versions compatible with Studio Pro 9.24
+
 ### Changed
 
 -   We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.

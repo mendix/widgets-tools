@@ -16,11 +16,13 @@
   },
   "files": [
     "bin",
-    "scripts",
     "configs",
-    "test-config",
     "dist",
-    "typings"
+    "patches",
+    "scripts",
+    "test-config",
+    "typings",
+    "utils"
   ],
   "dependencies": {
     "@babel/core": "^7.12.3",

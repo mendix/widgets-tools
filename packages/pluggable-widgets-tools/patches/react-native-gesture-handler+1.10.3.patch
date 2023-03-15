@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-gesture-handler/lib/typescript/components/GestureButtons.d.ts b/node_modules/react-native-gesture-handler/lib/typescript/components/GestureButtons.d.ts
+index 0c10368..b12d5ac 100644
+--- a/node_modules/react-native-gesture-handler/lib/typescript/components/GestureButtons.d.ts
++++ b/node_modules/react-native-gesture-handler/lib/typescript/components/GestureButtons.d.ts
+@@ -1,4 +1,5 @@
+ import * as React from 'react';
++import { PropsWithChildren } from 'react';
+ import { StyleProp, ViewStyle } from 'react-native';
+ import { NativeViewGestureHandlerProps } from '../handlers/NativeViewGestureHandler';
+ export interface RawButtonProps extends NativeViewGestureHandlerProps {
+@@ -28,7 +29,7 @@ export declare class BaseButton extends React.Component<BaseButtonProps> {
+     private onGestureEvent;
+     render(): JSX.Element;
+ }
+-export declare class RectButton extends React.Component<RectButtonProps> {
++export declare class RectButton extends React.Component<PropsWithChildren<RectButtonProps>> {
+     static defaultProps: {
+         activeOpacity: number;
+         underlayColor: string;
+diff --git a/node_modules/react-native-gesture-handler/lib/typescript/components/Swipeable.d.ts b/node_modules/react-native-gesture-handler/lib/typescript/components/Swipeable.d.ts
+index 60237c7..95aece3 100644
+--- a/node_modules/react-native-gesture-handler/lib/typescript/components/Swipeable.d.ts
++++ b/node_modules/react-native-gesture-handler/lib/typescript/components/Swipeable.d.ts
+@@ -1,5 +1,5 @@
+ import * as React from 'react';
+-import { Component } from 'react';
++import { Component, PropsWithChildren } from 'react';
+ import { Animated, StyleProp, ViewStyle } from 'react-native';
+ import { PanGestureHandlerProps } from '../handlers/gestureHandlers';
+ declare type SwipeableExcludes = Exclude<keyof PanGestureHandlerProps, 'onGestureEvent' | 'onHandlerStateChange'>;
+@@ -54,7 +54,7 @@ declare type SwipeableState = {
+     rightOffset?: number;
+     rowWidth?: number;
+ };
+-export default class Swipeable extends Component<SwipeableProps, SwipeableState> {
++export default class Swipeable extends Component<PropsWithChildren<SwipeableProps>, SwipeableState> {
+     static defaultProps: {
+         friction: number;
+         overshootFriction: number;

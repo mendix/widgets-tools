@@ -2,8 +2,17 @@
 const { execSync, spawnSync } = require("child_process");
 const { existsSync } = require("fs");
 const { delimiter, dirname, join, parse } = require("path");
+const { checkMigration } = require("../utils/migration");
+const { red } = require("ansi-colors");
 
 checkNodeVersion();
+(async () => {
+    try {
+        await checkMigration();
+    } catch (e) {
+        console.log(red("An error occurred while checking migration dependencies"));
+    }
+})();
 
 const [, currentScriptPath, cmd, ...args] = process.argv;
 const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
@@ -112,19 +121,23 @@ function checkNodeVersion() {
         const nodeVersion = extractMajorVersion(execSync("node --version").toString().trim());
         const npmVersion = extractMajorVersion(execSync("npm --version").toString().trim());
         if (nodeVersion < 16) {
-            console.error("To build this widget a minimum node version 16.0.0 is required. Please upgrade your node version!");
+            console.error(
+                "To build this widget a minimum node version 16.0.0 is required. Please upgrade your node version!"
+            );
             process.exit(1);
         }
         if (npmVersion < 8) {
-            console.error("To build this widget a minimum npm version 8.0.0 is required. Please upgrade your npm version!");
+            console.error(
+                "To build this widget a minimum npm version 8.0.0 is required. Please upgrade your npm version!"
+            );
             process.exit(1);
         }
-    } catch(e) {
-        throw new Error("Cannot find node or npm to determine the version")
+    } catch (e) {
+        throw new Error("Cannot find node or npm to determine the version");
     }
 }
 
 function extractMajorVersion(version) {
-    const majorVersion = version.replace(/^\D+/, '').split(".")[0];
+    const majorVersion = version.replace(/^\D+/, "").split(".")[0];
     return Number(majorVersion);
 }
