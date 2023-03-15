@@ -20,7 +20,13 @@ module.exports = {
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
     transform: {
-        "^.+\\.tsx?$": ["ts-jest", { tsconfig: { module: "commonjs" } }],
+        "^.+\\.tsx?$": [
+            "ts-jest",
+            {
+                isolatedModules: true,
+                tsconfig: { module: "commonjs" }
+            }
+        ],
         "^.+\\.jsx?$": join(__dirname, "transform-native.js")
     },
     moduleNameMapper: {
