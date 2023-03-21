@@ -12,13 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [18]
+        node: [16, 18]
         os: [windows-latest, ubuntu-latest]
-        include:
-          - node: 16
-            os: ubuntu-latest
-            experimental: true
-
     steps:
       - name: "Checking changed files"
         id: files
