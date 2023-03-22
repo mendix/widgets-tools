@@ -46,8 +46,8 @@ jobs:
 
       - name: "Installing dependencies"
         working-directory: ./
-        if: steps.filter.outputs.packages == 'true' && matrix.node == '14'
-        run: rm -f package-lock.json packages/generator-widget/package-lock.json packages/pluggable-widgets-tools/package-lock.json && npm install
+        if: steps.filter.outputs.packages == 'true'
+        run: npm install
 
       - name: Increase number of watchers
         if: steps.filter.outputs.packages == 'true' && startsWith(matrix.os, 'ubuntu')
