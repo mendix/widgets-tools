@@ -1,3 +1,3 @@
-export function hot(widget: any): any {
+export function hot<T>(widget: T): T {
     return widget;
 }
