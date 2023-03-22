@@ -1,6 +1,6 @@
-const Enzyme = require("enzyme");
-const Adapter = require("@wojtekmaj/enzyme-adapter-react-17");
+const {configure: configureEnzyme} = require("enzyme");
+const Adapter = require("@cfaester/enzyme-adapter-react-18").default;
 const enableHooks = require("jest-react-hooks-shallow").default;
 
-Enzyme.configure({ adapter: new Adapter() });
+configureEnzyme({ adapter: new Adapter() });
 enableHooks(jest);

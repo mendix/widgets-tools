@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- We've updated our templates to support the new version of Pluggable Widgets Tools containing new React and React Native versions. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
+
 ## [9.20.0] - 2022-12-12
 
 ### Changed

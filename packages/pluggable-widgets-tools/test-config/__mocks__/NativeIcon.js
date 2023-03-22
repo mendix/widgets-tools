@@ -1,4 +1,6 @@
-import { createElement } from "react";
-import { View } from "react-native";
+const { createElement } = require("react");
+const { View } = require("react-native");
 
-export const Icon = () => createElement(View, { testId: "icon" });
+module.exports = {
+    Icon: () => createElement(View, { testId: "icon" })
+}

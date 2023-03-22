@@ -27,14 +27,22 @@
     "output": "./dist/testresults/TESTS-Jest.xml"
   },<% } %>
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.18.0"<% if (isLanguageTS) { %>,
+    "@mendix/pluggable-widgets-tools": "^9.24.0"<% if (isLanguageTS) { %>,
     "@types/big.js": "^6.0.2",<% if (hasUnitTests) { %>
     "@types/enzyme": "^3.10.8",
-    "@types/jest": "^26.0.22",<% } %>
-    "@types/react": "~17.0.1",
-    "@types/react-native": "~0.63.52"<% } %>
+    "@types/jest": "^29.0.0",<% } %>
+    "@types/react": "~18.0.0",
+    "@types/react-native": "~0.70.0"<% } %>
   },
   "dependencies": {
 
+  },
+  "resolutions": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
   }
 }

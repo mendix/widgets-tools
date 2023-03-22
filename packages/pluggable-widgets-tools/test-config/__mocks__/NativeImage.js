@@ -1,1 +1,3 @@
-export const Image = require("react-native").Image;
+module.exports = {
+    Image: require("react-native").Image
+};
