@@ -58,17 +58,17 @@ This generator uses the Yeoman scaffolding tool to let you quickly create a [Men
     - Platform
     - Template
     - Add unit tests
-    - Add end to end tests
+    - Add end-to-end tests
 
 ### Template
 
 #### Full boilerplate
 
-The full widget boilerplate is a fully developed and tested Mendix React widget that shows a value as a badge or a color label (just available for web/responsive platform).
+The full widget boilerplate is a fully developed and tested Mendix React widget that shows a value as a badge or a color label (just available for web/responsive platforms).
 It has the following features:
 
 -   Display as a badge or a color label
--   Attach actions to onClick event
+-   Attach actions to the onClick event
 -   Set static data text when the dynamic data is not specified
 
 #### Empty widget
@@ -77,13 +77,13 @@ The empty template is a Mendix React hello world widget recommended for more exp
 
 ### Add unit tests
 
-If `Yes` is selected, unit tests are included to ensure individual units of the component are tested to determine whether they are fit for use. Default value is `No`.
+If `Yes` is selected, unit tests are included to ensure individual units of the component are tested to determine whether they are fit for use. The default value is `No`.
 
-### Add end to end tests
+### Add end-to-end tests
 
-If `Yes` is selected, end to end tests are included to ensure that the integrated components of an application function as expected. Default value is `No`.
+If `Yes` is selected, end-to-end tests are included to ensure that the integrated components of an application function as expected. The default value is `No`.
 
-Note: Both `Unit` and `End to end` tests apply only to the Full Boilerplate. `End to End` is exclusive for web and PWA apps.
+Note: Both `Unit` and `End-to-end` tests apply only to the Full Boilerplate. `End-to-end` is exclusive for web and PWA apps.
 
 The tool will then create copied files, and run `npm install` to install development dependencies.
 
