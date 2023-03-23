@@ -32,6 +32,7 @@ export interface MyWidgetPreviewProps {
     referenceOrSet: string;
     optionsSource: {} | { type: string } | null;
     displayValue: string;
+    referenceOnChange: {} | null;
 }
 `;
 

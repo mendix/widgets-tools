@@ -8,12 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
-- We pinned our version of Typescript to 4.9.5
+-   We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
+-   We pinned our version of Typescript to 4.9.5
+
+### Fixed
+
+-   We fixed the output of the typings generator for `action` properties that are specified as the `onChange` action of an `association` property. In this case, the `action` property is not exported as a separate property to the widget, but the typings suggested otherwise.
 
 ### Removed
 
-- We removed the dependency for react-hot-loader as it's not being used since Pluggable Widgets Tools v9.0.0.
+-   We removed the dependency for react-hot-loader as it's not being used since Pluggable Widgets Tools v9.0.0.
 
 ## [9.23.2] - 2023-03-07
 

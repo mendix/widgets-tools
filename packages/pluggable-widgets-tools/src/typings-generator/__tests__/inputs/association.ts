@@ -4,7 +4,7 @@ export const associationInput = `<?xml version="1.0" encoding="utf-8"?>
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
         <propertyGroup caption="General">
-            <property key="reference" type="association" selectableObjects="optionsSource">
+            <property key="reference" type="association" selectableObjects="optionsSource" onChange="referenceOnChange">
                 <caption>Reference</caption>
                 <description/>
                 <associationTypes>
@@ -36,6 +36,10 @@ export const associationInput = `<?xml version="1.0" encoding="utf-8"?>
                 <attributeTypes>
                     <attributeType name="String"/>
                 </attributeTypes>
+            </property>
+            <property key="referenceOnChange" type="action">
+                <caption>Reference On Change</caption>
+                <description/>
             </property>
         </propertyGroup>
     </properties>
@@ -47,7 +51,7 @@ export const associationInputNative = `<?xml version="1.0" encoding="utf-8"?>
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
         <propertyGroup caption="General">
-            <property key="reference" type="association" selectableObjects="optionsSource">
+            <property key="reference" type="association" selectableObjects="optionsSource" onChange="referenceOnChange">
                 <caption>Reference</caption>
                 <description/>
                 <associationTypes>
@@ -79,6 +83,10 @@ export const associationInputNative = `<?xml version="1.0" encoding="utf-8"?>
                 <attributeTypes>
                     <attributeType name="String"/>
                 </attributeTypes>
+            </property>
+            <property key="referenceOnChange" type="action">
+                <caption>Reference On Change</caption>
+                <description/>
             </property>
         </propertyGroup>
     </properties>
