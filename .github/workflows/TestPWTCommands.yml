@@ -15,24 +15,21 @@ jobs:
         node: [16, 18]
         os: [windows-latest, ubuntu-latest]
     steps:
-      - name: "Checking changed files"
-        id: files
-        uses: softprops/diffset@3aeca0719d5043522e155012d3c9f7470fdd2dc6 # v1
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        with:
-          packages_files: |
-            packages/**/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
 
-      - name: "Fetching master to compare"
-        if: github.event_name == 'pull_request' && steps.files.outputs.packages_files == ''
-        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+      - name: "Checking changed files"
+        id: filter
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
+        if: github.event_name == 'pull_request'
+        with:
+          filters: |
+            packages:
+              - 'packages/**/*'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Defining cache"
         uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # v2
@@ -49,14 +46,14 @@ jobs:
 
       - name: "Installing dependencies"
         working-directory: ./
-        if: steps.files.outputs.packages_files != ''
+        if: steps.filter.outputs.packages == 'true'
         run: npm install
 
       - name: Increase number of watchers
-        if: steps.files.outputs.packages_files != '' && startsWith(matrix.os, 'ubuntu')
+        if: steps.filter.outputs.packages == 'true' && startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: "Testing PWT commands"
         working-directory: ./
-        if: steps.files.outputs.packages_files != ''
+        if: steps.filter.outputs.packages == 'true'
         run: npm run test:pwt:commands
