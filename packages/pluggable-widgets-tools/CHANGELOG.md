@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Breaking changes
 
--   Icon properties now use `undefined` instead of `null` when no icon is selected.
+-   Icon properties now use `undefined` instead of `null` when no icon is selected. This change was done for compatibility with the `Icon` component in the pluggable widgets API.
 
 ## [9.23.2] - 2023-03-07
 
