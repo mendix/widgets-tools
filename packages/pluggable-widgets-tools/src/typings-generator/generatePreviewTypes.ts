@@ -67,7 +67,7 @@ function toPreviewPropType(
             return "string";
         case "datasource":
             // { type: string } is included here due to an incorrect API output before 9.2 (PAG-1400)
-            return "{} | { type: string } | null";
+            return "{} | { caption: string } | { type: string } | null";
         case "attribute":
         case "association":
         case "expression":

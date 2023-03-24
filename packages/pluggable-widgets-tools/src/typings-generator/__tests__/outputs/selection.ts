@@ -36,8 +36,8 @@ export interface MyWidgetPreviewProps {
     optionalSelectionAll: "None" | "Single" | "Multi";
     optionalSelectionSingleMulti: "Single" | "Multi" | "None";
     optionalSelectionMulti: "Multi" | "None";
-    optionalDataSource: {} | { type: string } | null;
-    requiredDataSource: {} | { type: string } | null;
+    optionalDataSource: {} | { caption: string } | { type: string } | null;
+    requiredDataSource: {} | { caption: string } | { type: string } | null;
     onSelectionAllChange: {} | null;
 }
 `;

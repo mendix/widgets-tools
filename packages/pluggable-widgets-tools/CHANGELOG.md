@@ -5,6 +5,9 @@ All notable changes to this tool will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+
+-   We added support to the typings generator for the data source caption (`{caption: string}`), introduced in version 9.24.0. This feature will give widget developers the ability to display the same caption for a data source, that Mendix uses in the Page Explorer, within a widget preview.
 
 ### Changed
 
