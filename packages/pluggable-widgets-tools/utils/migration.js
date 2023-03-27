@@ -46,10 +46,7 @@ const resolutionsOverrides = [
 ];
 
 function extractVersions(version) {
-    return version
-        .replace(/^\D+/, "")
-        .split(".")
-        .map(stringValue => Number(stringValue));
+    return version.replace(/^\D+/, "").split(".").map(Number);
 }
 
 async function question(question) {
@@ -63,7 +60,7 @@ async function question(question) {
 }
 
 function getOutdatedDependencies(packageDependencies, listOfNewDependencies = dependencies) {
-    const createReturn = dep => ({
+    const versionInfo = dep => ({
         name: dep.name,
         oldVersion: packageDependencies[dep.name],
         newVersion: dep.version,
@@ -73,23 +70,21 @@ function getOutdatedDependencies(packageDependencies, listOfNewDependencies = de
         .filter(dep => !!packageDependencies[dep.name])
         .map(dep => {
             const version = extractVersions(packageDependencies[dep.name]);
+            const newVersion = extractVersions(dep.version);
             switch (dep.check) {
                 case CheckType.MAJOR:
-                    if (version[0] < extractVersions(dep.version)[0]) {
-                        return createReturn(dep);
+                    if (version[0] < newVersion[0]) {
+                        return versionInfo(dep);
                     }
                     break;
                 case CheckType.MINOR:
-                    if (version[1] < extractVersions(dep.version)[1]) {
-                        return createReturn(dep);
+                    if (version[1] < newVersion[1]) {
+                        return versionInfo(dep);
                     }
                     break;
                 case CheckType.MAJOR_MINOR:
-                    if (
-                        version[0] < extractVersions(dep.version)[0] ||
-                        (version[0] === extractVersions(dep.version)[0] && version[1] < extractVersions(dep.version)[1])
-                    ) {
-                        return createReturn(dep);
+                    if (version[0] < newVersion[0] || (version[0] === newVersion[0] && version[1] < newVersion[1])) {
+                        return versionInfo(dep);
                     }
                     break;
                 default:
@@ -99,11 +94,11 @@ function getOutdatedDependencies(packageDependencies, listOfNewDependencies = de
         .filter(Boolean);
 }
 
-function replaceOldDependency(listOfOutdatedDependency, target, message) {
-    if (listOfOutdatedDependency.length > 0) {
-        console.log(green(message));
-        listOfOutdatedDependency.forEach(dep => {
-            target[dep.name] = dep.newVersion;
+function replaceOldDependencies(listOfOutdatedDependencies, packageJson, key) {
+    if (listOfOutdatedDependencies.length > 0) {
+        console.log(green(`The following ${key} were updated:`));
+        listOfOutdatedDependencies.forEach(dep => {
+            packageJson[key][dep.name] = dep.newVersion;
             if (!!dep.patch) {
                 const dir = join(process.cwd(), "patches");
                 if (!existsSync(dir)) {
@@ -117,10 +112,10 @@ function replaceOldDependency(listOfOutdatedDependency, target, message) {
     }
 }
 
-function addExtraDependencies(packageJson, key, message) {
+function addExtraDependencies(packageJson, key) {
     const dependenciesToAdd = resolutionsOverrides.filter(ov => !packageJson[key] || !packageJson[key][ov.name]);
     if (dependenciesToAdd.length > 0) {
-        console.log(green(message));
+        console.log(green(`The following ${key} were added:`));
         packageJson[key] = packageJson[key] || {};
         dependenciesToAdd.forEach(dep => {
             packageJson[key][dep.name] = dep.version;
@@ -134,7 +129,7 @@ async function checkMigration() {
     const packageJsonPath = join(process.cwd(), "package.json");
     const packageJson = await readJson(packageJsonPath);
     const args = process.argv;
-    if (args.indexOf("--skip-migration") === -1 && process.env.CI !== "true") {
+    if (!args.includes("--skip-migration") && process.env.CI !== "true") {
         const outdatedDependencies = getOutdatedDependencies(packageJson.dependencies || {});
         const outdatedDevDependencies = getOutdatedDependencies(packageJson.devDependencies || {});
         const outdatedOverrides = getOutdatedDependencies(packageJson.overrides || {}, resolutionsOverrides);
@@ -152,38 +147,22 @@ async function checkMigration() {
                 try {
                     const newPackageJson = packageJson;
 
-                    replaceOldDependency(
-                        outdatedDependencies,
-                        newPackageJson.dependencies,
-                        "The following dependencies were updated:"
-                    );
-                    replaceOldDependency(
-                        outdatedDevDependencies,
-                        newPackageJson.devDependencies,
-                        "The following devDependencies were updated:"
-                    );
-                    replaceOldDependency(
-                        outdatedOverrides,
-                        newPackageJson.overrides,
-                        "The following overrides were updated:"
-                    );
-                    replaceOldDependency(
-                        outdatedResolutions,
-                        newPackageJson.resolutions,
-                        "The following resolutions were updated:"
-                    );
+                    replaceOldDependencies(outdatedDependencies, newPackageJson, "dependencies");
+                    replaceOldDependencies(outdatedDevDependencies, newPackageJson, "devDependencies");
+                    replaceOldDependencies(outdatedOverrides, newPackageJson, "overrides");
+                    replaceOldDependencies(outdatedResolutions, newPackageJson, "resolutions");
+
                     // We check if any dependency should be added in overrides/resolutions
-                    addExtraDependencies(newPackageJson, "overrides", "The following overrides were added:");
-                    addExtraDependencies(newPackageJson, "resolutions", "The following resolutions were added:");
+                    addExtraDependencies(newPackageJson, "overrides");
+                    addExtraDependencies(newPackageJson, "resolutions");
 
                     // If any package requires a patch we make sure to install patch-package and add the script
                     if (requirePatch) {
-                        if (!newPackageJson.devDependencies["patch-package"]) {
-                            newPackageJson.devDependencies["patch-package"] = "^6.5.0";
-                        }
+                        newPackageJson.devDependencies["patch-package"] ||= "^6.5.0";
+
                         if (!newPackageJson.scripts.postinstall) {
                             newPackageJson.scripts.postinstall = "patch-package";
-                        } else if (newPackageJson.scripts.postinstall.indexOf("patch-package") === -1) {
+                        } else if (!newPackageJson.scripts.postinstall.includes("patch-package")) {
                             newPackageJson.scripts.postinstall =
                                 "patch-package && " + newPackageJson.scripts.postinstall;
                         }
