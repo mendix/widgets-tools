@@ -5,14 +5,15 @@ All notable changes to this tool will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
 
 -   We added support to the typings generator for the data source caption (`{caption: string}`), introduced in version 9.24.0. This feature will give widget developers the ability to display the same caption for a data source, that Mendix uses in the Page Explorer, within a widget preview.
 
 ### Changed
 
--   We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
--   We pinned our version of Typescript to 4.9.5
+-   We bumped the pinned version of TypeScript to 4.9.5.
+
 -   We updated the typings generator for icon properties to support icon collections, introduced in Mendix 9.24.
 
 ### Fixed
@@ -24,6 +25,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 -   We removed the dependency for react-hot-loader as it's not being used since Pluggable Widgets Tools v9.0.0.
 
 ### Breaking changes
+
+-   We've updated our library versions (React and React Native), please be aware this might break your widgets. New libraries versions: React: 18.0.2, React-Native: 0.70.7. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
 
 -   Icon properties now use `undefined` instead of `null` when no icon is selected. This change was done for compatibility with the `Icon` component in the pluggable widgets API.
 
