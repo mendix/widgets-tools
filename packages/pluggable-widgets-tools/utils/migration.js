@@ -8,9 +8,10 @@ const { copyFileSync, existsSync, mkdirSync } = require("fs");
 let requirePatch = false;
 
 const CheckType = {
-    MAJOR: "major",
-    MINOR: "minor",
-    MAJOR_MINOR: "major_minor"
+    MAJOR: (oldVersion, newVersion) => oldVersion[0] < newVersion[0],
+    MINOR: (oldVersion, newVersion) => oldVersion[1] < newVersion[1],
+    MAJOR_MINOR: (oldVersion, newVersion) =>
+        oldVersion[0] < newVersion[0] || (oldVersion[0] === newVersion[0] && oldVersion[1] < newVersion[1])
 };
 
 const dependencies = [
@@ -60,38 +61,20 @@ async function question(question) {
 }
 
 function getOutdatedDependencies(packageDependencies, listOfNewDependencies = dependencies) {
-    const versionInfo = dep => ({
-        name: dep.name,
-        oldVersion: packageDependencies[dep.name],
-        newVersion: dep.version,
-        patch: dep.patch
-    });
     return listOfNewDependencies
         .filter(dep => !!packageDependencies[dep.name])
-        .map(dep => {
-            const version = extractVersions(packageDependencies[dep.name]);
-            const newVersion = extractVersions(dep.version);
-            switch (dep.check) {
-                case CheckType.MAJOR:
-                    if (version[0] < newVersion[0]) {
-                        return versionInfo(dep);
-                    }
-                    break;
-                case CheckType.MINOR:
-                    if (version[1] < newVersion[1]) {
-                        return versionInfo(dep);
-                    }
-                    break;
-                case CheckType.MAJOR_MINOR:
-                    if (version[0] < newVersion[0] || (version[0] === newVersion[0] && version[1] < newVersion[1])) {
-                        return versionInfo(dep);
-                    }
-                    break;
-                default:
-                    return undefined;
-            }
-        })
-        .filter(Boolean);
+        .map(dep => ({
+            dep,
+            oldVersion: extractVersions(packageDependencies[dep.name]),
+            newVersion: extractVersions(dep.version)
+        }))
+        .filter(({ dep, oldVersion, newVersion }) => dep.check(oldVersion, newVersion))
+        .map(({ dep }) => ({
+            name: dep.name,
+            oldVersion: packageDependencies[dep.name],
+            newVersion: dep.version,
+            patch: dep.patch
+        }));
 }
 
 function replaceOldDependencies(listOfOutdatedDependencies, packageJson, key) {
