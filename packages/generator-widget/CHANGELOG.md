@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-- We've updated our templates to support the new version of Pluggable Widgets Tools containing new React and React Native versions. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
+### Changed
+
+-   We've updated our templates to support the new version of Pluggable Widgets Tools containing new React and React Native versions. This is necessary due to breaking changes introduced in Studio Pro 9.24.0.
+
+-   We've updated our templates to remove `@types/react`, `@types/react-dom` and `@types/react-native` from the generated widget's package.json since those dependencies will be part of the Pluggable Widgets Tools 9.24.
 
 ## [9.20.0] - 2022-12-12
 
