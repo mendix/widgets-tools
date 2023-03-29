@@ -1,4 +1,14 @@
 const { join } = require("path");
+const { TextEncoder, TextDecoder } = require("util");
+
+Object.defineProperties(global, {
+    TextEncoder: {
+        value: TextEncoder
+    },
+    TextDecoder: {
+        value: TextDecoder
+    }
+});
 
 const projectDir = process.cwd();
 
@@ -8,7 +18,7 @@ module.exports = {
     clearMocks: true,
     haste: {
         defaultPlatform: "android",
-        platforms: ["android", "ios", "native"],
+        platforms: ["android", "ios", "native"]
     },
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [
