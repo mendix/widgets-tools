@@ -12,35 +12,35 @@ checkNodeVersion();
     } catch (e) {
         console.log(red("An error occurred while checking migration dependencies"));
     }
-})();
 
-const [, currentScriptPath, cmd, ...args] = process.argv;
-const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
-    ? join(dirname(currentScriptPath), "../@mendix/pluggable-widgets-tools")
-    : join(dirname(currentScriptPath), "..");
+    const [, currentScriptPath, cmd, ...args] = process.argv;
+    const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
+        ? join(dirname(currentScriptPath), "../@mendix/pluggable-widgets-tools")
+        : join(dirname(currentScriptPath), "..");
 
-if (args.indexOf("--subprojectPath") > -1) {
-    args.splice(args.indexOf("--subprojectPath"), 2);
-}
-const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
-console.log(`Running MX Widgets Tools script ${cmd}...`);
-
-for (const subCommand of realCommand.split(/&&/g)) {
-    const result = spawnSync(subCommand.trim(), [], {
-        cwd: process.cwd(),
-        env: {
-            ...process.env,
-            PATH: `${process.env.PATH}${delimiter}${findNodeModulesBin()}`,
-            // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
-            Path: `${process.env.Path}${delimiter}${findNodeModulesBin()}`
-        },
-        shell: true,
-        stdio: "inherit"
-    });
-    if (result.status !== 0) {
-        process.exit(result.status);
+    if (args.indexOf("--subprojectPath") > -1) {
+        args.splice(args.indexOf("--subprojectPath"), 2);
     }
-}
+    const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
+    console.log(`Running MX Widgets Tools script ${cmd}...`);
+
+    for (const subCommand of realCommand.split(/&&/g)) {
+        const result = spawnSync(subCommand.trim(), [], {
+            cwd: process.cwd(),
+            env: {
+                ...process.env,
+                PATH: `${process.env.PATH}${delimiter}${findNodeModulesBin()}`,
+                // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
+                Path: `${process.env.Path}${delimiter}${findNodeModulesBin()}`
+            },
+            shell: true,
+            stdio: "inherit"
+        });
+        if (result.status !== 0) {
+            process.exit(result.status);
+        }
+    }
+})();
 
 function getRealCommand(cmd, toolsRoot) {
     const eslintCommand = "eslint --config .eslintrc.js --ext .jsx,.js,.ts,.tsx src";
