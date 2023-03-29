@@ -15,12 +15,16 @@ const CheckType = {
 };
 
 const dependencies = [
+    { name: "react", version: "remove", check: CheckType.MAJOR_MINOR },
+    { name: "react-dom", version: "remove", check: CheckType.MAJOR_MINOR },
+    { name: "react-native", version: "remove", check: CheckType.MINOR },
     { name: "@types/jest", version: "^29.0.0", check: CheckType.MAJOR },
-    { name: "@types/react", version: "~18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-native", version: "~0.70.0", check: CheckType.MINOR },
+    { name: "@types/react", version: "remove", check: CheckType.MAJOR },
+    { name: "@types/react-native", version: "remove", check: CheckType.MINOR },
     { name: "@types/react-native-push-notification", version: "8.1.1", check: CheckType.MAJOR_MINOR },
-    { name: "@types/react-dom", version: "~18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-test-renderer", version: "~18.0.0", check: CheckType.MAJOR },
+    { name: "@types/react-dom", version: "remove", check: CheckType.MAJOR },
+    { name: "@types/react-test-renderer", version: "18.0.0", check: CheckType.MAJOR },
+    { name: "@types/enzyme-adapter-react-16", version: "remove", check: CheckType.MAJOR },
     { name: "@react-native-firebase/app", version: "17.3.0", check: CheckType.MAJOR_MINOR },
     { name: "@react-native-firebase/messaging", version: "17.3.0", check: CheckType.MAJOR_MINOR },
     {
@@ -43,7 +47,11 @@ const dependencies = [
 ];
 const resolutionsOverrides = [
     { name: "react", version: "18.2.0", check: CheckType.MAJOR_MINOR },
-    { name: "react-native", version: "0.70.7", check: CheckType.MINOR }
+    { name: "react-dom", version: "18.2.0", check: CheckType.MAJOR_MINOR },
+    { name: "react-native", version: "0.70.7", check: CheckType.MINOR },
+    { name: "@types/react", version: "18.0.0", check: CheckType.MAJOR },
+    { name: "@types/react-dom", version: "18.0.0", check: CheckType.MAJOR },
+    { name: "@types/react-native", version: "0.70.0", check: CheckType.MINOR }
 ];
 
 function extractVersions(version) {
@@ -55,7 +63,7 @@ async function question(question) {
     return new Promise(resolve =>
         rl.question(yellow(question), answer => {
             rl.close();
-            resolve(answer);
+            resolve(!answer ? "y" : answer.toLowerCase());
         })
     );
 }
@@ -66,9 +74,9 @@ function getOutdatedDependencies(packageDependencies, listOfNewDependencies = de
         .map(dep => ({
             dep,
             oldVersion: extractVersions(packageDependencies[dep.name]),
-            newVersion: extractVersions(dep.version)
+            newVersion: dep.version !== "remove" ? extractVersions(dep.version) : undefined
         }))
-        .filter(({ dep, oldVersion, newVersion }) => dep.check(oldVersion, newVersion))
+        .filter(({ dep, oldVersion, newVersion }) => newVersion === undefined || dep.check(oldVersion, newVersion))
         .map(({ dep }) => ({
             name: dep.name,
             oldVersion: packageDependencies[dep.name],
@@ -81,16 +89,22 @@ function replaceOldDependencies(listOfOutdatedDependencies, packageJson, key) {
     if (listOfOutdatedDependencies.length > 0) {
         console.log(green(`The following ${key} were updated:`));
         listOfOutdatedDependencies.forEach(dep => {
-            packageJson[key][dep.name] = dep.newVersion;
-            if (!!dep.patch) {
-                const dir = join(process.cwd(), "patches");
-                if (!existsSync(dir)) {
-                    mkdirSync(dir);
+            if (dep.newVersion === "remove") {
+                delete packageJson[key][dep.name];
+                console.log(green(`${dep.name}: ${red(dep.oldVersion)} -> ${yellow("(removed)")}`));
+            } else {
+                packageJson[key][dep.name] = dep.newVersion;
+
+                if (!!dep.patch) {
+                    const dir = join(process.cwd(), "patches");
+                    if (!existsSync(dir)) {
+                        mkdirSync(dir);
+                    }
+                    copyFileSync(join(__dirname, "../patches", dep.patch), join(process.cwd(), "patches", dep.patch));
+                    requirePatch = true;
                 }
-                copyFileSync(join(__dirname, "../patches", dep.patch), join(process.cwd(), "patches", dep.patch));
-                requirePatch = true;
+                console.log(green(`${dep.name}: ${red(dep.oldVersion)} -> ${dep.newVersion}`));
             }
-            console.log(green(`${dep.name}: ${red(dep.oldVersion)} -> ${dep.newVersion}`));
         });
     }
 }
@@ -124,7 +138,7 @@ async function checkMigration() {
             outdatedResolutions.length > 0
         ) {
             const answer = await question(
-                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically? [y/n]: "
+                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically? [Y/n]: "
             );
             if (answer === "y") {
                 try {
@@ -152,10 +166,7 @@ async function checkMigration() {
                     }
                     // Writes the new package keeping the current format
                     await writeJson(packageJsonPath, newPackageJson, { spaces: 2 });
-                    const npmInstallQuestion = await question("Do you want to execute npm install? [y/n]: ");
-                    if (npmInstallQuestion === "y") {
-                        execSync("npm install", { cwd: process.cwd(), stdio: "inherit" });
-                    }
+                    execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
                 } catch (e) {
                     console.log(red("An error occurred while auto updating your dependencies"));
                     console.error(e);

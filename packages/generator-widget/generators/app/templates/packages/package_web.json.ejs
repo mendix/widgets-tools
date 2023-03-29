@@ -33,9 +33,7 @@
     "@types/enzyme": "^3.10.8",
     "@types/enzyme-adapter-react-16": "^1.0.6",<% } %><% if (hasE2eTests) { %>
     "@types/jasmine": "^3.6.9",<% } %><% if (hasUnitTests) { %>
-    "@types/jest": "^29.0.0",<% } %>
-    "@types/react": "~18.0.0",
-    "@types/react-dom": "~18.0.0"<% if (hasUnitTests) { %>,
+    "@types/jest": "^29.0.0"<% } %><% if (hasUnitTests) { %>,
     "@types/react-test-renderer": "~18.0.0"<% } %><% } %><% if (hasE2eTests) { %>,
     "cypress": "^10.10.0"<% } %>
   },
