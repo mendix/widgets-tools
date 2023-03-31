@@ -91,7 +91,7 @@ ${generatePreviewTypeBody(childProperties, generatedTypes, resolveChildProp)}
             );
             return prop.$.isList === "true" ? `${childType}[]` : childType;
         case "widgets":
-            return "{ widgetCount: number; renderer: ComponentType<{ caption?: string }> }";
+            return "{ widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> }";
         case "selection":
             if (!prop.selectionTypes?.length) {
                 throw new Error("[XML] Selection property requires selectionTypes element");
