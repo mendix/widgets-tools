@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+-   We updated the Mendix package to version 9.24.2965.
+
 -   We bumped the pinned version of TypeScript to 4.9.5.
 
 -   We updated the typings generator for icon properties to support icon collections, introduced in Mendix 9.24.

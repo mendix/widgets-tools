@@ -77,7 +77,7 @@
     "jest-jasmine2": "^29.0.3",
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
-    "mendix": "^9.22.62233",
+    "mendix": "^9.24.2965",
     "metro-react-native-babel-preset": "^0.74.1",
     "node-fetch": "^2.6.1",
     "postcss": "^8.3.11",
