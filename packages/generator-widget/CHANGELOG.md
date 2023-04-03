@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.24.1] - 2023-04-03
+
 ### Fixed
 
 -   We fixed the broken package.json templates for native and web when generating widgets without unit/e2e tests
