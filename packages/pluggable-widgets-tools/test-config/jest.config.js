@@ -23,7 +23,6 @@ module.exports = {
         "^.+\\.tsx?$": [
             "ts-jest",
             {
-                isolatedModules: true,
                 tsconfig: { module: "commonjs" }
             }
         ],
