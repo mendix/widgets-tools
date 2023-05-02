@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-### Fixes
+### Fixed
 
--  We fixed few issues with Jest while executing unit tests
+-   We fixed few issues with Jest while executing unit tests
 
 ## [9.24.0] - 2023-03-31
 
