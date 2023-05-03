@@ -51,6 +51,11 @@ jobs:
         if: steps.filter.outputs.packages == 'true'
         run: npm run test
 
+      - name: "Running generator-widget unit tests"
+        working-directory: ./packages/generator-widget
+        if: steps.filter.outputs.packages == 'true'
+        run: npm run test
+
       - name: "Linting generator-widget"
         working-directory: ./packages/generator-widget
         if: steps.filter.outputs.packages == 'true'
