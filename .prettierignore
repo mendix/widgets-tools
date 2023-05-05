@@ -1,4 +1,5 @@
-packages/generator-widget/generators/app/templates
+packages/generator-widget/generators/app/templates/packages/__tests__/outputs/
+packages/generator-widget/generators/app/templates/**/*.ejs
 packages/pluggable-widgets-tools/tests/projects
 *.png
 *.svg

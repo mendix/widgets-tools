@@ -1,0 +1,39 @@
+{
+  "name": "Widget test",
+  "widgetName": "Widget test",
+  "version": "1.0.0",
+  "description": "Widget description",
+  "copyright": "Mendix 2023",
+  "author": "Jest",
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "Apache-2.0",
+  "config": {
+    "projectPath": "./dist/MxTestProject"
+  },
+  "packagePath": "mendix",
+  "scripts": {
+    "start": "pluggable-widgets-tools start:native",
+    "build": "pluggable-widgets-tools build:native",
+    "lint": "pluggable-widgets-tools lint",
+    "lint:fix": "pluggable-widgets-tools lint:fix",
+    "prerelease": "npm run lint",
+    "release": "pluggable-widgets-tools release:native"
+  },
+  "devDependencies": {
+    "@mendix/pluggable-widgets-tools": "^9.24.0",
+    "@types/big.js": "^6.0.2"
+  },
+  "dependencies": {
+
+  },
+  "resolutions": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-native": "0.70.7"
+  }
+}
