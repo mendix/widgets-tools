@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 -   We fixed few issues with Jest while executing unit tests
+-   We fixed a few issues caused by missing dependencies on package.json
+-   We fixed a jest setup issue causing enzyme.render not to work properly
 
 ## [9.24.0] - 2023-03-31
 
