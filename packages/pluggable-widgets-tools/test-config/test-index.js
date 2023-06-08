@@ -1,3 +1,4 @@
+require("@testing-library/jest-dom");
 const { TextEncoder, TextDecoder } = require("util");
 const { configure: configureEnzyme } = require("enzyme");
 const Adapter = require("@cfaester/enzyme-adapter-react-18").default;
