@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [9.24.2] - 2023-06-09
+
 ### Fixed
 
 -   We fixed a problem preventing typescript templates with e2e tests from being generated.
