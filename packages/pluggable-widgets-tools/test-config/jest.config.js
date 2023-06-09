@@ -1,14 +1,4 @@
 const { join } = require("path");
-const { TextEncoder, TextDecoder } = require("util");
-
-Object.defineProperties(global, {
-    TextEncoder: {
-        value: TextEncoder
-    },
-    TextDecoder: {
-        value: TextDecoder
-    }
-});
 
 const projectDir = process.cwd();
 
