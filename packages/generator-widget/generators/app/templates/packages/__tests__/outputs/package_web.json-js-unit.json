@@ -27,7 +27,7 @@
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.24.0"
+    "@mendix/pluggable-widgets-tools": "^10.0.0"
   },
   "dependencies": {
     "classnames": "^2.2.6"

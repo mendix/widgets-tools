@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated pluggable-widgets-tools dependency from ^9.24.0 to ^10.0.0.
+
 ## [9.24.2] - 2023-06-09
 
 ### Fixed

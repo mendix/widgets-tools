@@ -26,7 +26,7 @@
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.24.0",
+    "@mendix/pluggable-widgets-tools": "^10.0.0",
     "cypress": "^10.10.0"
   },
   "dependencies": {

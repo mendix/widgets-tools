@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "9.24.1",
+  "version": "10.0.0",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=16"
@@ -80,7 +80,7 @@
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
     "make-dir": "^3.1.0",
-    "mendix": "^9.24.2965",
+    "mendix": "^10.0.9976",
     "metro-react-native-babel-preset": "^0.74.1",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
