@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the Mendix package to version 10.0.9976.
+
+### Removed
+
+-   The ability to call a [linked property value](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/#linked-values) directly as a function, which was deprecated in Mendix 9.0, has been removed from the widgets API.
+
 ## [9.24.1] - 2023-06-09
 
 ### Fixed
