@@ -9,7 +9,6 @@
         "moduleResolution": "node",
         "declaration": false,
         "noLib": false,
-        "watch": false,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
         "strict": true,
