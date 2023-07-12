@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We removed `watch` option form base config for typescript
+
 ## [10.0.0] - 2023-06-27
 
 ### Changed
