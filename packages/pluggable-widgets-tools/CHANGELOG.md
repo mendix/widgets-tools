@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.0.1] - 2023-08-24
+
 ### Fixed
 
 -   We fixed a bug in rollup-plugin-assets causing assets url on windows to not have the correct path separator (Ticket 194099).
