@@ -61,7 +61,7 @@ export default function url(options = {}) {
                         .replace(/\[dirname\]/g, relativeDir === "" ? "" : `${relativeDir}${sep}`)
                         .replace(/\[name\]/g, name);
                     // Windows fix - exports must be in unix format
-                    data = `${publicPath}${outputFileName.split(sep).join(posix.sep)}`;
+                    data = (publicPath + outputFileName).split(sep).join(posix.sep);
                     copies[id] = outputFileName;
                 } else {
                     const mimetype = mime.getType(id);

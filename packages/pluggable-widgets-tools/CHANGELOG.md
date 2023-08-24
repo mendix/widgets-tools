@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed a bug in rollup-plugin-assets causing assets url on windows to not have the correct path separator (Ticket 194099).
+
 ### Changed
 
 -   We removed `watch` option from base config for typescript
