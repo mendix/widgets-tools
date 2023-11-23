@@ -28,6 +28,8 @@ jobs:
           filters: |
             packages:
               - 'packages/**/*'
+            tests:
+              - 'tests/**/*'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -46,14 +48,14 @@ jobs:
 
       - name: "Installing dependencies"
         working-directory: ./
-        if: steps.filter.outputs.packages == 'true'
+        if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
         run: npm install
 
       - name: Increase number of watchers
-        if: steps.filter.outputs.packages == 'true' && startsWith(matrix.os, 'ubuntu')
+        if: (steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true') && startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: "Testing PWT commands"
         working-directory: ./
-        if: steps.filter.outputs.packages == 'true'
+        if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
         run: npm run test:pwt:commands
