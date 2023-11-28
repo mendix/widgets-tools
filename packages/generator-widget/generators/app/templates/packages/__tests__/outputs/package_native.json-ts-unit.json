@@ -27,7 +27,7 @@
     "output": "./dist/testresults/TESTS-Jest.xml"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.0.0",
+    "@mendix/pluggable-widgets-tools": "^10.5.0",
     "@types/big.js": "^6.0.2",
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^29.0.0"
