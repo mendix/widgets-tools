@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--   We updated the templates package_web.json and package_namtive.json to use @mendix/pluggable-widgets-tools version 10.5.0.
+-   We updated the templates package_web.json and package_native.json to use @mendix/pluggable-widgets-tools version 10.5.0.
 
 ## [10.0.0] - 2023-06-27
 
