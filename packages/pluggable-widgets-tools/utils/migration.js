@@ -45,13 +45,18 @@ const dependencies = [
     { name: "react-native-push-notification", version: "8.1.1", check: CheckType.MAJOR_MINOR },
     { name: "react-native-webview", version: "11.26.1", check: CheckType.MAJOR_MINOR }
 ];
+
+const reactVersion = "18.2.0";
+const reactDomVersion = "18.2.0";
+const reactNativeVersion = "0.70.7";
+
 const resolutionsOverrides = [
-    { name: "react", version: "18.2.0", check: CheckType.MAJOR_MINOR },
-    { name: "react-dom", version: "18.2.0", check: CheckType.MAJOR_MINOR },
-    { name: "react-native", version: "0.70.7", check: CheckType.MINOR },
-    { name: "@types/react", version: "18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-dom", version: "18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-native", version: "0.70.0", check: CheckType.MINOR }
+    { name: "react", version: reactVersion, check: CheckType.MAJOR_MINOR },
+    { name: "react-dom", version: reactDomVersion, check: CheckType.MAJOR_MINOR },
+    { name: "react-native", version: reactNativeVersion, check: CheckType.MINOR },
+    { name: "@types/react", version: reactVersion, check: CheckType.MAJOR },
+    { name: "@types/react-dom", version: reactDomVersion, check: CheckType.MAJOR },
+    { name: "@types/react-native", version: reactNativeVersion, check: CheckType.MINOR }
 ];
 
 function extractVersions(version) {
