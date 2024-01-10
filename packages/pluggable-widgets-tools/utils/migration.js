@@ -46,17 +46,17 @@ const dependencies = [
     { name: "react-native-webview", version: "11.26.1", check: CheckType.MAJOR_MINOR }
 ];
 
-const reactVersion = "18.2.0";
-const reactDomVersion = "18.2.0";
-const reactNativeVersion = "0.70.7";
+const reactPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
+const reactDomPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
+const reactNativePackage = { version: "0.70.7", check: CheckType.MINOR };
 
 const resolutionsOverrides = [
-    { name: "react", version: reactVersion, check: CheckType.MAJOR_MINOR },
-    { name: "react-dom", version: reactDomVersion, check: CheckType.MAJOR_MINOR },
-    { name: "react-native", version: reactNativeVersion, check: CheckType.MINOR },
-    { name: "@types/react", version: reactVersion, check: CheckType.MAJOR },
-    { name: "@types/react-dom", version: reactDomVersion, check: CheckType.MAJOR },
-    { name: "@types/react-native", version: reactNativeVersion, check: CheckType.MINOR }
+    { name: "react", ...reactPackage },
+    { name: "react-dom", ...reactDomPackage },
+    { name: "react-native", ...reactNativePackage },
+    { name: "@types/react", ...reactPackage },
+    { name: "@types/react-dom", ...reactDomPackage },
+    { name: "@types/react-native", ...reactNativePackage }
 ];
 
 function extractVersions(version) {
