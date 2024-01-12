@@ -171,6 +171,9 @@ async function checkMigration() {
                     }
                     // Writes the new package keeping the current format
                     await writeJson(packageJsonPath, newPackageJson, { spaces: 2 });
+                    console.log("Deleting old dependencies...");
+                    execSync("shx rm -rf ./{node_modules,package-lock.json}", { cwd: process.cwd(), stdio: "inherit" });
+                    console.log("Done.");
                     execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
                 } catch (e) {
                     console.log(red("An error occurred while auto updating your dependencies"));
