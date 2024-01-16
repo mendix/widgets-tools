@@ -105,6 +105,7 @@
     "sass": "^1.43.4",
     "semver": "^7.3.2",
     "shelljs": "^0.8.4",
+    "shx": "^0.3.3",
     "ts-jest": "^29.0.0",
     "ts-node": "^9.0.0",
     "typescript": "4.9.5",
@@ -115,7 +116,6 @@
     "@mendix/generator-widget": ">=8.9.0",
     "@types/xml2js": "^0.4.5",
     "async-mutex": "^0.2.4",
-    "shx": "^0.3.3",
     "tree-kill": "^1.2.2",
     "yeoman-test": "^6.2.0"
   },

@@ -45,13 +45,18 @@ const dependencies = [
     { name: "react-native-push-notification", version: "8.1.1", check: CheckType.MAJOR_MINOR },
     { name: "react-native-webview", version: "11.26.1", check: CheckType.MAJOR_MINOR }
 ];
+
+const reactPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
+const reactDomPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
+const reactNativePackage = { version: "0.70.7", check: CheckType.MINOR };
+
 const resolutionsOverrides = [
-    { name: "react", version: "18.2.0", check: CheckType.MAJOR_MINOR },
-    { name: "react-dom", version: "18.2.0", check: CheckType.MAJOR_MINOR },
-    { name: "react-native", version: "0.70.7", check: CheckType.MINOR },
-    { name: "@types/react", version: "18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-dom", version: "18.0.0", check: CheckType.MAJOR },
-    { name: "@types/react-native", version: "0.70.0", check: CheckType.MINOR }
+    { name: "react", ...reactPackage },
+    { name: "react-dom", ...reactDomPackage },
+    { name: "react-native", ...reactNativePackage },
+    { name: "@types/react", ...reactPackage },
+    { name: "@types/react-dom", ...reactDomPackage },
+    { name: "@types/react-native", ...reactNativePackage }
 ];
 
 function extractVersions(version) {
@@ -138,7 +143,8 @@ async function checkMigration() {
             outdatedResolutions.length > 0
         ) {
             const answer = await question(
-                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically? [Y/n]: "
+                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically?" +
+                "Note that this operation will delete your node_modules folder and package-lock.json files and re-create them. [Y/n]: "
             );
             if (answer === "y") {
                 try {
@@ -166,6 +172,9 @@ async function checkMigration() {
                     }
                     // Writes the new package keeping the current format
                     await writeJson(packageJsonPath, newPackageJson, { spaces: 2 });
+                    console.log("Deleting old dependencies...");
+                    execSync("shx rm -rf ./{node_modules,package-lock.json}", { cwd: process.cwd(), stdio: "inherit" });
+                    console.log("Done.");
                     execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
                 } catch (e) {
                     console.log(red("An error occurred while auto updating your dependencies"));
