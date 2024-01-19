@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed an issue where migration caused a misalignment between versions for react, react-dom, react-native packages and their corresponding @types packages.
+
 ## [10.5.0] - 2023-12-01
 
 ### Changed
