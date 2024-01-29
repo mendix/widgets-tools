@@ -1,10 +1,11 @@
 {
   "name": "@mendix/generator-widget",
-  "version": "10.5.0",
+  "version": "10.5.1",
   "description": "Mendix Pluggable Widgets Generator",
   "engines": {
     "node": ">=16"
   },
+  "bin": "./bin.js",
   "main": "app/index.js",
   "scripts": {
     "test": "jest --config ./jest.config.js",
