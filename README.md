@@ -16,7 +16,13 @@ A toolset to build, test, format, run, release and lint Mendix Pluggable Widgets
 
 ## Generator widget
 
-Yeoman scaffolding tool to let you quickly create a Mendix Pluggable Widget.
+Scaffolding tool to let you quickly create a Mendix Pluggable Widget.
+
+#### Note
+
+-   If you are running the generator through multiple operating systems (e.g. running a virtualized OS with Parallels on MacOS or any other virtualization software), make sure you have the right privileges and use the same OS for generation and file manipulation.
+
+-   If you want to test locally your changes to the Generator Widget, simply link the package running `npm link` inside the `packages/generator-widget/` folder and then you will be able to run `yo widget SomeWidgetName`
 
 [Source](./packages/generator-widget/) | [NPM Package](https://www.npmjs.com/package/@mendix/generator-widget)
 
