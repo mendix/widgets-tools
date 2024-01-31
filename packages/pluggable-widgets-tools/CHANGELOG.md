@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.7.0] - 2024-01-31
+
 ### Changed
 
 -   We updated the Mendix package to version 10.7.26214.
