@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We introduced an easier way to scaffold a pluggable widget using an npx command without the need to install Yeoman Generator and the @mendix/generator-widget package.
+
 ## [10.5.0] - 2023-12-01
 
 ### Changed

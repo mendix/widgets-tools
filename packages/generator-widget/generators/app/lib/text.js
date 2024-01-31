@@ -19,7 +19,7 @@ module.exports = {
     `,
 
     DIR_NOT_EMPTY_ERROR: chalk.bold.red(
-        "The directory you are trying to use is not empty, please open the generator in an empty folder or type yo @mendix/widget WidgetName\n"
+        "The directory you are trying to use is not empty, please open the generator in an empty folder or type npx @mendix/generator-widget WidgetName\n"
     ),
     INSTALL_FINISH_MSG:
         "File configuration done, now running " + chalk.blueBright("npm install") + " to install dependencies",

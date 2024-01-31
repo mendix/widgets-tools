@@ -1,4 +1,4 @@
-# Pluggable Widgets Generator
+# Mendix Pluggable Widgets Generator
 
 ![npm version](https://badge.fury.io/js/%40mendix%2Fgenerator-widget.svg)
 ![Mendix 8](https://img.shields.io/badge/mendix-8.0.0-brightgreen.svg)
@@ -7,39 +7,26 @@
 ![GitHub release](https://img.shields.io/github/release/mendix/widgets-tools)
 ![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-tools)
 
-> [Yeoman](http://yeoman.io) generator for Mendix Pluggable Widgets.
-
 ## About
 
-This generator uses the Yeoman scaffolding tool to let you quickly create a [Mendix Pluggable Widget](https://docs.mendix.com/howto/extensibility/pluggable-widgets).
+The Mendix Pluggable Widget Generator is a scaffolding tool to let you quickly create a [Mendix Pluggable Widget](https://docs.mendix.com/howto/extensibility/pluggable-widgets).
 
 ## Installation
 
-1. Install [node.js](https://nodejs.org/) (version >= 12).
-1. Install [Yeoman](http://yeoman.io):
-
-    ```bash
-    npm install -g yo
-    ```
-
-1. Install Pluggable Widgets Generator:
-
-    ```bash
-    npm install -g @mendix/generator-widget
-    ```
+1. Install [node.js](https://nodejs.org/) (version >= 16).
 
 ## Scaffold a widget project
 
 1. Generate your new project inside an empty folder:
 
     ```bash
-    yo @mendix/widget
+    npx @mendix/generator-widget
     ```
 
     or automatically create the folder using:
 
     ```bash
-    yo @mendix/widget MyWidgetName
+    npx @mendix/generator-widget MyWidgetName
     ```
 
     Note that `MyWidgetName` can consist of space characters as well.
@@ -112,10 +99,6 @@ npm run release
     ```bash
     npm start
     ```
-
--   If you are running the generator through multiple operating systems (e.g. running a virtualized OS with Parallels on MacOS or any other virtualization software), make sure you have the right privileges and use the same OS for generation and file manipulation.
-
--   If you want to test locally your changes to the Generator Widget, simply link the package running `npm link` inside the `packages/generator-widget/` folder and then you will be able to run `yo widget SomeWidgetName`
 
 ## Issues
 
