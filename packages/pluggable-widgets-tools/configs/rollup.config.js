@@ -9,7 +9,7 @@ import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
-import { red, yellow, blue } from "ansi-colors";
+import { red, blue } from "ansi-colors";
 import postcssImport from "postcss-import";
 import postcssUrl from "postcss-url";
 import loadConfigFile from "rollup/dist/loadConfigFile";
@@ -280,8 +280,17 @@ export default async args => {
         ];
     }
 
-    function onwarn(warning) {
-        const description =
+    function onwarn(warning, warn) {
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+
+        // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
+        // except a short white-list which we know is safe _and_ not easily fixable.
+        const safeWarnings = ["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"];
+        if (safeWarnings.includes(warning.code)) {
+            return warn(warning);
+        }
+
+        const error =
             (warning.plugin ? `(${warning.plugin} plugin) ` : "") +
             (warning.loc
                 ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) `
@@ -289,17 +298,8 @@ export default async args => {
             `Error: ${warning.message}` +
             (warning.frame ? warning.frame : "");
 
-        // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
-        // except a short white-list which we know is safe _and_ not easily fixable.
-        if (["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"].includes(warning.code)) {
-            console.warn(yellow(description));
-        } else if (args.watch) {
-            // Do not break watch mode because of an error. Also don't use console.error, since it is overwritten by rollup
-            console.warn(red(description));
-        } else {
-            console.error(red(description));
-            process.exit(1);
-        }
+        console.error(red(error));
+        process.exit(1);
     }
 };
 
