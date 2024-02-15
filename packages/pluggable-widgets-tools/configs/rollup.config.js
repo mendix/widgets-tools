@@ -281,12 +281,15 @@ export default async args => {
     }
 
     function onwarn(warning, warn) {
+        // Module level directives is ignored by Rollup since it causes error when bundled.
+        // And to not pollute the terminal, the warning code "MODULE_LEVEL_DIRECTIVE"
+        // should be ignored and handled separetely from the safe warning list.
         if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
 
         // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
         // except a short white-list which we know is safe _and_ not easily fixable.
         const safeWarnings = ["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"];
-        if (safeWarnings.includes(warning.code)) {
+        if (args.watch || safeWarnings.includes(warning.code)) {
             return warn(warning);
         }
 
