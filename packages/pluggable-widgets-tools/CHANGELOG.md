@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.7.1] - 2024-02-15
+
 ### Fixed
 
 -   We fixed an issue where rollup warnings about `use client` and `use server` were causing bundling failures.
