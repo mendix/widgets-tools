@@ -3,8 +3,8 @@ const { createInterface } = require("readline");
 const { readJson, writeJson } = require("fs-extra");
 const { execSync } = require("child_process");
 const { red, green, yellow } = require("ansi-colors");
-const { copyFileSync, existsSync, mkdirSync } = require("fs");
-
+const { copyFileSync, existsSync, mkdirSync, readFile, promises } = require("fs");
+const { parseStringPromise } = require("xml2js");
 let requirePatch = false;
 
 const CheckType = {
@@ -114,8 +114,8 @@ function replaceOldDependencies(listOfOutdatedDependencies, packageJson, key) {
     }
 }
 
-function addExtraDependencies(packageJson, key) {
-    const dependenciesToAdd = resolutionsOverrides.filter(ov => !packageJson[key] || !packageJson[key][ov.name]);
+async function addExtraDependencies(packageJson, key) {
+    const dependenciesToAdd = await getExtraDependencies(packageJson, key);
     if (dependenciesToAdd.length > 0) {
         console.log(green(`The following ${key} were added:`));
         packageJson[key] = packageJson[key] || {};
@@ -124,6 +124,56 @@ function addExtraDependencies(packageJson, key) {
             console.log(green(`${dep.name}: ${dep.version}`));
         });
     }
+}
+
+async function getExtraDependencies(packageJson, key) {
+    const sourceDir = process.cwd();
+    const rawPackageXML = await promises.readFile(join(sourceDir, "src/package.xml"), 'utf-8');
+    if (!rawPackageXML) {
+        throw new Error("package.xml file was not found, please check your src folder");
+    }
+
+    const parsedPackageXML = await parseStringPromise(rawPackageXML);
+    if (!parsedPackageXML) {
+        throw new Error("Empty package.xml file, please check your src folder");
+    }
+
+    const widgetDefinitionXMLPaths = parsedPackageXML.package.clientModule[0].widgetFiles
+        .map(wf => wf.widgetFile)
+        .reduce((a, e) => a.concat(e), [])
+        .filter(wfXml => wfXml.$.path);
+    if (widgetDefinitionXMLPaths.length === 0)
+        throw new Error("Path to the widget definition XML file(s) could not be found, please check your package.xml file")
+
+    const parsedWidgetDefinitionXMLs = [];
+    for (const widgetDefinitionXMLPath of widgetDefinitionXMLPaths) {
+        const rawWidgetDefinitionXML = await promises.readFile(join(sourceDir, 'src/', widgetDefinitionXMLPath.$.path), 'utf-8');
+        if (!rawWidgetDefinitionXML) {
+            throw new Error(`Widget definition XML file (with path ${widgetDefinitionXMLPath}) could not be found, please check your src folder`)
+        }
+        const parsedWidgetDefinitionXML = await parseStringPromise(rawWidgetDefinitionXML);
+        if (!parsedWidgetDefinitionXML) {
+            throw new Error(`Widget definition XML file (with path ${widgetDefinitionXMLPath}) is empty, please check your src folder`)
+        }
+        parsedWidgetDefinitionXMLs.push(parsedWidgetDefinitionXML);
+    }
+
+    const supportedPlatforms = [];
+    for (const parsedWidgetDefinitionXML of parsedWidgetDefinitionXMLs) {
+        const supportedPlatform = parsedWidgetDefinitionXML.widget.$.supportedPlatform;
+        if (!supportedPlatform) {
+            throw new Error("supportedPlatform attribute is missing, please check your widget definition XML file");
+        }
+        supportedPlatforms.push(supportedPlatform);
+    }
+
+    let extraDependencies = resolutionsOverrides.filter(ov => !packageJson[key] || !packageJson[key][ov.name]);
+    if (!supportedPlatforms.includes("Native"))
+        extraDependencies = extraDependencies.filter(d => d.name !== "react-native" && d.name !== "@types/react-native")
+    if (!supportedPlatforms.includes("Web"))
+        extraDependencies = extraDependencies.filter(d => d.name !== "react-dom" && d.name !== "@types/react-dom");
+
+    return extraDependencies;
 }
 
 async function checkMigration() {
@@ -156,8 +206,8 @@ async function checkMigration() {
                     replaceOldDependencies(outdatedResolutions, newPackageJson, "resolutions");
 
                     // We check if any dependency should be added in overrides/resolutions
-                    addExtraDependencies(newPackageJson, "overrides");
-                    addExtraDependencies(newPackageJson, "resolutions");
+                    await addExtraDependencies(newPackageJson, "overrides");
+                    await addExtraDependencies(newPackageJson, "resolutions");
 
                     // If any package requires a patch we make sure to install patch-package and add the script
                     if (requirePatch) {
