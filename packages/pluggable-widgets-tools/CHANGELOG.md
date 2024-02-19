@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We synced the versions of resolution and override packages.
 
+### Added
+
+-   We added new `jest.enzyme-free.config.js` config file that don't include enzyme as dependency.
+
 ## [10.7.1] - 2024-02-15
 
 ### Fixed
