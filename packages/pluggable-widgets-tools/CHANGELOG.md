@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We moved Pluggable Widgets Tools dependencies marked as external in rollup configuration files to devDependencies in the package.json.
+
+-   We synced the version of @types/react package.
+
+-   We synced the versions of resolution and override packages.
+
 ## [10.7.1] - 2024-02-15
 
 ### Fixed

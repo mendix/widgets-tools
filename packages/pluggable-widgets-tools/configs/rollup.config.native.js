@@ -35,6 +35,36 @@ const outWidgetFile = join(widgetPackage.replace(/\./g, "/"), widgetName.toLower
 const mpkDir = join(sourcePath, "dist", widgetVersion);
 const mpkFile = join(mpkDir, process.env.MPKOUTPUT ? process.env.MPKOUTPUT : `${widgetPackage}.${widgetName}.mpk`);
 
+const extensions = [".js", ".jsx", ".tsx", ".ts"];
+
+const editorConfigExternal = [
+    // "mendix" and internals under "mendix/"
+    /^mendix($|\/)/,
+
+    // "react"
+    /^react$/,
+
+    // "react/jsx-runtime"
+    /^react\/jsx-runtime$/,
+
+    // "react-dom"
+    /^react-dom$/
+];
+
+const nativeExternal = [
+    /^mendix($|\/)/,
+    /^react-native($|\/)/,
+    /^big.js$/,
+    /^react($|\/)/,
+    /^react-native-gesture-handler($|\/)/,
+    /^react-native-reanimated($|\/)/,
+    /^react-native-fast-image($|\/)/,
+    /^react-native-svg($|\/)/,
+    /^react-native-vector-icons($|\/)/,
+    /^react-navigation($|\/)/,
+    /^react-native-safe-area-context($|\/)/
+];
+
 export default async args => {
     const production = Boolean(args.configProduction);
 
@@ -250,33 +280,3 @@ export default async args => {
         }
     }
 };
-
-const extensions = [".js", ".jsx", ".tsx", ".ts"];
-
-const editorConfigExternal = [
-    // "mendix" and internals under "mendix/"
-    /^mendix($|\/)/,
-
-    // "react"
-    /^react$/,
-
-    // "react/jsx-runtime"
-    /^react\/jsx-runtime$/,
-
-    // "react-dom"
-    /^react-dom$/
-];
-
-const nativeExternal = [
-    /^mendix($|\/)/,
-    /^react-native($|\/)/,
-    /^big.js$/,
-    /^react($|\/)/,
-    /^react-native-gesture-handler($|\/)/,
-    /^react-native-reanimated($|\/)/,
-    /^react-native-fast-image($|\/)/,
-    /^react-native-svg($|\/)/,
-    /^react-native-vector-icons($|\/)/,
-    /^react-navigation($|\/)/,
-    /^react-native-safe-area-context($|\/)/
-];

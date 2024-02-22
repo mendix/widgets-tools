@@ -45,6 +45,22 @@ const assetsDirName = "assets";
 const absoluteOutAssetsDir = join(absoluteOutPackageDir, assetsDirName);
 const outAssetsDir = join(outWidgetDir, assetsDirName);
 
+const commonExternalLibs = [
+    // "mendix" and internals under "mendix/"
+    /^mendix($|\/)/,
+
+    // "react"
+    /^react$/,
+
+    // "react/jsx-runtime"
+    /^react\/jsx-runtime$/,
+
+    // "react-dom"
+    /^react-dom$/
+];
+
+const webExternal = [...commonExternalLibs, /^big.js$/];
+
 /**
  * This function is used by postcss-url.
  * Its main purpose to "adjust" asset path so that
@@ -115,7 +131,7 @@ export default async args => {
                 file: join(outDir, `${widgetName}.editorPreview.js`),
                 sourcemap: !production ? "inline" : false
             },
-            external: editorPreviewExternal,
+            external: commonExternalLibs,
             plugins: [
                 postcss({
                     extensions: [".css", ".sass", ".scss"],
@@ -131,7 +147,7 @@ export default async args => {
                     extensions,
                     transpile: production,
                     babelConfig: { presets: [["@babel/preset-env", { targets: { safari: "12" } }]] },
-                    external: editorPreviewExternal
+                    external: commonExternalLibs
                 })
             ],
             onwarn
@@ -147,7 +163,7 @@ export default async args => {
                 file: join(outDir, `${widgetName}.editorConfig.js`),
                 sourcemap: false
             },
-            external: editorConfigExternal,
+            external: commonExternalLibs,
             treeshake: { moduleSideEffects: false },
             plugins: [
                 url({ include: ["**/*.svg"], limit: 143360 }), // SVG file size limit of 140 kB
@@ -156,7 +172,7 @@ export default async args => {
                     extensions,
                     transpile: true,
                     babelConfig: { presets: [["@babel/preset-env", { targets: { ie: "11" } }]] },
-                    external: editorConfigExternal
+                    external: commonExternalLibs
                 })
             ],
             onwarn
@@ -317,26 +333,6 @@ const imagesAndFonts = [
     "**/*.woff(2)?",
     "**/*.eot"
 ];
-
-const commonExternalLibs = [
-    // "mendix" and internals under "mendix/"
-    /^mendix($|\/)/,
-
-    // "react"
-    /^react$/,
-
-    // "react/jsx-runtime"
-    /^react\/jsx-runtime$/,
-
-    // "react-dom"
-    /^react-dom$/
-];
-
-const webExternal = commonExternalLibs.concat(/^big.js$/);
-
-const editorPreviewExternal = commonExternalLibs;
-
-const editorConfigExternal = commonExternalLibs;
 
 export function postCssPlugin(outputFormat, production, postcssPlugins = []) {
     return postcss({
