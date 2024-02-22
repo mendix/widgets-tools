@@ -45,6 +45,19 @@ const assetsDirName = "assets";
 const absoluteOutAssetsDir = join(absoluteOutPackageDir, assetsDirName);
 const outAssetsDir = join(outWidgetDir, assetsDirName);
 
+const imagesAndFonts = [
+    "**/*.svg",
+    "**/*.png",
+    "**/*.jp(e)?g",
+    "**/*.gif",
+    "**/*.webp",
+    "**/*.ttf",
+    "**/*.woff(2)?",
+    "**/*.eot"
+];
+
+const extensions = [".js", ".jsx", ".tsx", ".ts"];
+
 const commonExternalLibs = [
     // "mendix" and internals under "mendix/"
     /^mendix($|\/)/,
@@ -321,18 +334,6 @@ export default async args => {
         process.exit(1);
     }
 };
-
-const extensions = [".js", ".jsx", ".tsx", ".ts"];
-const imagesAndFonts = [
-    "**/*.svg",
-    "**/*.png",
-    "**/*.jp(e)?g",
-    "**/*.gif",
-    "**/*.webp",
-    "**/*.ttf",
-    "**/*.woff(2)?",
-    "**/*.eot"
-];
 
 export function postCssPlugin(outputFormat, production, postcssPlugins = []) {
     return postcss({
