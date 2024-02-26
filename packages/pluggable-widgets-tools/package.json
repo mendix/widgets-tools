@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "10.7.1",
+  "version": "10.7.2",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=16"
@@ -47,8 +47,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.0.0",
-    "@types/react-native": "^0.70.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/react-native": "^0.72.7",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
@@ -122,12 +122,14 @@
   "overrides": {
     "colors": "1.4.0",
     "react": "$react",
-    "react-dom": "$react-dom"
+    "react-dom": "$react-dom",
+    "react-native": "$react-native"
   },
   "resolutions": {
     "colors": "1.4.0",
     "react": "$react",
-    "react-dom": "$react-dom"
+    "react-dom": "$react-dom",
+    "react-native": "$react-native"
   },
   "keywords": [
     "typings",

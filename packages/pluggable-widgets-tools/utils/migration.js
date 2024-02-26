@@ -48,7 +48,7 @@ const dependencies = [
 
 const reactPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
 const reactDomPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
-const reactNativePackage = { version: "0.70.7", check: CheckType.MINOR };
+const reactNativePackage = { version: "0.72.7", check: CheckType.MINOR };
 
 const resolutionsOverrides = [
     { name: "react", ...reactPackage },
