@@ -193,7 +193,7 @@ async function checkMigration() {
             outdatedResolutions.length > 0
         ) {
             const answer = await question(
-                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically?" +
+                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically? " +
                 "Note that this operation will delete your node_modules folder and package-lock.json files and re-create them. [Y/n]: "
             );
             if (answer === "y") {
