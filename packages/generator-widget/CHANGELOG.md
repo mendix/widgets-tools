@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
 -   We updated react-native dependency for the Yeoman generator from 0.70.7 to 0.72.7.
 
 ## [10.7.1] - 2024-02-15
