@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.7.2] - 2024-03-06
+
 ### Fixed
 
 -   We fixed an issue where the rollup process would sometimes hang and prevent the widget build/release script from completing.
@@ -17,7 +19,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 -   We synced the version of @types/react package.
 
 -   We synced the versions of resolution and override packages.
-
 
 ### Added
 
