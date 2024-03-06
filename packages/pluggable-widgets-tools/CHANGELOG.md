@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We synced the versions of resolution and override packages.
 
+-   We improved the widget migration script to exclude web dependencies for native widgets and vice versa.
+
 ## [10.7.1] - 2024-02-15
 
 ### Fixed

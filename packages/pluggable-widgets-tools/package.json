@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "10.7.1",
+  "version": "10.7.2",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=16"
@@ -47,14 +47,15 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.0.0",
-    "@types/react-native": "^0.70.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/react-native": "^0.72.7",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "ansi-colors": "4.1.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.0.0",
+    "big.js": "^6.0.2",
     "concurrently": "^6.0.0",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
@@ -79,6 +80,7 @@
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
     "make-dir": "^3.1.0",
+    "mendix": "^10.7.26214",
     "metro-react-native-babel-preset": "^0.74.1",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
@@ -111,8 +113,6 @@
     "@mendix/generator-widget": ">=8.9.0",
     "@types/xml2js": "^0.4.5",
     "async-mutex": "^0.2.4",
-    "big.js": "^6.0.2",
-    "mendix": "^10.7.26214",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "^0.72.7",
@@ -122,12 +122,14 @@
   "overrides": {
     "colors": "1.4.0",
     "react": "$react",
-    "react-dom": "$react-dom"
+    "react-dom": "$react-dom",
+    "react-native": "$react-native"
   },
   "resolutions": {
     "colors": "1.4.0",
     "react": "$react",
-    "react-dom": "$react-dom"
+    "react-dom": "$react-dom",
+    "react-native": "$react-native"
   },
   "keywords": [
     "typings",
