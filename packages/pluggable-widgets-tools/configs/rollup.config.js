@@ -186,7 +186,15 @@ export default async args => {
                     transpile: true,
                     babelConfig: { presets: [["@babel/preset-env", { targets: { ie: "11" } }]] },
                     external: commonExternalLibs
-                })
+                }),
+                {
+                    closeBundle() {
+                        if (!process.env.ROLLUP_WATCH) {
+                          setTimeout(() => process.exit(0));
+                        }
+                    },
+                    name: 'force-close'
+                }
             ],
             onwarn
         });

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed an issue where the rollup process would sometimes hang and prevent the widget build/release script from completing.
+
 ### Changed
 
 -   We moved Pluggable Widgets Tools dependencies marked as external in rollup configuration files to devDependencies in the package.json.
@@ -14,9 +18,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We synced the versions of resolution and override packages.
 
+
 ### Added
 
 -   We added a new configuration file named jest.enzyme-free.config.js that doesn't include enzyme as a dependency.
+
+-   We improved the widget migration script to exclude web dependencies for native widgets and vice versa.
 
 ## [10.7.1] - 2024-02-15
 
