@@ -18,6 +18,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We synced the versions of resolution and override packages.
 
+
+### Added
+
+-   We added a new configuration file named jest.enzyme-free.config.js that doesn't include enzyme as a dependency.
+
 -   We improved the widget migration script to exclude web dependencies for native widgets and vice versa.
 
 ## [10.7.1] - 2024-02-15
