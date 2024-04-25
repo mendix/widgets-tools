@@ -26,7 +26,8 @@ import {
     widgetEntry,
     widgetName,
     widgetPackage,
-    widgetVersion
+    widgetVersion,
+    onwarn
 } from "./shared";
 import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper";
 
@@ -124,11 +125,11 @@ export default async args => {
                     licenses: production && i === 0
                 })
             ],
-            onwarn: warning => {
+            onwarn: (warning, warn) => {
                 if (warning.code === "UNUSED_EXTERNAL_IMPORT" && /('|")Platform('|")/.test(warning.message)) {
                     return;
                 }
-                onwarn(warning);
+                onwarn(args)(warning, warn);
             }
         });
     });
@@ -154,7 +155,7 @@ export default async args => {
                     external: editorConfigExternal
                 })
             ],
-            onwarn
+            onwarn: onwarn(args)
         });
     }
 
@@ -256,27 +257,5 @@ export default async args => {
                 }
             ])
         ];
-    }
-
-    function onwarn(warning) {
-        const description =
-            (warning.plugin ? `(${warning.plugin} plugin) ` : "") +
-            (warning.loc
-                ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) `
-                : "") +
-            `Error: ${warning.message}` +
-            (warning.frame ? warning.frame : "");
-
-        // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
-        // except a short white-list which we know is safe _and_ not easily fixable.
-        if (["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"].includes(warning.code)) {
-            console.warn(yellow(description));
-        } else if (args.watch) {
-            // Do not break watch mode because of an error. Also don't use console.error, since it is overwritten by rollup
-            console.warn(red(description));
-        } else {
-            console.error(red(description));
-            process.exit(1);
-        }
     }
 };

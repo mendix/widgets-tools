@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { existsSync } from "fs";
-import { join, relative } from "path";
+import { join } from "path";
 import alias from "@rollup/plugin-alias";
 import { getBabelInputPlugin, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
@@ -9,7 +9,7 @@ import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
-import { red, blue } from "ansi-colors";
+import { blue } from "ansi-colors";
 import postcssImport from "postcss-import";
 import postcssUrl from "postcss-url";
 import loadConfigFile from "rollup/dist/loadConfigFile";
@@ -30,7 +30,8 @@ import {
     widgetEntry,
     widgetName,
     widgetPackage,
-    widgetVersion
+    widgetVersion,
+    onwarn
 } from "./shared";
 import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper";
 import url from "./rollup-plugin-assets";
@@ -132,7 +133,7 @@ export default async args => {
                     licenses: production && outputFormat === "amd"
                 })
             ],
-            onwarn
+            onwarn: onwarn(args)
         });
     });
 
@@ -163,7 +164,7 @@ export default async args => {
                     external: commonExternalLibs
                 })
             ],
-            onwarn
+            onwarn: onwarn(args)
         });
     }
 
@@ -196,7 +197,7 @@ export default async args => {
                     name: 'force-close'
                 }
             ],
-            onwarn
+            onwarn: onwarn(args)
         });
     }
 
@@ -315,31 +316,6 @@ export default async args => {
             ]),
             args.watch && !production && projectPath ? livereload() : null
         ];
-    }
-
-    function onwarn(warning, warn) {
-        // Module level directives is ignored by Rollup since it causes error when bundled.
-        // And to not pollute the terminal, the warning code "MODULE_LEVEL_DIRECTIVE"
-        // should be ignored and handled separetely from the safe warning list.
-        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
-
-        // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
-        // except a short white-list which we know is safe _and_ not easily fixable.
-        const safeWarnings = ["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"];
-        if (args.watch || safeWarnings.includes(warning.code)) {
-            return warn(warning);
-        }
-
-        const error =
-            (warning.plugin ? `(${warning.plugin} plugin) ` : "") +
-            (warning.loc
-                ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) `
-                : "") +
-            `Error: ${warning.message}` +
-            (warning.frame ? warning.frame : "");
-
-        console.error(red(error));
-        process.exit(1);
     }
 };
 
