@@ -29,6 +29,7 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
     myDataSource: {} | { caption: string } | { type: string } | null;
     expressionReturnTypeType: string;
     expressionReturnTypeTypeDataSource: string;

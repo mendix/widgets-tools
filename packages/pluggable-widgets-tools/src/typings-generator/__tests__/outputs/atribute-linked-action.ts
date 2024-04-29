@@ -14,6 +14,7 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
     collapsed: string;
     onToggleCollapsed: {} | null;
 }
@@ -51,6 +52,7 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
     onToggleCollapsed: {} | null;
     datasourceProperties: DatasourcePropertiesPreviewType[];
 }
