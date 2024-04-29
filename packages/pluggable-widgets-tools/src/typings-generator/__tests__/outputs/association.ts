@@ -27,6 +27,7 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
     reference: string;
     referenceSet: string;
     referenceOrSet: string;

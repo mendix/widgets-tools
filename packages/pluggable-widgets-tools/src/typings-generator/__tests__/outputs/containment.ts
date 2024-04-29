@@ -25,6 +25,7 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
     content: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     description: string;
     action: {} | null;
