@@ -28,7 +28,10 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    renderMode: "design" | "xray" | "structure";
+    /**
+     * Introduced in version 10.11.0 otherwise it will be undefined
+     */
+    renderMode?: "design" | "xray" | "structure";
     dataSource: {} | { caption: string } | { type: string } | null;
     reference: string;
     referenceSet: string;

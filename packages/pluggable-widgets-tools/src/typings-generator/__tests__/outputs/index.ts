@@ -52,7 +52,10 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    renderMode: "design" | "xray" | "structure";
+    /**
+     * Introduced in version 10.11.0 otherwise it will be undefined
+     */
+    renderMode?: "design" | "xray" | "structure";
     valueAttribute: string;
     mywidgetValue: string;
     valueExpression: string;
@@ -125,7 +128,10 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    renderMode: "design" | "xray" | "structure";
+    /**
+     * Introduced in version 10.11.0 otherwise it will be undefined
+     */
+    renderMode?: "design" | "xray" | "structure";
     valueAttribute: string;
     mywidgetValue: string;
     valueExpression: string;
@@ -189,7 +195,10 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
-    renderMode: "design" | "xray" | "structure";
+    /**
+     * Introduced in version 10.11.0 otherwise it will be undefined
+     */
+    renderMode?: "design" | "xray" | "structure";
     valueAttribute: string;
     mywidgetValue: string;
     valueExpression: string;
