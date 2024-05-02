@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { existsSync, readdirSync, promises as fs } from "fs";
-import { join } from "path";
+import { join, relative } from "path";
 import { config } from "dotenv";
+import { red } from "ansi-colors";
 
 config({ path: join(process.cwd(), ".env") });
 
@@ -47,6 +48,32 @@ export const projectPath = [
     join(sourcePath, "tests/testProject")
 ].filter(path => path && existsSync(path))[0];
 
+export const onwarn = (args) => (warning, warn) => {
+  // Module level directives is ignored by Rollup since it causes error when bundled.
+  // And to not pollute the terminal, the warning code "MODULE_LEVEL_DIRECTIVE" and "SOURCEMAP_ERROR"
+  // should be ignored and handled separetely from the safe warning list.
+  if (warning.code === "MODULE_LEVEL_DIRECTIVE" || warning.code === "SOURCEMAP_ERROR") return;
+
+  // Many rollup warnings are indication of some critical issue, so we should treat them as errors,
+  // except a short white-list which we know is safe _and_ not easily fixable.
+  const safeWarnings = ["CIRCULAR_DEPENDENCY", "THIS_IS_UNDEFINED", "UNUSED_EXTERNAL_IMPORT"];
+  if (args.watch || safeWarnings.includes(warning.code)) {
+      return warn(warning);
+  }
+
+  const error =
+      (warning.plugin ? `(${warning.plugin} plugin) ` : "") +
+      (warning.loc
+          ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) `
+          : "") +
+      `Error: ${warning.message}` +
+      (warning.frame ? warning.frame : "");
+
+  console.error(red(error));
+  process.exit(1);
+}
+
 function escape(str) {
     return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
 }
+
