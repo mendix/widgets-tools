@@ -27,6 +27,10 @@ export function generatePreviewTypes(
             : ""
     }
     readOnly: boolean;
+    /**
+     * Introduced in version 10.11.0 otherwise it will be undefined
+     */
+    renderMode?: "design" | "xray" | "structure";
 ${generatePreviewTypeBody(properties, results, resolveProp)}
 }`);
     return results;
