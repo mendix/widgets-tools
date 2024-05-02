@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Added
-- We added the renderMode parameter to the preview arguments. This flag will give developers the ability to customize the preview for different render modes namnely x-ray, structure and design.
+- We added the renderMode parameter to the preview arguments. This flag will give developers the ability to customize the preview for different render modes namely x-ray, structure and design.
 
 ## [10.7.2] - 2024-03-06
 
