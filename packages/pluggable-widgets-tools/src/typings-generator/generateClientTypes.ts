@@ -133,7 +133,16 @@ function toClientPropType(
                 .flatMap(ats => ats.attributeType)
                 .map(at => toAttributeClientType(at.$.name));
             const unionType = toUniqueUnionType(types);
-            return prop.$.dataSource ? `ListAttributeValue<${unionType}>` : `EditableValue<${unionType}>`;
+         
+            if (!prop.associationTypes?.length) {
+                return prop.$.dataSource ? `ListAttributeValue<${unionType}>` : `EditableValue<${unionType}>`;
+            }
+            else {
+                const reftypes = prop.associationTypes
+                    .flatMap(ats => ats.associationType)
+                    .map(at => toAttributeOutputType(at.$.name, !!prop.$.dataSource, unionType));
+                return toUniqueUnionType(reftypes);
+            }
         }
         case "association": {
             if (!prop.associationTypes?.length) {
@@ -273,6 +282,17 @@ export function toAssociationOutputType(xmlType: string, linkedToDataSource: boo
             return linkedToDataSource ? "ListReferenceValue" : "ReferenceValue";
         case "ReferenceSet":
             return linkedToDataSource ? "ListReferenceSetValue" : "ReferenceSetValue";
+        default:
+            return "any";
+    }
+}
+
+export function toAttributeOutputType(xmlType: string, linkedToDataSource: boolean, unionAttributeType: string) {
+    switch (xmlType) {
+        case "Reference":
+            return linkedToDataSource ?  `ListAttributeValue<${unionAttributeType}>` : `EditableValue<${unionAttributeType}>`;
+        case "ReferenceSet":
+            return linkedToDataSource ?  `ListAttributeListValue<${unionAttributeType}>` : `EditableListValue<${unionAttributeType}>`;
         default:
             return "any";
     }
