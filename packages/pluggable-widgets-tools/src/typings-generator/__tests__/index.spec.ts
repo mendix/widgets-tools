@@ -29,6 +29,8 @@ import { expressionInput, expressionInputNative } from "./inputs/expression";
 import { expressionWebOutput, expressionNativeOutput } from "./outputs/expression";
 import { selectionInput, selectionInputNative } from "./inputs/selection";
 import { selectionNativeOutput, selectionWebOutput } from "./outputs/selection";
+import { listAttributeNativeInput, listAttributeWebInput } from "./inputs/list-attribute-refset";
+import { listAttributeNativeOutput, listAttributeWebOutput } from "./outputs/list-attribute-refset";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -169,6 +171,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using selection", () => {
         const newContent = generateNativeTypesFor(selectionInputNative);
         expect(newContent).toBe(selectionNativeOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using ref sets in linked attribute", () => {
+        const newContent = generateFullTypesFor(listAttributeWebInput);
+        expect(newContent).toBe(listAttributeWebOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using ref sets in linked attribute", () => {
+        const newContent = generateNativeTypesFor(listAttributeNativeInput);
+        expect(newContent).toBe(listAttributeNativeOutput);
     });
 });
 
