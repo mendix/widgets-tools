@@ -178,7 +178,7 @@ describe("Generating tests", () => {
         expect(newContent).toBe(listAttributeWebOutput);
     });
 
-    it("Generates a parsed typing from XML for web using ref sets in linked attribute", () => {
+    it("Generates a parsed typing from XML for native using ref sets in linked attribute", () => {
         const newContent = generateNativeTypesFor(listAttributeNativeInput);
         expect(newContent).toBe(listAttributeNativeOutput);
     });
