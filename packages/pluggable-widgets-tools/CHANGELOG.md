@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the Mendix package to version 10.12.38909.
+
 ### Fixed
 
 -   We fixed an issue where the rollup process would sometimes hang and prevent the widget build/release script from completing. 
