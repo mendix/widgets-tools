@@ -31,6 +31,14 @@ import { selectionInput, selectionInputNative } from "./inputs/selection";
 import { selectionNativeOutput, selectionWebOutput } from "./outputs/selection";
 import { listAttributeNativeInput, listAttributeWebInput } from "./inputs/list-attribute-refset";
 import { listAttributeNativeOutput, listAttributeWebOutput } from "./outputs/list-attribute-refset";
+import {
+    nonLinkedListAttributeNativeInput,
+    nonLinkedListAttributeWebInput
+} from "./inputs/non-linked-list-attribute-refset";
+import {
+    nonLinkedListAttributeNativeOutput,
+    nonLinkedListAttributeWebOutput
+} from "./outputs/non-linked-list-attribute-refset";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -181,6 +189,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using ref sets in linked attribute", () => {
         const newContent = generateNativeTypesFor(listAttributeNativeInput);
         expect(newContent).toBe(listAttributeNativeOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using ref sets in non-linked attribute", () => {
+        const newContent = generateFullTypesFor(nonLinkedListAttributeWebInput);
+        expect(newContent).toBe(nonLinkedListAttributeWebOutput);
+    });
+
+    it("Generates a parsed typing from XML for native using ref sets in non-linked attribute", () => {
+        const newContent = generateNativeTypesFor(nonLinkedListAttributeNativeInput);
+        expect(newContent).toBe(nonLinkedListAttributeNativeOutput);
     });
 });
 
