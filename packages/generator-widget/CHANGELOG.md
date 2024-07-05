@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+-   We added `@types/react` package and aligned its version with the `react` package to ^18.2.0 in resolutions and overrides for the Yeoman generator. 
+
 ## [10.7.2] - 2024-03-07
 
 ### Changed
