@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--   We fix an issue regrading native navigation support.
+-   We fixed an issue regarding native navigation support.
 
 ## [10.12.0] - 2024-06-25
 
