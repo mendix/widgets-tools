@@ -30,6 +30,7 @@ export interface MyWidgetPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
+    renderMode?: "design" | "xray" | "structure";
     selectionAll: "None" | "Single" | "Multi";
     selectionSingleMulti: "Single" | "Multi";
     selectionMulti: "Multi";

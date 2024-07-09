@@ -22,6 +22,7 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
+    renderMode?: "design" | "xray" | "structure";
     actions: ActionsPreviewType[];
 }
 `;

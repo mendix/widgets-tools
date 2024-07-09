@@ -17,6 +17,7 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
+    renderMode?: "design" | "xray" | "structure";
     file: string;
     file2: string;
     description: string;
