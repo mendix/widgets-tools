@@ -52,9 +52,6 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
-    /**
-     * Introduced in version 10.11.0 otherwise it will be undefined
-     */
     renderMode?: "design" | "xray" | "structure";
     contentSource: {} | { caption: string } | { type: string } | null;
     optionalSource: {} | { caption: string } | { type: string } | null;
