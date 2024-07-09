@@ -62,7 +62,7 @@ const nativeExternal = [
     /^react-native-fast-image($|\/)/,
     /^react-native-svg($|\/)/,
     /^react-native-vector-icons($|\/)/,
-    /^react-navigation($|\/)/,
+    /^@?react-navigation($|\/)/,
     /^react-native-safe-area-context($|\/)/
 ];
 
