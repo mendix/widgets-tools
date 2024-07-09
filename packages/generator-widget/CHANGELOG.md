@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the default overrides (and resolutions) for generated widgets to ensure consistent React types with `@mendix/pluggable-widgets-tools`. This fixes errors like "_Type Element is not assignable to type ReactElement_".
+
 ## [10.7.2] - 2024-03-07
 
 ### Changed

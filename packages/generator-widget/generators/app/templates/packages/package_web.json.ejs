@@ -40,11 +40,13 @@
     "classnames": "^2.2.6"
   },
   "resolutions": {
-    "react": "18.2.0",
+    "react": "^18.2.0",<% if (isLanguageTS) { %>
+    "@types/react": "^18.2.0",<% } %>
     "react-native": "0.72.7"
   },
   "overrides": {
-    "react": "18.2.0",
+    "react": "^18.2.0",<% if (isLanguageTS) { %>
+    "@types/react": "^18.2.0",<% } %>
     "react-native": "0.72.7"
   }
 }
