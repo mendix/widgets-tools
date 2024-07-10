@@ -5,8 +5,12 @@ All notable changes to this tool will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [10.12.1] - 2024-07-10
+
 ### Added
-- We added the renderMode parameter to the preview arguments. This flag will give developers the ability to customize the preview for different render modes namely x-ray, structure and design.
+
+-   We added the renderMode parameter to the preview arguments. This flag will give developers the ability to customize the preview for different render modes namely x-ray, structure and design.
 
 ### Changed
 
