@@ -5,6 +5,7 @@ import { WidgetXml } from "./WidgetXml";
 
 const mxExports = [
     "ActionValue",
+    "AttributeMetaData",
     "DynamicValue",
     "EditableValue",
     "EditableListValue",
