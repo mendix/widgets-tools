@@ -39,6 +39,8 @@ import {
     nonLinkedListAttributeNativeOutput,
     nonLinkedListAttributeWebOutput
 } from "./outputs/non-linked-list-attribute-refset";
+import { attributeMetaDataNativeInput, attributeMetaDataWebInput } from "./inputs/metadata-attribute";
+import { attributeMetaDataNativeOutput, attributeMetaDataWebOutput } from "./outputs/metadata-attribute";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -199,6 +201,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using ref sets in non-linked attribute", () => {
         const newContent = generateNativeTypesFor(nonLinkedListAttributeNativeInput);
         expect(newContent).toBe(nonLinkedListAttributeNativeOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using metadata attribute", () => {
+        const newContent = generateFullTypesFor(attributeMetaDataWebInput);
+        expect(newContent).toBe(attributeMetaDataWebOutput);
+    });
+
+    it("Generates a parsed typing from XML for native using metadata attribute", () => {
+        const newContent = generateNativeTypesFor(attributeMetaDataNativeInput);
+        expect(newContent).toBe(attributeMetaDataNativeOutput);
     });
 });
 
