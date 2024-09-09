@@ -39,6 +39,11 @@ function generatePreviewTypeBody(
     resolveProp: (key: string) => Property | undefined
 ) {
     return properties
+        .filter(prop => {
+            if (prop.$.type === "datasource" && prop.$.isLinked)
+                return false;
+            return true;
+        })
         .map(prop => `    ${prop.$.key}: ${toPreviewPropType(prop, generatedTypes, resolveProp)};`)
         .join("\n");
 }

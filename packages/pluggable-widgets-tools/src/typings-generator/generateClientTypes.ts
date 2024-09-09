@@ -61,19 +61,21 @@ function generateClientTypeBody(
     resolveProp: (key: string) => Property | undefined
 ) {
     return properties
-        .map(prop => {
+        .filter(prop => {
             if (prop.$.type === "action" && isEmbeddedOnChangeAction(prop.$.key, properties)) {
-                return undefined;
+                return false;
             }
-
-            return `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
-                prop,
-                isNative,
-                generatedTypes,
-                resolveProp
-            )};`;
+            if (prop.$.type === "datasource" && prop.$.isLinked) {
+                return false;
+            }
+            return true;
         })
-        .filter(Boolean)
+        .map(prop => `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
+            prop,
+            isNative,
+            generatedTypes,
+            resolveProp
+        )};`)
         .join("\n");
 }
 

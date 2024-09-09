@@ -44,6 +44,7 @@ export interface Property {
             | "widgets"
             | "selection";
         isList?: string;
+        isLinked?: string;
         isMetaData?: string;
         defaultValue?: string;
         required?: string;
