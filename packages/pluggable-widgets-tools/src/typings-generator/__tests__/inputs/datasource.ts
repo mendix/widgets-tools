@@ -12,6 +12,10 @@ export const datasourceInput = `<?xml version="1.0" encoding="utf-8"?>
                 <caption>Optional data source</caption>
                 <description />
             </property>
+            <property key="linkedSource" type="datasource" isLinked="true">
+                <caption>Linked data source</caption>
+                <description />
+            </property>
             <property key="content" type="widgets" dataSource="contentSource">
                 <caption>Content</caption>
                 <description />

@@ -22,7 +22,7 @@
     "release": "pluggable-widgets-tools release:native"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.7.1",
+    "@mendix/pluggable-widgets-tools": "^10.15.0",
     "@types/big.js": "^6.0.2"
   },
   "dependencies": {

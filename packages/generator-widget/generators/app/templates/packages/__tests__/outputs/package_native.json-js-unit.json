@@ -27,7 +27,7 @@
     "output": "./dist/testresults/TESTS-Jest.xml"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.7.1"
+    "@mendix/pluggable-widgets-tools": "^10.15.0"
   },
   "dependencies": {
 

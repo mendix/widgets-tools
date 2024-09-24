@@ -61,19 +61,21 @@ function generateClientTypeBody(
     resolveProp: (key: string) => Property | undefined
 ) {
     return properties
-        .map(prop => {
+        .filter(prop => {
             if (prop.$.type === "action" && isEmbeddedOnChangeAction(prop.$.key, properties)) {
-                return undefined;
+                return false;
             }
-
-            return `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
-                prop,
-                isNative,
-                generatedTypes,
-                resolveProp
-            )};`;
+            if (prop.$.type === "datasource" && prop.$.isLinked) {
+                return false;
+            }
+            return true;
         })
-        .filter(Boolean)
+        .map(prop => `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
+            prop,
+            isNative,
+            generatedTypes,
+            resolveProp
+        )};`)
         .join("\n");
 }
 
@@ -133,14 +135,22 @@ function toClientPropType(
                 .flatMap(ats => ats.attributeType)
                 .map(at => toAttributeClientType(at.$.name));
             const unionType = toUniqueUnionType(types);
-         
+            const linkedToDataSource = !!prop.$.dataSource;
+
+            if (prop.$.isMetaData === "true") {
+                if (!linkedToDataSource) {
+                    throw new Error(`[XML] Attribute property can only have isMetaData="true" when linked to a datasource`);
+                }
+                return `AttributeMetaData<${unionType}>`
+            }
+
             if (!prop.associationTypes?.length) {
-                return prop.$.dataSource ? `ListAttributeValue<${unionType}>` : `EditableValue<${unionType}>`;
+                return toAttributeOutputType("Reference", linkedToDataSource, unionType);
             }
             else {
                 const reftypes = prop.associationTypes
                     .flatMap(ats => ats.associationType)
-                    .map(at => toAttributeOutputType(at.$.name, !!prop.$.dataSource, unionType));
+                    .map(at => toAttributeOutputType(at.$.name, linkedToDataSource, unionType));
                 return toUniqueUnionType(reftypes);
             }
         }
