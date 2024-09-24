@@ -6,13 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.15.0] - 2024-09-24
+
 ### Added
 
-- We added the property type AttributeMetaData which exposes useful metadata for filtering and sorting datasources.
+-   We added the property type AttributeMetaData which exposes useful metadata for filtering and sorting datasources.
 
 ### Changed
 
-- We updated the Mendix package to 10.15.46408.
+-   We updated the Mendix package to 10.15.46408.
 
 -   We updated dependencies with non-breaking security patches.
 
