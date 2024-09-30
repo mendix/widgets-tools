@@ -41,6 +41,8 @@ import {
 } from "./outputs/non-linked-list-attribute-refset";
 import { attributeMetaDataNativeInput, attributeMetaDataWebInput } from "./inputs/metadata-attribute";
 import { attributeMetaDataNativeOutput, attributeMetaDataWebOutput } from "./outputs/metadata-attribute";
+import { associationMetaDataNativeInput, associationMetaDataWebInput } from "./inputs/metadata-association";
+import { associationMetaDataNativeOutput, associationMetaDataWebOutput } from "./outputs/metadata-association";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -211,6 +213,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using metadata attribute", () => {
         const newContent = generateNativeTypesFor(attributeMetaDataNativeInput);
         expect(newContent).toBe(attributeMetaDataNativeOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using metadata association", () => {
+        const newContent = generateFullTypesFor(associationMetaDataWebInput);
+        expect(newContent).toBe(associationMetaDataWebOutput);
+    });
+
+    it("Generates a parsed typing from XML for native using metadata association", () => {
+        const newContent = generateNativeTypesFor(associationMetaDataNativeInput);
+        expect(newContent).toBe(associationMetaDataNativeOutput);
     });
 });
 
