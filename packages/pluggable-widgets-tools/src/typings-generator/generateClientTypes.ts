@@ -141,7 +141,7 @@ function toClientPropType(
                 if (!linkedToDataSource) {
                     throw new Error(`[XML] Attribute property can only have isMetaData="true" when linked to a datasource`);
                 }
-                return `AttributeMetaData<${unionType}>`
+                return `AttributeMetaData<${unionType}>`;
             }
 
             if (!prop.associationTypes?.length) {
