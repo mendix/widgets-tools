@@ -27,6 +27,7 @@ export const attributeMetaDataWebInput = `<?xml version="1.0" encoding="utf-8"?>
         </propertyGroup>
     </properties>
 </widget>`;
+
 export const attributeMetaDataNativeInput = `<?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.mywidget.MyWidget" needsEntityContext="true" offlineCapable="true"
     pluginWidget="true" supportedPlatform="Native"
