@@ -1,4 +1,4 @@
-export const attributeMetaDataWebInput = `<?xml version="1.0" encoding="utf-8"?>
+export const associationMetaDataWebInput = `<?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.mywidget.MyWidget" needsEntityContext="true" offlineCapable="true"
     pluginWidget="true" supportedPlatform="Web"
     xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -9,26 +9,24 @@ export const attributeMetaDataWebInput = `<?xml version="1.0" encoding="utf-8"?>
                 <caption>Reference</caption>
                 <description />
             </property>
-            <property key="metaString" type="attribute" isMetaData="true" dataSource="data">
+            <property key="metaReference" type="association" isMetaData="true" dataSource="data">
                 <caption>Reference</caption>
                 <description />
-                <attributeTypes>
-                    <attributeType name="String" />
-                </attributeTypes>
+                <associationTypes>
+                    <associationType name="Reference" />
+                </associationTypes>
             </property>
-            <property key="metaNumberDate" type="attribute" isMetaData="true" dataSource="data">
+            <property key="metaReferenceSet" type="association" isMetaData="true" dataSource="data">
                 <caption>Reference</caption>
                 <description />
-                <attributeTypes>
-                    <attributeType name="Integer" />
-                    <attributeType name="DateTime" />
-                </attributeTypes>
+                <associationTypes>
+                    <associationType name="ReferenceSet" />
+                </associationTypes>
             </property>
         </propertyGroup>
     </properties>
 </widget>`;
-
-export const attributeMetaDataNativeInput = `<?xml version="1.0" encoding="utf-8"?>
+export const associationMetaDataNativeInput = `<?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.mywidget.MyWidget" needsEntityContext="true" offlineCapable="true"
     pluginWidget="true" supportedPlatform="Native"
     xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,20 +37,19 @@ export const attributeMetaDataNativeInput = `<?xml version="1.0" encoding="utf-8
                 <caption>Reference</caption>
                 <description />
             </property>
-            <property key="metaString" type="attribute" isMetaData="true" dataSource="data">
+            <property key="metaReference" type="association" isMetaData="true" dataSource="data">
                 <caption>Reference</caption>
                 <description />
-                <attributeTypes>
-                    <attributeType name="String" />
-                </attributeTypes>
+                <associationTypes>
+                    <associationType name="Reference" />
+                </associationTypes>
             </property>
-            <property key="metaNumberDate" type="attribute" isMetaData="true" dataSource="data">
+            <property key="metaReferenceSet" type="association" isMetaData="true" dataSource="data">
                 <caption>Reference</caption>
                 <description />
-                <attributeTypes>
-                    <attributeType name="Integer" />
-                    <attributeType name="DateTime" />
-                </attributeTypes>
+                <associationTypes>
+                    <associationType name="ReferenceSet" />
+                </associationTypes>
             </property>
         </propertyGroup>
     </properties>

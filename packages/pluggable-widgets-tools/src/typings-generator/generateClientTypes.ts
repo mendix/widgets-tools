@@ -141,7 +141,7 @@ function toClientPropType(
                 if (!linkedToDataSource) {
                     throw new Error(`[XML] Attribute property can only have isMetaData="true" when linked to a datasource`);
                 }
-                return `AttributeMetaData<${unionType}>`
+                return `AttributeMetaData<${unionType}>`;
             }
 
             if (!prop.associationTypes?.length) {
@@ -158,9 +158,18 @@ function toClientPropType(
             if (!prop.associationTypes?.length) {
                 throw new Error("[XML] Association property requires associationTypes element");
             }
+
+            const linkedToDataSource = !!prop.$.dataSource;
+            if (prop.$.isMetaData === "true") {
+                if (!linkedToDataSource) {
+                    throw new Error(`[XML] Association property can only have isMetaData="true" when linked to a datasource`);
+                }
+                return "AssociationMetaData";
+            }
+
             const types = prop.associationTypes
                 .flatMap(ats => ats.associationType)
-                .map(at => toAssociationOutputType(at.$.name, !!prop.$.dataSource));
+                .map(at => toAssociationOutputType(at.$.name, linkedToDataSource));
             return toUniqueUnionType(types);
         }
         case "expression":

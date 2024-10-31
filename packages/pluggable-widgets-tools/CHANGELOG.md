@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   We added the property type AssociationMetaData which exposes useful metadata for filtering and sorting datasources.
+
+### Changed
+
+-   We updated the Mendix package to 10.16.49747.
+
 ## [10.15.0] - 2024-09-24
 
 ### Added
