@@ -10,14 +10,14 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
 import url from "@rollup/plugin-url";
-import { red, yellow, blue } from "ansi-colors";
+import colors from "ansi-colors";
 import loadConfigFile from "rollup/dist/loadConfigFile";
 import clear from "rollup-plugin-clear";
 import command from "rollup-plugin-command";
 import { terser } from "rollup-plugin-terser";
-import { cp } from "shelljs";
-import { widgetTyping } from "./rollup-plugin-widget-typing";
-import { collectDependencies } from "./rollup-plugin-collect-dependencies";
+import shelljs from "shelljs";
+import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
+import { collectDependencies } from "./rollup-plugin-collect-dependencies.mjs";
 import {
     editorConfigEntry,
     isTypescript,
@@ -28,8 +28,11 @@ import {
     widgetPackage,
     widgetVersion,
     onwarn
-} from "./shared";
-import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper";
+} from "./shared.mjs";
+import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
+
+const { cp } = shelljs;
+const { blue } = colors;
 
 const outDir = join(sourcePath, "/dist/tmp/widgets/");
 const outWidgetFile = join(widgetPackage.replace(/\./g, "/"), widgetName.toLowerCase(), `${widgetName}`);
@@ -101,20 +104,20 @@ export default async args => {
                     widgetName,
                     ...(production && i === 0
                         ? {
-                              licenseOptions: {
-                                  thirdParty: {
-                                      output: [
-                                          {
-                                              file: join(outDir, "dependencies.txt")
-                                          },
-                                          {
-                                              file: join(outDir, "dependencies.json"),
-                                              template: licenseCustomTemplate
-                                          }
-                                      ]
-                                  }
-                              }
-                          }
+                            licenseOptions: {
+                                thirdParty: {
+                                    output: [
+                                        {
+                                            file: join(outDir, "dependencies.txt")
+                                        },
+                                        {
+                                            file: join(outDir, "dependencies.json"),
+                                            template: licenseCustomTemplate
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                         : null)
                 }),
                 ...getCommonPlugins({
@@ -173,12 +176,12 @@ export default async args => {
             nodeResolve({ preferBuiltins: false, mainFields: ["module", "browser", "main"] }),
             isTypescript
                 ? typescript({
-                      noEmitOnError: !args.watch,
-                      sourceMap: config.sourceMaps,
-                      inlineSources: config.sourceMaps,
-                      target: "es2019", // we transpile the result with babel anyway, see below
-                      exclude: ["**/__tests__/**/*"]
-                  })
+                    noEmitOnError: !args.watch,
+                    sourceMap: config.sourceMaps,
+                    inlineSources: config.sourceMaps,
+                    target: "es2019", // we transpile the result with babel anyway, see below
+                    exclude: ["**/__tests__/**/*"]
+                })
                 : null,
             // Babel can transpile source JS and resulting JS, hence are input/output plugins. The good
             // practice is to do the most of conversions on resulting code, since then we ensure that
@@ -216,11 +219,11 @@ export default async args => {
             }),
             config.transpile
                 ? getBabelOutputPlugin({
-                      sourceMaps: config.sourceMaps,
-                      babelrc: false,
-                      compact: false,
-                      ...(config.babelConfig || {})
-                  })
+                    sourceMaps: config.sourceMaps,
+                    babelrc: false,
+                    compact: false,
+                    ...(config.babelConfig || {})
+                })
                 : null,
             image(),
             production ? terser({ mangle: false }) : null,

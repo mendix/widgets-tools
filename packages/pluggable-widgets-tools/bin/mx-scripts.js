@@ -47,8 +47,8 @@ function getRealCommand(cmd, toolsRoot) {
     const prettierConfigRootPath = join(__dirname, "../../../prettier.config.js");
     const prettierConfigPath = existsSync(prettierConfigRootPath) ? prettierConfigRootPath : "prettier.config.js";
     const prettierCommand = `prettier --config "${prettierConfigPath}" "{src,typings,tests}/**/*.{js,jsx,ts,tsx,scss}"`;
-    const rollupCommandWeb = `rollup --config "${join(toolsRoot, "configs/rollup.config.js")}"`;
-    const rollupCommandNative = `rollup --config "${join(toolsRoot, "configs/rollup.config.native.js")}"`;
+    const rollupCommandWeb = `rollup --config "${join(toolsRoot, "configs/rollup.config.mjs")}"`;
+    const rollupCommandNative = `rollup --config "${join(toolsRoot, "configs/rollup.config.native.mjs")}"`;
 
     switch (cmd) {
         case "start:web":
