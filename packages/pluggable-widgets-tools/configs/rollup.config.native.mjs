@@ -11,10 +11,10 @@ import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
 import url from "@rollup/plugin-url";
 import colors from "ansi-colors";
-import loadConfigFile from "rollup/dist/loadConfigFile";
+import { loadConfigFile } from "rollup/dist/loadConfigFile.js";
 import clear from "rollup-plugin-clear";
 import command from "rollup-plugin-command";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import shelljs from "shelljs";
 import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
 import { collectDependencies } from "./rollup-plugin-collect-dependencies.mjs";
@@ -162,9 +162,14 @@ export default async args => {
         });
     }
 
-    const customConfigPath = join(sourcePath, "rollup.config.js");
-    if (existsSync(customConfigPath)) {
-        const customConfig = await loadConfigFile(customConfigPath, { ...args, configDefaultConfig: result });
+    const customConfigPathJS = join(sourcePath, "rollup.config.js");
+    const customConfigPathESM = join(sourcePath, "rollup.config.mjs");
+    const existingConfigPath =
+        existsSync(customConfigPathJS) ? customConfigPathJS
+            : existsSync(customConfigPathESM) ? customConfigPathESM
+                : null;
+    if (existingConfigPath != null) {
+        const customConfig = await loadConfigFile(existingConfigPath, { ...args, configDefaultConfig: result });
         customConfig.warnings.flush();
         return customConfig.options;
     }
