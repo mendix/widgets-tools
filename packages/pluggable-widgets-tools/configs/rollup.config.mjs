@@ -227,7 +227,7 @@ export default async args => {
                     noEmitOnError: !args.watch,
                     sourceMap: config.sourceMaps,
                     inlineSources: config.sourceMaps,
-                    target: "es2019", // we transpile the result with babel anyway, see below
+                    target: "es2022", // we transpile the result with babel anyway, see below
                     exclude: ["**/__tests__/**/*"]
                 })
                 : null,
@@ -239,7 +239,6 @@ export default async args => {
                 sourceMaps: config.sourceMaps,
                 babelrc: false,
                 babelHelpers: "bundled",
-                plugins: ["@babel/plugin-proposal-class-properties"],
                 overrides: [
                     {
                         test: /node_modules/,
