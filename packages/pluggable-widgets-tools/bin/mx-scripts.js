@@ -24,14 +24,15 @@ checkNodeVersion();
     const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
     console.log(`Running MX Widgets Tools script ${cmd}...`);
 
+    const nodeModulesBins = findNodeModulesBin();
     for (const subCommand of realCommand.split(/&&/g)) {
         const result = spawnSync(subCommand.trim(), [], {
             cwd: process.cwd(),
             env: {
                 ...process.env,
-                PATH: `${process.env.PATH}${delimiter}${findNodeModulesBin()}`,
+                PATH: [process.env.PATH].concat(nodeModulesBins).join(delimiter),
                 // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
-                Path: `${process.env.Path}${delimiter}${findNodeModulesBin()}`
+                Path: [process.env.Path].concat(nodeModulesBins).join(delimiter),
             },
             shell: true,
             stdio: "inherit"
@@ -105,14 +106,18 @@ function getRealCommand(cmd, toolsRoot) {
 
 function findNodeModulesBin() {
     let parentDir = join(__dirname, "..");
+    const bins = [];
     while (parse(parentDir).root !== parentDir) {
         const candidate = join(parentDir, "node_modules/.bin");
         if (existsSync(candidate)) {
-            return candidate;
+            bins.push(candidate);
         }
         parentDir = join(parentDir, "..");
     }
-    throw new Error("Cannot find bin folder");
+    if (bins.length === 0) {
+        throw new Error("Cannot find bin folder");
+    }
+    return bins;
 }
 
 function checkNodeVersion() {
