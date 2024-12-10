@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
 import { extname, join } from "path";
-import { listDir } from "./shared";
+import { listDir } from "./shared.mjs";
 
-const { transformPackage } = require("../dist/typings-generator");
+const { transformPackage } = await import(new URL("../dist/typings-generator/index.js", import.meta.url));
 
 export function widgetTyping({ sourceDir }) {
     let firstRun = true;

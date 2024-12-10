@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import fg from "fast-glob";
-import { readJson, writeJson } from "fs-extra";
+import fsExtra from "fs-extra";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, parse } from "path";
 import copy from "recursive-copy";
@@ -10,7 +10,9 @@ import resolve from "resolve";
 import _ from "lodash";
 import moment from "moment";
 import mkdirp from "mkdirp";
-import { LICENSE_GLOB } from "./common/glob";
+import { LICENSE_GLOB } from "./common/glob.mjs";
+
+const { readJson, writeJson } = fsExtra;
 
 const dependencies = [];
 export function collectDependencies({
@@ -115,7 +117,7 @@ async function resolvePackage(target, sourceDir, optional = false) {
         if (
             e.message.includes("Cannot find module") &&
             !/\.((j|t)sx?)|json|(pn|jpe?|sv)g|(tif|gi)f$/g.test(targetPackage) &&
-            !/configs\/jsActions/i.test(__dirname) && // Ignore errors about missing package.json in 'jsActions/**/src/*' folders
+            !/configs\/jsActions/i.test(import.meta.url) && // Ignore errors about missing package.json in 'jsActions/**/src/*' folders
             !optional // Certain (peer)dependencies can be optional, ignore throwing an error if an optional (peer)dependency is considered missing.
         ) {
             throw e;

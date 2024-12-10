@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import alias from "@rollup/plugin-alias";
 import { getBabelInputPlugin, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
@@ -9,18 +10,18 @@ import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
-import { blue } from "ansi-colors";
+import colors from "ansi-colors";
 import postcssImport from "postcss-import";
 import postcssUrl from "postcss-url";
-import loadConfigFile from "rollup/dist/loadConfigFile";
+import { loadConfigFile } from "rollup/dist/loadConfigFile.js";
 import clear from "rollup-plugin-clear";
 import command from "rollup-plugin-command";
 import license from "rollup-plugin-license";
 import livereload from "rollup-plugin-livereload";
 import postcss from "rollup-plugin-postcss";
-import { terser } from "rollup-plugin-terser";
-import { cp } from "shelljs";
-import { widgetTyping } from "./rollup-plugin-widget-typing";
+import terser from "@rollup/plugin-terser";
+import shelljs from "shelljs";
+import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
 import {
     editorConfigEntry,
     isTypescript,
@@ -32,9 +33,11 @@ import {
     widgetPackage,
     widgetVersion,
     onwarn
-} from "./shared";
-import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper";
-import url from "./rollup-plugin-assets";
+} from "./shared.mjs";
+import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
+import url from "./rollup-plugin-assets.mjs";
+
+const { cp } = shelljs;
 
 const outDir = join(sourcePath, "/dist/tmp/widgets/");
 const outWidgetDir = join(widgetPackage.replace(/\./g, "/"), widgetName.toLowerCase());
@@ -93,7 +96,7 @@ const cssUrlTransform = asset =>
 export default async args => {
     const production = Boolean(args.configProduction);
     if (!production && projectPath) {
-        console.info(blue(`Project Path: ${projectPath}`));
+        console.info(colors.blue(`Project Path: ${projectPath}`));
     }
 
     const result = [];
@@ -118,7 +121,7 @@ export default async args => {
                 postCssPlugin(outputFormat, production),
                 alias({
                     entries: {
-                        "react-hot-loader/root": join(__dirname, "hot")
+                        "react-hot-loader/root": fileURLToPath(new URL("hot", import.meta.url)),
                     }
                 }),
                 ...getCommonPlugins({
@@ -178,6 +181,7 @@ export default async args => {
                 sourcemap: false
             },
             external: commonExternalLibs,
+            strictDeprecations: true,
             treeshake: { moduleSideEffects: false },
             plugins: [
                 url({ include: ["**/*.svg"], limit: 143360 }), // SVG file size limit of 140 kB
@@ -191,7 +195,7 @@ export default async args => {
                 {
                     closeBundle() {
                         if (!process.env.ROLLUP_WATCH) {
-                          setTimeout(() => process.exit(0));
+                            setTimeout(() => process.exit(0));
                         }
                     },
                     name: 'force-close'
@@ -201,9 +205,14 @@ export default async args => {
         });
     }
 
-    const customConfigPath = join(sourcePath, "rollup.config.js");
-    if (existsSync(customConfigPath)) {
-        const customConfig = await loadConfigFile(customConfigPath, { ...args, configDefaultConfig: result });
+    const customConfigPathJS = join(sourcePath, "rollup.config.js");
+    const customConfigPathESM = join(sourcePath, "rollup.config.mjs");
+    const existingConfigPath =
+        existsSync(customConfigPathJS) ? customConfigPathJS
+            : existsSync(customConfigPathESM) ? customConfigPathESM
+                : null;
+    if (existingConfigPath != null) {
+        const customConfig = await loadConfigFile(existingConfigPath, { ...args, configDefaultConfig: result });
         customConfig.warnings.flush();
         return customConfig.options;
     }
@@ -215,12 +224,12 @@ export default async args => {
             nodeResolve({ preferBuiltins: false, mainFields: ["module", "browser", "main"] }),
             isTypescript
                 ? typescript({
-                      noEmitOnError: !args.watch,
-                      sourceMap: config.sourceMaps,
-                      inlineSources: config.sourceMaps,
-                      target: "es2019", // we transpile the result with babel anyway, see below
-                      exclude: ["**/__tests__/**/*"]
-                  })
+                    noEmitOnError: !args.watch,
+                    sourceMap: config.sourceMaps,
+                    inlineSources: config.sourceMaps,
+                    target: "es2022", // we transpile the result with babel anyway, see below
+                    exclude: ["**/__tests__/**/*"]
+                })
                 : null,
             // Babel can transpile source JS and resulting JS, hence are input/output plugins. The good
             // practice is to do the most of conversions on resulting code, since then we ensure that
@@ -230,7 +239,6 @@ export default async args => {
                 sourceMaps: config.sourceMaps,
                 babelrc: false,
                 babelHelpers: "bundled",
-                plugins: ["@babel/plugin-proposal-class-properties"],
                 overrides: [
                     {
                         test: /node_modules/,
@@ -258,29 +266,29 @@ export default async args => {
             }),
             config.transpile
                 ? getBabelOutputPlugin({
-                      sourceMaps: config.sourceMaps,
-                      babelrc: false,
-                      compact: false,
-                      ...(config.babelConfig || {})
-                  })
+                    sourceMaps: config.sourceMaps,
+                    babelrc: false,
+                    compact: false,
+                    ...(config.babelConfig || {})
+                })
                 : null,
             image(),
             production ? terser() : null,
             config.licenses
                 ? license({
-                      thirdParty: {
-                          includePrivate: true,
-                          output: [
-                              {
-                                  file: join(outDir, "dependencies.txt")
-                              },
-                              {
-                                  file: join(outDir, "dependencies.json"),
-                                  template: licenseCustomTemplate
-                              }
-                          ]
-                      }
-                  })
+                    thirdParty: {
+                        includePrivate: true,
+                        output: [
+                            {
+                                file: join(outDir, "dependencies.txt")
+                            },
+                            {
+                                file: join(outDir, "dependencies.json"),
+                                template: licenseCustomTemplate
+                            }
+                        ]
+                    }
+                })
                 : null,
             // We need to create .mpk and copy results to test project after bundling is finished.
             // In case of a regular build is it is on `writeBundle` of the last config we define

@@ -67,11 +67,12 @@ In your `package.json` scripts, use the following command with the desired task:
     -   `.eslint.js` - configuration for ESLint. We recommend to just re-export `@mendix/pluggable-widgets-tools/configs/eslint.ts.base.json`
     -   `prettier.config.js` - configuration for Prettier. We recommend to just re-export `@mendix/pluggable-widgets-tools/configs/prettier.base.json`
     -   `tsconfig.json` - configuration for TypeScript. We recommend to just extend `@mendix/pluggable-widgets-tools/configs/tsconfig.base.json`
-    -   `rollup.config.js` - (optional) custom configurations for [rollup](https://rollupjs.org/guide/en/) bundler. The standard configuration is passed as an argument named `configDefaultConfig`.
+    -   `rollup.config.[m]js` - (optional) custom configurations for [rollup](https://rollupjs.org/guide/en/) bundler. The standard configuration is passed as an argument named `configDefaultConfig`.
     -   `package.json` - widget package definitions, including its dependencies, scripts, and basic configuration (`widgetName` and `config.projectPath` in particular)
 
 ## Migrating from previous versions
 
+-   10.17 includes an upgrade from Rollup 2 to 3. See the [changelog](./CHANGELOG.md) for upgrade notes.
 -   Webpack bundler is changed to a Rollup. You must migrate your custom configuration.
 -   Update `pluggable-widgets-tools` commands used in your `package.json` file to one of the described in this readme. In particular `start:js`, `start:ts`, and `start:server` commands should be changed to `start:web`.
 -   You now can use named exports in your widget. That is, you can write `export MyWidget;` instead of `export default MyWidget;`.
