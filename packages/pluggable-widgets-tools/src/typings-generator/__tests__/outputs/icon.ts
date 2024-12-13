@@ -24,7 +24,8 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
-    renderMode?: "design" | "xray" | "structure";
+    renderMode: "design" | "xray" | "structure";
+    translate: (text: string) => string;
     icons: IconsPreviewType[];
 }
 `;

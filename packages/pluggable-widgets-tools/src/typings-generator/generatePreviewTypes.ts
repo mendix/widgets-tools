@@ -27,7 +27,8 @@ export function generatePreviewTypes(
             : ""
     }
     readOnly: boolean;
-    renderMode?: "design" | "xray" | "structure";
+    renderMode: "design" | "xray" | "structure";
+    translate: (text: string) => string;
 ${generatePreviewTypeBody(properties, results, resolveProp)}
 }`);
     return results;
@@ -40,8 +41,7 @@ function generatePreviewTypeBody(
 ) {
     return properties
         .filter(prop => {
-            if (prop.$.type === "datasource" && prop.$.isLinked)
-                return false;
+            if (prop.$.type === "datasource" && prop.$.isLinked) return false;
             return true;
         })
         .map(prop => `    ${prop.$.key}: ${toPreviewPropType(prop, generatedTypes, resolveProp)};`)

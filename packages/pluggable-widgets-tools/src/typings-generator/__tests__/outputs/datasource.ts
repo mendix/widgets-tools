@@ -52,7 +52,8 @@ export interface MyWidgetContainerProps {
 
 export interface MyWidgetPreviewProps {
     readOnly: boolean;
-    renderMode?: "design" | "xray" | "structure";
+    renderMode: "design" | "xray" | "structure";
+    translate: (text: string) => string;
     contentSource: {} | { caption: string } | { type: string } | null;
     optionalSource: {} | { caption: string } | { type: string } | null;
     content: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
