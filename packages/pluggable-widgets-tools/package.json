@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "10.17.0",
+  "version": "10.18.0",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=20"
@@ -26,9 +26,9 @@
   ],
   "dependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@babel/plugin-transform-class-properties": "^7.25.9",
     "@babel/plugin-transform-private-methods": "^7.25.9",
+    "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
     "@cfaester/enzyme-adapter-react-18": "^0.6.0",
@@ -81,7 +81,7 @@
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
     "make-dir": "^3.1.0",
-    "mendix": "^10.16.49747",
+    "mendix": "^10.18.54340",
     "metro-react-native-babel-preset": "^0.74.1",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
