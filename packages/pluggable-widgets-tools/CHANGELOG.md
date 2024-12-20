@@ -12,64 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+-   We upgraded rollup to version 3. Custom rollup.config.js files [likely require changes](./docs/rollup3-guide.md).
 -   The renderMode property in the preview arguments is no longer considered optional.
-
-#### Rollup 3
-
-We upgraded the bundling setup. For most packages this meant updating to the latest minor or patch versions, but for Rollup we upgraded from major version 2 to 3. If your widget uses custom configurations you may need to perform some actions.
-
-1. Ensure you are using node 20 or above.
-2. Upgrade any Rollup related package to their latest (Rollup 3 supporting) version: `npm install <package-name>@latest`.
-3. Update your custom rollup configuration:
-  - If your rollup configuration imports our base rollup configuration, rename the import to `@mendix/pluggable-widgets-tools/configs/rollup.config.mjs`.
-  - Rollup now offers native support for ES Modules for Rollup configuration. This does mean it is stricter with regards to ESM and CJS, ensure that:
-    - If you are using ESM to use the `.mjs` extension for your `rollup.config.mjs` file.
-    - If you are using CJS you can continue using the `.js` extension for your `rollup.config.js` file.
-
-If you decide to continue using ES Modules for your rollup configuration, there are [some caveats to be aware of](https://rollupjs.org/command-line-interface/#caveats-when-using-native-node-es-modules). Below we highlight a few.
-
-##### ES Module Imports
-
-When using ESM you should rename your Rollup configuration files to `.mjs`. This tells node to expect ESM for that particular file. Import statements targeting local files should be updated to include the file extension.
-
-When importing some CJS packages you may no longer be able to access individual named exports directly. In this case you will need to import the full module. You can [desctructure](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) the module to keep the rest of your implementation the same.
-
-```js
-// Partial import
-import { cp } from "shelljs";
-// Full namespace import
-import shelljs from "shelljs";
-const { cp } = shelljs;
-```
-
-##### ES Module __Dirname
-
-In ESM files the `__dirname` variable is not available. Instead, you can access the current file's path using `import.meta.url`. Do note that this includes the `file:` protocol prefix. An easy way to work with the file's url is to use it as the [base value for the URL constructor](https://developer.mozilla.org/en-US/docs/Web/API/URL/URL#base). This will allow you to resolve a relative path from that path. For example `new URL("../", "file:/a/b/c.txt")` results in the URL `file:/a`.
-
-```js
-// ESM equivalent of __dirname
-const dirname = new URL("./", import.meta.url).pathname;
-```
-
-Also note that `require()` is unavailable in ESM files. A common usecase for rollup setups is accessing the package.json of a project. If this is a static location relative to the script, you may use a typed import. Otherwise, read the file from the file system and parse it as JSON.
-
-```js
-// CJS method
-import { join } from "node:path";
-const packagePath = join(process.cwd(), "/package.json");
-const package = require(packagePath);
-
-// ESM import with attributes
-import package from "../package.json" with { type: "json" }
-
-// Dynamic import with attributes
-const package = await import(packagePath, { with: { type: "json" }})
-
-// Read file and parse (async version with fs.readFile)
-import { readFileSync } from "node:fs"
-const package = JSON.parse(readFileSync(packagePath))
-```
-
+-   We updated the Mendix package to 10.18.54340.
 
 ## [10.16.0] - 2024-10-31
 
