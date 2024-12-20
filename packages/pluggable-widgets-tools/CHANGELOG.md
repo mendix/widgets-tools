@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.18.0] - 2024-12-20
+
 ### Added
 
 -   We added the translate function to the preview arguments. This can be used to translate texts show in the widget preview.
@@ -13,7 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We upgraded rollup to version 3. Custom rollup.config.js files [likely require changes](./docs/rollup3-guide.md).
+
 -   The renderMode property in the preview arguments is no longer considered optional.
+
 -   We updated the Mendix package to 10.18.54340.
 
 ## [10.16.0] - 2024-10-31
