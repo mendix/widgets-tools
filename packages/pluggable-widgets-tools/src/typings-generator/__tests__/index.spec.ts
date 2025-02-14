@@ -43,6 +43,8 @@ import { attributeMetaDataNativeInput, attributeMetaDataWebInput } from "./input
 import { attributeMetaDataNativeOutput, attributeMetaDataWebOutput } from "./outputs/metadata-attribute";
 import { associationMetaDataNativeInput, associationMetaDataWebInput } from "./inputs/metadata-association";
 import { associationMetaDataNativeOutput, associationMetaDataWebOutput } from "./outputs/metadata-association";
+import {listActionWithVariablesInput, listActionWithVariablesInputNative} from "./inputs/list-action-with-variables";
+import {listActionWithVariablesOutput, listActionWithVariablesOutputNative} from "./outputs/list-action-with-variables";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -73,6 +75,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for web using list of actions", () => {
         const newContent = generateFullTypesFor(listActionInput);
         expect(newContent).toBe(listActionWebOutput);
+    });
+
+    it("Generates a parsed typing from XML for native using list of actions with variables", () => {
+        const newContent = generateNativeTypesFor(listActionWithVariablesInputNative);
+        expect(newContent).toBe(listActionWithVariablesOutputNative);
+    });
+
+    it("Generates a parsed typing from XML for web using list of actions with variables", () => {
+        const newContent = generateFullTypesFor(listActionWithVariablesInput);
+        expect(newContent).toBe(listActionWithVariablesOutput);
     });
 
     it("Generates a parsed typing from XML for native using list of images", () => {
