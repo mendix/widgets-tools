@@ -3,12 +3,12 @@ export const listActionWithVariablesOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { ActionValue, EditableValue } from "mendix";
+import { ActionValue, EditableValue, Option } from "mendix";
 import { Big } from "big.js";
 
 export interface ActionsType {
     description: EditableValue<string>;
-    action?: ActionValue<{ boolean_v?: boolean; integer_v?: Big; datetime_v?: Date; string_v?: string; decimal_v?: Big }>;
+    action?: ActionValue<{ boolean_v: Option<boolean>; integer_v: Option<Big>; datetime_v: Option<Date>; string_v: Option<string>; decimal_v: Option<Big> }>;
 }
 
 export interface ActionsPreviewType {
@@ -32,7 +32,7 @@ export interface MyWidgetPreviewProps {
 `;
 export const listActionWithVariablesOutputNative = `export interface ActionsType {
     description: EditableValue<string>;
-    action?: ActionValue<{ boolean_v?: boolean; integer_v?: Big; datetime_v?: Date; string_v?: string; decimal_v?: Big }>;
+    action?: ActionValue<{ boolean_v: Option<boolean>; integer_v: Option<Big>; datetime_v: Option<Date>; string_v: Option<string>; decimal_v: Option<Big> }>;
 }
 
 export interface MyWidgetProps<Style> {

@@ -102,7 +102,7 @@ export function hasOptionalDataSource(prop: Property, resolveProp: (key: string)
 
 function toActionVariablesOutputType(actionVariables?: ActionVariableTypes[]) {
     const types = actionVariables?.flatMap(av => av.actionVariable)
-        .map(avt => `${avt.$.key}?: ${toAttributeClientType(avt.$.type)}`)
+        .map(avt => `${avt.$.key}: ${toOption(toAttributeClientType(avt.$.type))}`)
         .join("; ");
 
     return types ? `<{ ${types} }>` : "";
@@ -335,6 +335,10 @@ function toSelectionClientType(xmlType: string) {
         default:
             return "any";
     }
+}
+
+function toOption(type: string) {
+    return `Option<${type}>`;
 }
 
 export function toUniqueUnionType(types: string[]) {

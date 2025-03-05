@@ -14,6 +14,7 @@ const mxExports = [
     "ListValue",
     "NativeIcon",
     "NativeImage",
+    "Option",
     "ListActionValue",
     "ListAttributeValue",
     "ListAttributeListValue",
