@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed an issue with "release" command failing in some cases.
+
+### Changed
+
+-   We updated "ts-node" package to version 10.
+
 ## [10.18.0] - 2024-12-20
 
 ### Added
