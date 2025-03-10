@@ -61,6 +61,7 @@ export interface Property {
     properties?: Properties[];
     enumerationValues?: Enumeration[];
     selectionTypes?: SelectionTypes[];
+    actionVariables?: ActionVariableTypes[];
 }
 
 export interface AttributeType {
@@ -121,5 +122,16 @@ export interface SelectionTypes {
 export interface SelectionType {
     $: {
         name: string;
+    };
+}
+
+export interface ActionVariableTypes {
+    actionVariable: ActionVariableType[];
+}
+
+export interface ActionVariableType {
+    $: {
+        key: string;
+        type: string;
     };
 }

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   We added support for action variables, introduced in Mendix 10.21.
+
+
 ## [10.18.0] - 2024-12-20
 
 ### Added

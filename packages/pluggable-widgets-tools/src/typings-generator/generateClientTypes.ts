@@ -1,4 +1,4 @@
-import { Property, ReturnType, SystemProperty } from "./WidgetXml";
+import { ActionVariableTypes, Property, ReturnType, SystemProperty } from "./WidgetXml";
 import { capitalizeFirstLetter, commasAnd, extractProperties } from "./helpers";
 
 export function generateClientTypes(
@@ -100,6 +100,14 @@ export function hasOptionalDataSource(prop: Property, resolveProp: (key: string)
     return prop.$.dataSource && resolveProp(prop.$.dataSource)?.$.required === "false";
 }
 
+function toActionVariablesOutputType(actionVariables?: ActionVariableTypes[]) {
+    const types = actionVariables?.flatMap(av => av.actionVariable)
+        .map(avt => `${avt.$.key}: ${toOption(toAttributeClientType(avt.$.type))}`)
+        .join("; ");
+
+    return types ? `<{ ${types} }>` : "";
+}
+
 function toClientPropType(
     prop: Property,
     isNative: boolean,
@@ -112,7 +120,8 @@ function toClientPropType(
         case "string":
             return "string";
         case "action":
-            return prop.$.dataSource ? "ListActionValue" : "ActionValue";
+            const variableTypes = toActionVariablesOutputType(prop.actionVariables);
+            return (prop.$.dataSource ? "ListActionValue" : "ActionValue") + variableTypes;
         case "textTemplate":
             return prop.$.dataSource ? "ListExpressionValue<string>" : "DynamicValue<string>";
         case "integer":
@@ -326,6 +335,10 @@ function toSelectionClientType(xmlType: string) {
         default:
             return "any";
     }
+}
+
+function toOption(type: string) {
+    return `Option<${type}>`;
 }
 
 export function toUniqueUnionType(types: string[]) {
