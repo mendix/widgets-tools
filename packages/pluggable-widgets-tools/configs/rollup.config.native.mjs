@@ -11,7 +11,7 @@ import replace from "rollup-plugin-re";
 import typescript from "@rollup/plugin-typescript";
 import url from "@rollup/plugin-url";
 import colors from "ansi-colors";
-import { loadConfigFile } from "rollup/dist/loadConfigFile.js";
+import loadConfigFile from "rollup/dist/loadConfigFile.js";
 import clear from "rollup-plugin-clear";
 import command from "rollup-plugin-command";
 import terser from "@rollup/plugin-terser";
