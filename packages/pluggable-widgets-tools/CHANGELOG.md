@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.18.1] - 2025-03-11
+
 ### Fixed
 
 -   We fixed an issue with "release" command failing in some cases.
