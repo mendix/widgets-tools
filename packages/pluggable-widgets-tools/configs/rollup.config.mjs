@@ -13,7 +13,7 @@ import typescript from "@rollup/plugin-typescript";
 import colors from "ansi-colors";
 import postcssImport from "postcss-import";
 import postcssUrl from "postcss-url";
-import loadConfigFile from "rollup/dist/loadConfigFile.js";
+import rollupLoadConfigFile from "rollup/dist/loadConfigFile.js";
 import clear from "rollup-plugin-clear";
 import command from "rollup-plugin-command";
 import license from "rollup-plugin-license";
@@ -37,6 +37,7 @@ import {
 import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
 import url from "./rollup-plugin-assets.mjs";
 
+const { loadConfigFile } = rollupLoadConfigFile;
 const { cp } = shelljs;
 
 const outDir = join(sourcePath, "/dist/tmp/widgets/");
