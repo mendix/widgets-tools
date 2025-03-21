@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.18.2] - 2025-03-21
+
 ### Fixed
 
-- We fixed an issue with loading custom rollup configs.
+-   We fixed an issue with loading custom rollup configs.
 
 ## [10.18.1] - 2025-03-11
 
