@@ -81,7 +81,7 @@
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
     "make-dir": "^3.1.0",
-    "mendix": "^10.18.54340",
+    "mendix": "^10.21.64362",
     "metro-react-native-babel-preset": "^0.74.1",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
