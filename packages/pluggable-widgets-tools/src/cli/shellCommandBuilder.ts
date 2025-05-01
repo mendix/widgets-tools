@@ -85,10 +85,22 @@ export function shellCommandBuilder(...command: Array<TextElement | [string, Tex
     };
 }
 
+export function shell(staticParts: TemplateStringsArray, ...dynamicParts: TextElement[]) {
+    return (context: ShellCommandContext) => {
+        const contextualizedParts = dynamicParts.map(part => textElementToString(part, context))
+        const combined = staticParts.flatMap((part, i) => typeof contextualizedParts[i] === "string" ? [part, contextualizedParts[i]] : [part]);
+        return combined.join("");
+    }
+}
+
 const rollupWithConfig = (config: string) =>
     shellCommandBuilder("rollup").option("config", ({ toolsRoot }) => join(toolsRoot, config));
 
 rollupWithConfig("configs/rollup.config.mjs").flag("watch").flag("configProduction");
+
+const rollupWithConfigSh = (config: string) => shell`rollup --config ${({ toolsRoot }) => join(toolsRoot, config)}`
+
+shell`${rollupWithConfigSh("configs/rollup.config.mjs")} --watch`
 
 const prettier = shellCommandBuilder("prettier").option("config", ({ toolsRoot, widgetRoot }) => {
     const widgetPrettier = join(widgetRoot, "prettier.config.js");

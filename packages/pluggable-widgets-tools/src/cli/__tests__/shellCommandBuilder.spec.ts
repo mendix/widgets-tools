@@ -1,5 +1,5 @@
 import { join } from "path";
-import { shellCommandBuilder, ShellCommandContext } from "../shellCommand";
+import { shell, shellCommandBuilder, ShellCommandContext } from "../shellCommandBuilder";
 
 const ctx: ShellCommandContext = {
     toolsRoot: "/opt/textBox/node_modules/@mendix/pluggable-widgets-tools",
@@ -168,4 +168,59 @@ describe("ShellCommandBuilder", () => {
             );
         });
     });
+});
+
+describe("Shell Template", () => {
+
+    it("builds an empty string for empty input", () => {
+        expect(shell``(ctx)).toBe("");
+    });
+
+    it("builds an equivalent string", () => {
+        expect(shell`abc`(ctx)).toBe("abc");
+    })
+
+    it("respects identity for string input", () => {
+        const value = "abc";
+        expect(shell`${value}`(ctx)).toBe(value);
+    })
+
+    it("builds with contextual input", () => {
+        expect(shell`${ctx => ctx.toolsRoot}`(ctx)).toBe(ctx.toolsRoot);
+    })
+
+    it("respects order", () => {
+        expect(shell`a ${"b"} c ${"d"}`(ctx)).toBe("a b c d");
+    })
+
+    describe("examples", () => {
+        it("builds rollup commands", () => {
+            const result = shell`rollup --config ${({ toolsRoot }) => join(toolsRoot, "configs/rollup.config.mjs")} --watch --configProduction`(ctx)
+
+            expect(result).toBe(
+                "rollup --config /opt/textBox/node_modules/@mendix/pluggable-widgets-tools/configs/rollup.config.mjs --watch --configProduction"
+            );
+        });
+
+        it("builds eslint commands", () => {
+            const result = shell`eslint --config ${({ widgetRoot }) => join(widgetRoot, ".eslintrc.js")} --fix`(ctx)
+
+            expect(result).toBe("eslint --config /opt/textBox/.eslintrc.js --fix");
+        });
+
+        it("builds prettier commands", () => {
+            const prettier = shell`prettier --config ${({ widgetRoot }) => join(widgetRoot, "prettier.config.js")} "{src,typings,tests}/**/*.{js,jsx,ts,tsx,scss}"`
+
+            const prettierFix = shell`${prettier} --write`;
+            expect(prettierFix(ctx)).toBe(
+                `prettier --config /opt/textBox/prettier.config.js "{src,typings,tests}/**/*.{js,jsx,ts,tsx,scss}" --write`
+            );
+
+            const prettierLint = shell`${prettier} --check`;
+            expect(prettierLint(ctx)).toBe(
+                `prettier --config /opt/textBox/prettier.config.js "{src,typings,tests}/**/*.{js,jsx,ts,tsx,scss}" --check`
+            );
+        });
+    });
+
 });
