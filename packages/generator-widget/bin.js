@@ -1,14 +1,11 @@
 #!/usr/bin/env node
-
-const { readFileSync } = require("fs");
 var { join } = require("path");
-const { execSync } = require("child_process");
 const chalk = require("chalk");
 
-const packageJson = readFileSync(join(__dirname, "package.json"));
-const version = JSON.parse(packageJson).version;
-const args = process.argv.slice(2);
+console.log(chalk.bold.blueBright("Initializing the widget generator..."));
+const yeoman = require('yeoman-environment');
+const env = yeoman.createEnv();
+env.register(join(__dirname, "./generators/app/index.js"), "@mendix/widget");
 
-console.log(chalk.bold.blueBright("Running widget generator..."));
-execSync(`npm install -g yo @mendix/generator-widget@${version}`);
-execSync(`yo @mendix/widget@${version} ${args.join(" ")}`, { stdio: "inherit" });
+const args = process.argv.slice(2);
+env.run(['@mendix/widget', ...args].join(" "))
