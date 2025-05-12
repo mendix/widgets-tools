@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- We fixed the error that is thrown when the target directory is not empty. (#123)
+
 ## [10.15.0] - 2024-09-24
 
 ### Changed

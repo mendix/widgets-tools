@@ -32,7 +32,7 @@ class MxGenerator extends Generator {
 
         if ((await dirExists(fullDestinationPath)) && !(await isDirEmpty(fullDestinationPath))) {
             this.log(text.BANNER);
-            this.env.error(Error(text.DIR_NOT_EMPTY_ERROR));
+            throw new Error(text.DIR_NOT_EMPTY_ERROR);
         }
     }
 
