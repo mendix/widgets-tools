@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- We improved the startup time when using the generator with `npx`.
+
 ### Fixed
 
 - We fixed the error that is thrown when the target directory is not empty. (#123)
+
+### Security
+
+- We updated dependencies to recent security patches.
 
 ## [10.15.0] - 2024-09-24
 
