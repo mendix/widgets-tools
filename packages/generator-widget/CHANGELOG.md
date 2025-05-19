@@ -6,17 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.15.1] - 2025-05-19
+
 ### Changed
 
-- We improved the startup time when using the generator with `npx`.
+-   We improved the startup time when using the generator with `npx`.
 
 ### Fixed
 
-- We fixed the error message when attempting to generate a widget in a non-empty directory. (Issue #123)
+-   We fixed the error message when attempting to generate a widget in a non-empty directory. (Issue #123)
 
 ### Security
 
-- We updated dependencies to recent security patches.
+-   We updated dependencies to recent security patches.
 
 ## [10.15.0] - 2024-09-24
 
