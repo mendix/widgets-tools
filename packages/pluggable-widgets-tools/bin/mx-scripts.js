@@ -90,6 +90,8 @@ function getRealCommand(cmd, toolsRoot) {
             return `jest --projects "${join(toolsRoot, "test-config/jest.config.js")}"`;
         case "test:unit:native":
             return `jest --projects "${join(toolsRoot, "test-config/jest.native.config.js")}"`;
+        case "test:enzyme-free":
+            return `jest --projects "${join(toolsRoot, "test-config/jest.enzyme-free.config.js")}"`;
         case "test:e2e":
         case "test:e2e:ts":
         case "test:e2e:web:cypress":
