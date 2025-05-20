@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   We added enzyme-free unit test command in scripts.
+
 ## [10.21.0] - 2025-03-27
 
 ### Added
