@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We fixed an issue with unit tests failing when files contain modern JavaScript features.
+
 ## [10.21.1] - 2025-06-13
 
 ### Added
