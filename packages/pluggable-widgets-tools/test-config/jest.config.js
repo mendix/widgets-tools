@@ -13,7 +13,7 @@ module.exports = {
         "^.+\\.tsx?$": [
             "ts-jest",
             {
-                tsconfig: { module: "commonjs" }
+                tsconfig: { module: "commonjs", target: "ES2019" },
             }
         ],
         "^.+\\.jsx?$": join(__dirname, "transform.js"),
