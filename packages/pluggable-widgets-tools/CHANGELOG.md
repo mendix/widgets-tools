@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.21.2] - 2025-07-02
+
 ### Changed
 
 -   We fixed an issue with unit tests failing when files contain modern JavaScript features.
