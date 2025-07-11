@@ -1,17 +1,26 @@
-import { findUp } from "find-up-simple"
-import { readFile } from "node:fs/promises"
+import { type } from "arktype";
+import { findUp } from "find-up-simple";
+import { readFile } from "node:fs/promises";
+import { PackageJson } from "./lib/core/PackageJson.js";
 
 export async function build() {
-    const result = await readPackageUp()
+    console.log("Building the project...");
+    const result = await readPackageUp();
     if (!result) {
-        console.error("No package.json found")
-        process.exit(1)
+        throw new Error("No package.json found");
     }
-    console.dir(result)
+    const pkg = PackageJson(result);
+
+    if (pkg instanceof type.errors) {
+        console.error(pkg.summary);
+        throw new Error("package.json is invalid");
+    }
+    console.dir(pkg);
 }
 
 export async function readPackageUp(): Promise<{} | undefined> {
     const filePath = await findUp("package.json");
+    console.log("Found package.json at:", filePath);
     if (!filePath) {
         return;
     }
@@ -19,5 +28,7 @@ export async function readPackageUp(): Promise<{} | undefined> {
 
     try {
         return JSON.parse(data);
-    } catch {}
+    } catch {
+        console.error("Failed to parse package.json");
+    }
 }
