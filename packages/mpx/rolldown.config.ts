@@ -4,7 +4,7 @@ const config: RolldownOptions = {
     input: "./src/cli.ts",
     external: ["rolldown"],
     output: {
-        file: "./bin/mpw.js",
+        file: "./bin/mpx.js",
         inlineDynamicImports: true
     },
     platform: "node"

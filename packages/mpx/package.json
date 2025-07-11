@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "test": "echo 'test is missing'"
+        "test": "echo 'test is missing'",
+        "dev": "premove bin && rolldown -c rolldown.config.ts -w"
     },
     "keywords": [
         "mendix",
@@ -22,8 +23,10 @@
     "devDependencies": {
         "@tsconfig/node22": "^22.0.2",
         "@types/node": "^24.0.13",
+        "arktype": "^2.1.20",
         "cac": "^6.7.14",
         "find-up-simple": "^1.0.1",
+        "premove": "^4.0.0",
         "prettier": "^3.6.2"
     }
 }
