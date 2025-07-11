@@ -1,0 +1,29 @@
+{
+    "name": "@mendix/mpx",
+    "version": "0.1.0",
+    "description": "Mendix tool for bundling pluggable widgets",
+    "type": "module",
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "test": "echo 'test is missing'"
+    },
+    "keywords": [
+        "mendix",
+        "cli",
+        "widgets",
+        "tool"
+    ],
+    "author": "",
+    "license": "Apache-2.0",
+    "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
+    "dependencies": {
+        "rolldown": "1.0.0-beta.26"
+    },
+    "devDependencies": {
+        "@tsconfig/node22": "^22.0.2",
+        "@types/node": "^24.0.13",
+        "cac": "^6.7.14",
+        "find-up-simple": "^1.0.1",
+        "prettier": "^3.6.2"
+    }
+}
