@@ -1,11 +1,10 @@
 import { ArkErrors } from "arktype";
 import chalk from "chalk";
-import fg from "fast-glob";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { rolldown } from "rolldown";
 import { pprint } from "./error-utils.js";
-import { PackageJson } from "./lib/core/PackageJson.js";
+import { PackageJson } from "./lib/parsers/PackageJson.js";
 
 export async function actionBuild(root?: string) {
     try {
@@ -18,13 +17,16 @@ export async function actionBuild(root?: string) {
 }
 
 export async function build(root?: string) {
-    root = resolve(root ?? "");
+    root = path.resolve(root ?? "");
     process.chdir(root);
 
-    const pkg = await readPackageJson(root);
-    const [entry] = await fg(["src/**/*.ts", "src/**/*.tsx"]);
+    const [pkg, isTs] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
+
+    const inputFiles = getInputFiles(pkg.widgetName, isTs);
+
+    // const [entry] = await fg(["src/**/*.ts", "src/**/*.tsx"]);
     const bundle = await rolldown({
-        input: entry,
+        input: inputFiles.widgetFile,
         external: [/^react\/jsx-runtime$/]
     });
 
@@ -34,9 +36,60 @@ export async function build(root?: string) {
     });
 }
 
-export async function readPackageJson(root: string): Promise<PackageJson> {
-    const filePath = resolve(root, "package.json");
-    const pkg = PackageJson(await readFile(filePath, "utf-8"));
+interface InputFiles {
+    editorConfig: string;
+    editorPreview: string;
+    packageXml: string;
+    widgetFile: string;
+    widgetXml: string;
+}
+
+function getInputFiles(widgetName: string, isTs: boolean): InputFiles {
+    const ext = isTs ? "ts" : "js";
+    const extJsx = isTs ? "tsx" : "jsx";
+
+    const editorConfig = path.format({
+        dir: "src",
+        name: widgetName,
+        ext: `editorConfig.${ext}`
+    });
+
+    const editorPreview = path.format({
+        dir: "src",
+        name: widgetName,
+        ext: `editorPreview.${extJsx}`
+    });
+
+    const packageXml = path.format({
+        dir: "src",
+        base: "package.xml"
+    });
+
+    const widgetFile = path.format({
+        dir: "src",
+        name: widgetName,
+        ext: extJsx
+    });
+
+    const widgetXml = path.format({
+        dir: "src",
+        name: widgetName,
+        ext: "xml"
+    });
+
+    return { editorConfig, editorPreview, packageXml, widgetFile, widgetXml };
+}
+
+async function isTypeScriptProject(root: string): Promise<boolean> {
+    return fs.access(path.resolve(root, "tsconfig.json"), fs.constants.F_OK).then(
+        () => true,
+        () => false
+    );
+}
+
+async function readPackageJson(root: string): Promise<PackageJson> {
+    const filePath = path.resolve(root, "package.json");
+    const pkg = PackageJson(await fs.readFile(filePath, "utf-8"));
 
     if (pkg instanceof ArkErrors) {
         throw new Error(`Invalid package.json:\n${pkg.summary}`);
