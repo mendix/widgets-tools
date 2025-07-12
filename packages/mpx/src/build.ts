@@ -1,34 +1,46 @@
-import { type } from "arktype";
-import { findUp } from "find-up-simple";
+import { ArkErrors } from "arktype";
+import chalk from "chalk";
+import fg from "fast-glob";
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { rolldown } from "rolldown";
+import { pprint } from "./error-utils.js";
 import { PackageJson } from "./lib/core/PackageJson.js";
 
-export async function build() {
-    console.log("Building the project...");
-    const result = await readPackageUp();
-    if (!result) {
-        throw new Error("No package.json found");
+export async function actionBuild(root?: string) {
+    try {
+        await build(root);
+    } catch (error) {
+        console.error(chalk.red("BUILD ERROR"));
+        console.error(pprint(error instanceof Error ? error.message : String(error)));
+        process.exit(1);
     }
-    const pkg = PackageJson(result);
-
-    if (pkg instanceof type.errors) {
-        console.error(pkg.summary);
-        throw new Error("package.json is invalid");
-    }
-    console.dir(pkg);
 }
 
-export async function readPackageUp(): Promise<{} | undefined> {
-    const filePath = await findUp("package.json");
-    console.log("Found package.json at:", filePath);
-    if (!filePath) {
-        return;
-    }
-    const data = await readFile(filePath, "utf-8");
+export async function build(root?: string) {
+    root = resolve(root ?? "");
+    process.chdir(root);
 
-    try {
-        return JSON.parse(data);
-    } catch {
-        console.error("Failed to parse package.json");
+    const pkg = await readPackageJson(root);
+    const [entry] = await fg(["src/**/*.ts", "src/**/*.tsx"]);
+    const bundle = await rolldown({
+        input: entry,
+        external: [/^react\/jsx-runtime$/]
+    });
+
+    await bundle.write({
+        format: "esm",
+        minify: false
+    });
+}
+
+export async function readPackageJson(root: string): Promise<PackageJson> {
+    const filePath = resolve(root, "package.json");
+    const pkg = PackageJson(await readFile(filePath, "utf-8"));
+
+    if (pkg instanceof ArkErrors) {
+        throw new Error(`Invalid package.json:\n${pkg.summary}`);
     }
+
+    return pkg;
 }
