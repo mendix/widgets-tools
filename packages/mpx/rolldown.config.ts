@@ -2,12 +2,14 @@ import type { RolldownOptions } from "rolldown";
 
 const config: RolldownOptions = {
     input: "./src/cli.ts",
-    external: ["rolldown"],
+    external: ["rolldown", "arktype"],
     output: {
-        file: "./bin/mpx.js",
-        inlineDynamicImports: true
+        file: "./dist/mpx.js",
+        inlineDynamicImports: true,
+        minify: false
     },
-    platform: "node"
+    platform: "node",
+    treeshake: true
 };
 
 export default config;
