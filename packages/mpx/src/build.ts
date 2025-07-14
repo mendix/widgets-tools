@@ -16,7 +16,6 @@ interface BuildCommandOptions {
 
 export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
     try {
-        // consola.log(root, options);
         await runBuild(root, options);
     } catch (error) {
         consola.error(error);
@@ -142,8 +141,7 @@ class ProjectConfig {
 
     get outputDirs(): BundleOutputDirs {
         const { pkg } = this.#inputs;
-        // const widgetDir = path.join(this.#dist, ...pkg.packagePath.split("."), pkg.widgetName.toLowerCase());
-        const widgetDir = this.#dist;
+        const widgetDir = path.join(this.#dist, ...pkg.packagePath.split("."), pkg.widgetName.toLowerCase());
 
         return { dist: this.#dist, widgetDir };
     }
@@ -154,7 +152,11 @@ function defaultConfig(project: ProjectConfig): BuildOptions[] {
         input: project.files.widgetFile,
         external: ["react/jsx-runtime"],
         output: {
-            file: path.join(project.outputDirs.widgetDir, "widget.mjs"),
+            file: path.format({
+                dir: project.outputDirs.widgetDir,
+                name: project.pkg.widgetName,
+                ext: "mjs"
+            }),
             format: "esm"
         }
     } satisfies BuildOptions;
@@ -163,7 +165,11 @@ function defaultConfig(project: ProjectConfig): BuildOptions[] {
         input: project.files.widgetFile,
         external: ["react/jsx-runtime"],
         output: {
-            file: path.join(project.outputDirs.widgetDir, "widget.js"),
+            file: path.format({
+                dir: project.outputDirs.widgetDir,
+                name: project.pkg.widgetName,
+                ext: "js"
+            }),
             format: "umd",
             name: `${project.pkg.packagePath}.${project.pkg.widgetName}`,
             globals: {
