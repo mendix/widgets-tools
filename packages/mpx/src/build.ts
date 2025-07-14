@@ -4,6 +4,7 @@ import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
+import { STD_EXTERNALS } from "./constants.js";
 import { PackageJson } from "./lib/parsers/PackageJson.js";
 import { bold, green } from "./utils/colors.js";
 import { parsePackageError } from "./utils/error.js";
@@ -80,6 +81,13 @@ interface BundleInputFiles {
     widgetXml: string;
 }
 
+interface BundleOutputFiles {
+    editorConfig: string;
+    editorPreview: string;
+    esm: string;
+    umd: string;
+}
+
 interface BundleOutputDirs {
     dist: string;
     widgetDir: string;
@@ -95,6 +103,8 @@ class ProjectConfig {
     readonly #inputs: ProjectConfigInputs;
     readonly pkg: PackageJson;
     readonly isTsProject: boolean;
+    readonly configExt = "editorConfig";
+    readonly previewExt = "editorPreview";
 
     constructor(inputs: ProjectConfigInputs) {
         this.#inputs = inputs;
@@ -110,13 +120,13 @@ class ProjectConfig {
         const editorConfig = path.format({
             dir: "src",
             name: pkg.widgetName,
-            ext: `editorConfig.${ext}`
+            ext: `${this.configExt}.${ext}`
         });
 
         const editorPreview = path.format({
             dir: "src",
             name: pkg.widgetName,
-            ext: `editorPreview.${extJsx}`
+            ext: `${this.previewExt}.${extJsx}`
         });
 
         const packageXml = path.format({
@@ -145,31 +155,48 @@ class ProjectConfig {
 
         return { dist: this.#dist, widgetDir };
     }
-}
 
-function defaultConfig(project: ProjectConfig): BuildOptions[] {
-    const esmBundle = {
-        input: project.files.widgetFile,
-        external: ["react/jsx-runtime"],
-        output: {
-            file: path.format({
-                dir: project.outputDirs.widgetDir,
-                name: project.pkg.widgetName,
+    get outputFiles(): BundleOutputFiles {
+        return {
+            esm: path.format({
+                dir: this.outputDirs.widgetDir,
+                name: this.pkg.widgetName,
                 ext: "mjs"
             }),
+            umd: path.format({
+                dir: this.outputDirs.widgetDir,
+                name: this.pkg.widgetName,
+                ext: "js"
+            }),
+            editorConfig: path.format({
+                dir: this.outputDirs.dist,
+                name: this.pkg.widgetName,
+                ext: `${this.configExt}.js`
+            }),
+            editorPreview: path.format({
+                dir: this.outputDirs.dist,
+                name: this.pkg.widgetName,
+                ext: `${this.previewExt}.js`
+            })
+        };
+    }
+}
+
+async function defaultConfig(project: ProjectConfig): Promise<BuildOptions[]> {
+    const esmBundle = {
+        input: project.files.widgetFile,
+        external: [...STD_EXTERNALS],
+        output: {
+            file: project.outputFiles.esm,
             format: "esm"
         }
     } satisfies BuildOptions;
 
     const umdBundle = {
         input: project.files.widgetFile,
-        external: ["react/jsx-runtime"],
+        external: [...STD_EXTERNALS],
         output: {
-            file: path.format({
-                dir: project.outputDirs.widgetDir,
-                name: project.pkg.widgetName,
-                ext: "js"
-            }),
+            file: project.outputFiles.umd,
             format: "umd",
             name: `${project.pkg.packagePath}.${project.pkg.widgetName}`,
             globals: {
@@ -178,7 +205,38 @@ function defaultConfig(project: ProjectConfig): BuildOptions[] {
         }
     } satisfies BuildOptions;
 
-    return [esmBundle, umdBundle];
+    const editorConfigBundle = {
+        input: project.files.editorConfig,
+        output: {
+            file: project.outputFiles.editorConfig,
+            format: "commonjs"
+        }
+    } satisfies BuildOptions;
+
+    const editorPreviewBundle = {
+        input: project.files.editorPreview,
+        output: {
+            file: project.outputFiles.editorPreview,
+            format: "commonjs"
+        }
+    } satisfies BuildOptions;
+
+    const bundles: BuildOptions[] = [esmBundle, umdBundle];
+
+    const [addEditorConfig, addEditorPreview] = await Promise.all([
+        hasEditorConfig(project),
+        hasEditorPreview(project)
+    ]);
+
+    if (addEditorConfig) {
+        bundles.push(editorConfigBundle);
+    }
+
+    if (addEditorPreview) {
+        bundles.push(editorPreviewBundle);
+    }
+
+    return bundles;
 }
 
 async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
@@ -187,6 +245,20 @@ async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
 
 async function isTypeScriptProject(root: string): Promise<boolean> {
     return fs.access(path.resolve(root, "tsconfig.json"), fs.constants.F_OK).then(
+        () => true,
+        () => false
+    );
+}
+
+async function hasEditorConfig(project: ProjectConfig): Promise<boolean> {
+    return fs.access(path.resolve(project.files.editorConfig), fs.constants.F_OK).then(
+        () => true,
+        () => false
+    );
+}
+
+async function hasEditorPreview(project: ProjectConfig): Promise<boolean> {
+    return fs.access(path.resolve(project.files.editorPreview), fs.constants.F_OK).then(
         () => true,
         () => false
     );
