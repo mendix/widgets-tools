@@ -1,4 +1,3 @@
-import consola from "consola";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { env } from "node:process";
@@ -8,6 +7,7 @@ import { onExit } from "signal-exit";
 import { PackageJson } from "./lib/parsers/PackageJson.js";
 import { bold, green } from "./utils/colors.js";
 import { parsePackageError } from "./utils/error.js";
+import { logger } from "./utils/logger.js";
 
 interface BuildCommandOptions {
     watch?: boolean;
@@ -18,7 +18,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
     try {
         await runBuild(root, options);
     } catch (error) {
-        consola.error(error);
+        logger.error(error);
         process.exit(1);
     }
 }
@@ -45,29 +45,29 @@ export async function runBuild(root: string | undefined, options: BuildCommandOp
         buildMeasure.start();
         for (const bundle of bundles) {
             await buildBundle(bundle);
-            consola.success(pprintSuccessOutput(bundle.output?.file!));
+            logger.success(pprintSuccessOutput(bundle.output?.file!));
         }
         buildMeasure.end();
     } else {
-        consola.start("Start build in watch mode");
+        logger.start("Start build in watch mode");
         const watcher = watch(bundles);
         watcher.on("event", event => {
             if (event.code === "BUNDLE_END") {
                 let [outFile] = event.output;
                 outFile = bold(path.relative(root, outFile));
-                consola.success(pprintSuccessOutput(outFile, event.duration));
+                logger.success(pprintSuccessOutput(outFile, event.duration));
                 event.result?.close();
             }
 
             if (event.code === "END") {
-                consola.log("");
+                logger.log("");
             }
         });
 
         onExit(() => {
             watcher.close();
-            consola.log("");
-            consola.log("Build watcher stopped");
+            logger.log("");
+            logger.log("Build watcher stopped");
         });
     }
 }
@@ -215,6 +215,6 @@ const buildMeasure = {
     end() {
         performance.mark("build-end");
         const buildInfo = performance.measure("build", "build-start", "build-end");
-        consola.success("Done in", green(ms(buildInfo.duration)));
+        logger.success("Done in", green(ms(buildInfo.duration)));
     }
 };
