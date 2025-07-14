@@ -1,10 +1,14 @@
-import { type } from "arktype";
+import * as z from "zod";
 
-export const PackageJson = type("string.json.parse").to({
-    name: type("string > 0").to("string.trim"),
-    version: "string.semver",
-    widgetName: type("string > 0").to("string.trim"),
-    packagePath: type(/^[a-zA-Z]+(\.[a-zA-Z]+)*$/).describe("must be dot separated path like 'example.widget'")
+export const PackageJson = z.object({
+    name: z.string().min(1).trim(),
+    version: z.string().refine(val => /^\d+\.\d+\.\d+$/.test(val), {
+        message: "Invalid semver"
+    }),
+    widgetName: z.string().min(1).trim(),
+    packagePath: z.string().regex(/^[a-zA-Z]+(\.[a-zA-Z]+)*$/, {
+        message: "must be dot separated path like 'example.widget'"
+    })
 });
 
-export type PackageJson = typeof PackageJson.infer;
+export type PackageJson = z.infer<typeof PackageJson>;

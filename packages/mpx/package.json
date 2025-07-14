@@ -6,7 +6,8 @@
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "test": "echo 'test is missing'",
-        "dev": "premove dist && rolldown -c rolldown.config.ts -w"
+        "dev": "premove dist && rolldown -c rolldown.config.ts -w",
+        "build": "premove dist && rolldown -c rolldown.config.ts"
     },
     "keywords": [
         "mendix",
@@ -17,18 +18,22 @@
     "author": "",
     "license": "Apache-2.0",
     "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
-    "dependencies": {
-        "arktype": "^2.1.20",
-        "picocolors": "^1.1.1",
-        "rolldown": "1.0.0-beta.26"
-    },
     "devDependencies": {
         "@tsconfig/node22": "^22.0.2",
         "@types/node": "^24.0.13",
         "cac": "^6.7.14",
+        "consola": "^3.4.2",
         "fast-glob": "^3.3.3",
-        "find-up-simple": "^1.0.1",
+        "picocolors": "^1.1.1",
         "premove": "^4.0.0",
-        "prettier": "^3.6.2"
+        "prettier": "^3.6.2",
+        "pretty-ms": "^9.2.0",
+        "rollup": "^4.45.0",
+        "signal-exit": "^4.1.0",
+        "typescript": "^5.8.3",
+        "zod": "^4.0.5"
+    },
+    "dependencies": {
+        "rolldown": "1.0.0-beta.26"
     }
 }
