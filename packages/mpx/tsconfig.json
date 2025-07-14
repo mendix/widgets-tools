@@ -2,6 +2,7 @@
     "extends": "@tsconfig/node22/tsconfig.json",
     "exclude": ["input"],
     "compilerOptions": {
-        "noEmit": true
+        "noEmit": true,
+        "resolveJsonModule": true
     }
 }

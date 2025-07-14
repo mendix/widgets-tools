@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { cac } from "cac";
-import { buildCommand } from "./build.js";
+import { build } from "./build.js";
 import { VERSION } from "./constants.js";
 
 const cli = cac("mpx");
@@ -9,7 +9,7 @@ const cli = cac("mpx");
 cli.command("build [root]", "Build widget")
     .option("-w, --watch", "watch for changes and rebuild")
     .option("-m, --minify", "minify the output (this option is on in CI environment)")
-    .action(buildCommand);
+    .action(build);
 
 cli.help();
 cli.version(VERSION);
