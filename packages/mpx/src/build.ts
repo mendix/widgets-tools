@@ -60,6 +60,10 @@ export async function runBuild(root: string | undefined, options: BuildCommandOp
                 event.result?.close();
             }
 
+            if (event.code === "ERROR") {
+                logger.error(event.error);
+            }
+
             if (event.code === "END") {
                 logger.log("");
             }
