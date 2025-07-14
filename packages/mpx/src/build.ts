@@ -20,13 +20,17 @@ export async function build(root?: string) {
     root = path.resolve(root ?? "");
     process.chdir(root);
 
-    const [pkg, isTs] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
+    const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
-    const inputFiles = getInputFiles(pkg.widgetName, isTs);
+    const config = new ProjectConfig({
+        pkg,
+        isTsProject
+    });
 
+    console.log(config.files, config.outputDirs);
     // const [entry] = await fg(["src/**/*.ts", "src/**/*.tsx"]);
     const bundle = await rolldown({
-        input: inputFiles.widgetFile,
+        input: config.files.widgetFile,
         external: [/^react\/jsx-runtime$/]
     });
 
@@ -36,7 +40,7 @@ export async function build(root?: string) {
     });
 }
 
-interface InputFiles {
+interface BundleInputFiles {
     editorConfig: string;
     editorPreview: string;
     packageXml: string;
@@ -44,40 +48,67 @@ interface InputFiles {
     widgetXml: string;
 }
 
-function getInputFiles(widgetName: string, isTs: boolean): InputFiles {
-    const ext = isTs ? "ts" : "js";
-    const extJsx = isTs ? "tsx" : "jsx";
+interface BundleOutputDirs {
+    dist: string;
+    widgetDir: string;
+}
 
-    const editorConfig = path.format({
-        dir: "src",
-        name: widgetName,
-        ext: `editorConfig.${ext}`
-    });
+interface ProjectConfigInputs {
+    pkg: PackageJson;
+    isTsProject: boolean;
+}
 
-    const editorPreview = path.format({
-        dir: "src",
-        name: widgetName,
-        ext: `editorPreview.${extJsx}`
-    });
+class ProjectConfig {
+    readonly #dist = path.join("dist/tmp/widgets");
+    readonly #inputs: ProjectConfigInputs;
 
-    const packageXml = path.format({
-        dir: "src",
-        base: "package.xml"
-    });
+    constructor(inputs: ProjectConfigInputs) {
+        this.#inputs = inputs;
+    }
 
-    const widgetFile = path.format({
-        dir: "src",
-        name: widgetName,
-        ext: extJsx
-    });
+    get files(): BundleInputFiles {
+        const { pkg, isTsProject } = this.#inputs;
+        const ext = isTsProject ? "ts" : "js";
+        const extJsx = isTsProject ? "tsx" : "jsx";
 
-    const widgetXml = path.format({
-        dir: "src",
-        name: widgetName,
-        ext: "xml"
-    });
+        const editorConfig = path.format({
+            dir: "src",
+            name: pkg.widgetName,
+            ext: `editorConfig.${ext}`
+        });
 
-    return { editorConfig, editorPreview, packageXml, widgetFile, widgetXml };
+        const editorPreview = path.format({
+            dir: "src",
+            name: pkg.widgetName,
+            ext: `editorPreview.${extJsx}`
+        });
+
+        const packageXml = path.format({
+            dir: "src",
+            base: "package.xml"
+        });
+
+        const widgetFile = path.format({
+            dir: "src",
+            name: pkg.widgetName,
+            ext: extJsx
+        });
+
+        const widgetXml = path.format({
+            dir: "src",
+            name: pkg.widgetName,
+            ext: "xml"
+        });
+
+        return { editorConfig, editorPreview, packageXml, widgetFile, widgetXml };
+    }
+
+    get outputDirs(): BundleOutputDirs {
+        const { pkg } = this.#inputs;
+        const widgetDir = path.join(this.#dist, ...pkg.packagePath.split("."), pkg.widgetName.toLowerCase());
+
+        return { dist: this.#dist, widgetDir };
+    }
 }
 
 async function isTypeScriptProject(root: string): Promise<boolean> {
