@@ -19,13 +19,13 @@
     "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
     "dependencies": {
         "arktype": "^2.1.20",
+        "picocolors": "^1.1.1",
         "rolldown": "1.0.0-beta.26"
     },
     "devDependencies": {
         "@tsconfig/node22": "^22.0.2",
         "@types/node": "^24.0.13",
         "cac": "^6.7.14",
-        "chalk": "^5.4.1",
         "fast-glob": "^3.3.3",
         "find-up-simple": "^1.0.1",
         "premove": "^4.0.0",

@@ -1,17 +1,15 @@
 import { ArkErrors } from "arktype";
-import chalk from "chalk";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { rolldown } from "rolldown";
-import { pprint } from "./error-utils.js";
 import { PackageJson } from "./lib/parsers/PackageJson.js";
+import { printError } from "./utils/logging.js";
 
-export async function actionBuild(root?: string) {
+export async function buildCommand(root?: string): Promise<void> {
     try {
         await build(root);
     } catch (error) {
-        console.error(chalk.red("BUILD ERROR"));
-        console.error(pprint(error instanceof Error ? error.message : String(error)));
+        printError(error);
         process.exit(1);
     }
 }

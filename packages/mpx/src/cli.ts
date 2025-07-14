@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
 import { cac } from "cac";
-import { actionBuild } from "./build.js";
+import { buildCommand } from "./build.js";
 import { VERSION } from "./constants.js";
 
 const cli = cac("mpx");
 
-cli.command("dev [root]", "Run build in watch mode").action(actionBuild);
-// cli.command("build", "Create production build").action(build);
+cli.command("build [root]", "Build widget")
+    .option("-w, --watch", "watch for changes and rebuild")
+    .option("-m, --minify", "minify the output (this option is on in CI environment)")
+    .action(buildCommand);
 
 cli.help();
 cli.version(VERSION);
