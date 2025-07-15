@@ -13,4 +13,4 @@ export const STD_EXTERNALS = [
     /^big.js$/
 ];
 
-export const WIDGET_ASSETS = ["src/*.xml", "src/*.@(tile|icon)?(.dark).png"];
+export const MODELER_FILES = ["src/*.xml", "src/*.@(tile|icon)?(.dark).png"];

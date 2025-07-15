@@ -26,6 +26,7 @@ interface BundleOutputDirs {
     mpkDir: string;
     contentRoot: string;
     widgetDir: string;
+    widgetAssetsDir: string;
 }
 
 interface ProjectConfigInputs {
@@ -46,6 +47,15 @@ export class ProjectConfig {
     constructor(inputs: ProjectConfigInputs) {
         this.pkg = inputs.pkg;
         this.isTsProject = inputs.isTsProject;
+    }
+
+    /** Public path (aka base url) for widget assets */
+    get assetsPublicPath(): string {
+        const {
+            pkg: { packagePath, widgetName }
+        } = this;
+        const publicPath = ["widgets", ...packagePath.split("."), widgetName.toLowerCase(), "assets"].join("/");
+        return `${publicPath}/`;
     }
 
     get inputFiles(): BundleInputFiles {
@@ -96,7 +106,8 @@ export class ProjectConfig {
             dist: this.dist,
             mpkDir: path.join(this.dist, this.pkg.version),
             contentRoot: this.contentRoot,
-            widgetDir: this.widgetDir
+            widgetDir: this.widgetDir,
+            widgetAssetsDir: path.join(this.widgetDir, "assets")
         };
     }
 
