@@ -4,7 +4,7 @@ import { parsePackageError } from "./error.js";
 import { PackageJson } from "./parsers/PackageJson.js";
 import { ProjectConfig } from "./project-config.js";
 
-function access(filePath: string): Promise<boolean> {
+export function access(filePath: string): Promise<boolean> {
     return fs.access(filePath, fs.constants.F_OK).then(
         () => true,
         () => false

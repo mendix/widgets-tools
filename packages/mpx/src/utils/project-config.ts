@@ -1,4 +1,6 @@
 import path from "node:path";
+import { env } from "node:process";
+import { access } from "./fs.js";
 import { PackageJson } from "./parsers/PackageJson.js";
 
 /** Files located in src directory */
@@ -125,5 +127,23 @@ export class ProjectConfig {
                 base: `${pkg.packagePath}.${pkg.widgetName}.mpk`
             })
         };
+    }
+
+    async getProjectPath(): Promise<string | undefined> {
+        const { pkg } = this;
+        const projectPath = (() => {
+            if (env.MX_PROJECT_PATH) {
+                return env.MX_PROJECT_PATH;
+            }
+            if (pkg.config?.projectPath) {
+                return pkg.config.projectPath;
+            }
+
+            return path.join("tests", "testProject");
+        })();
+
+        if (await access(projectPath)) {
+            return projectPath;
+        }
     }
 }
