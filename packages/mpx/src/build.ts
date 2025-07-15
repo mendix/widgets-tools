@@ -8,10 +8,9 @@ import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
 import { STD_EXTERNALS } from "./constants.js";
 import { bold, green } from "./utils/colors.js";
-import { parsePackageError } from "./utils/error.js";
+import { hasEditorConfig, hasEditorPreview, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
-import { PackageJson } from "./utils/parsers/PackageJson.js";
 import { ProjectConfig } from "./utils/project-config.js";
 
 interface BuildCommandOptions {
@@ -67,7 +66,7 @@ const tasks = {
 
         for (const bundle of bundles) {
             await buildBundle(bundle);
-            logger.success(pprintSuccessOutput(bundle.output?.file!));
+            logger.success(formatMsg.built(bundle.output?.file!));
         }
 
         const stream = fg.stream(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]);
@@ -80,7 +79,7 @@ const tasks = {
         }
 
         await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
-        logger.success(pprintSuccessOutput(project.outputFiles.mpk));
+        logger.success(formatMsg.built(project.outputFiles.mpk));
 
         const buildInfo = buildMeasure.end();
         logger.success("Done in", green(ms(buildInfo.duration)));
@@ -89,11 +88,17 @@ const tasks = {
         logger.start("Start build in watch mode");
 
         const bundlesWatcher = watch(bundles);
+
+        let waitingChanges = false;
         bundlesWatcher.on("event", event => {
             if (event.code === "BUNDLE_END") {
                 let [outFile] = event.output;
                 outFile = bold(path.relative(root, outFile));
-                logger.success(pprintSuccessOutput(outFile, event.duration));
+                if (!waitingChanges) {
+                    logger.success(formatMsg.built(outFile));
+                } else {
+                    logger.success(formatMsg.rebuilt(outFile, event.duration));
+                }
                 event.result?.close();
             }
 
@@ -103,6 +108,10 @@ const tasks = {
 
             if (event.code === "END") {
                 logger.log("");
+                if (!waitingChanges) {
+                    logger.info("Watching for changes...");
+                }
+                waitingChanges = true;
             }
         });
 
@@ -175,42 +184,10 @@ async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
     return defaultConfig(project);
 }
 
-async function isTypeScriptProject(root: string): Promise<boolean> {
-    return fs.access(path.resolve(root, "tsconfig.json"), fs.constants.F_OK).then(
-        () => true,
-        () => false
-    );
-}
-
-async function hasEditorConfig(project: ProjectConfig): Promise<boolean> {
-    return fs.access(path.resolve(project.inputFiles.editorConfig), fs.constants.F_OK).then(
-        () => true,
-        () => false
-    );
-}
-
-async function hasEditorPreview(project: ProjectConfig): Promise<boolean> {
-    return fs.access(path.resolve(project.inputFiles.editorPreview), fs.constants.F_OK).then(
-        () => true,
-        () => false
-    );
-}
-
-async function readPackageJson(root: string): Promise<PackageJson> {
-    const filePath = path.resolve(root, "package.json");
-    try {
-        return PackageJson.parse(JSON.parse(await fs.readFile(filePath, "utf-8")));
-    } catch (error) {
-        throw parsePackageError(error);
-    }
-}
-
-function pprintSuccessOutput(file: string, duration?: number): string {
-    if (!duration) {
-        return `Built ${bold(file)}`;
-    }
-    return `Built ${bold(file)} in ${green(ms(duration))}`;
-}
+const formatMsg = {
+    built: (file: string) => `Built ${bold(file)}`,
+    rebuilt: (file: string, duration: number) => `Rebuilt ${bold(file)} in ${green(ms(duration))}`
+};
 
 const buildMeasure = {
     start() {
