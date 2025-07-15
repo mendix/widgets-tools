@@ -1,3 +1,4 @@
+import chokidar from "chokidar";
 import { ConsolaInstance } from "consola";
 import fg from "fast-glob";
 import fs from "node:fs/promises";
@@ -53,7 +54,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
     }
 }
 
-interface TaskInput {
+interface TaskParams {
     root: string;
     bundles: BuildOptions[];
     project: ProjectConfig;
@@ -61,7 +62,8 @@ interface TaskInput {
 }
 
 const tasks = {
-    async build({ project, bundles, logger }: TaskInput): Promise<void> {
+    async build(params: TaskParams): Promise<void> {
+        const { project, bundles, logger } = params;
         buildMeasure.start();
 
         for (const bundle of bundles) {
@@ -69,14 +71,7 @@ const tasks = {
             logger.success(formatMsg.built(bundle.output?.file!));
         }
 
-        const stream = fg.stream(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]);
-        for await (const src of stream) {
-            const f = path.parse(src as string);
-            const dst = path.join(project.outputDirs.contentRoot, f.base);
-            await fs.cp(src as string, dst, {
-                recursive: true
-            });
-        }
+        await tasks.copyWidgetAssets(params);
 
         await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
         logger.success(formatMsg.built(project.outputFiles.mpk));
@@ -84,41 +79,101 @@ const tasks = {
         const buildInfo = buildMeasure.end();
         logger.success("Done in", green(ms(buildInfo.duration)));
     },
-    async watch({ root, bundles, logger }: TaskInput): Promise<void> {
+    async watch(params: TaskParams): Promise<void> {
+        const { root, bundles, logger } = params;
         logger.start("Start build in watch mode");
 
         const bundlesWatcher = watch(bundles);
 
-        let waitingChanges = false;
-        bundlesWatcher.on("event", event => {
-            if (event.code === "BUNDLE_END") {
-                let [outFile] = event.output;
-                outFile = bold(path.relative(root, outFile));
-                if (!waitingChanges) {
-                    logger.success(formatMsg.built(outFile));
-                } else {
-                    logger.success(formatMsg.rebuilt(outFile, event.duration));
+        const bundleWatchReady = new Promise<void>(resolve => {
+            let isFirstEvent = true;
+            bundlesWatcher.on("event", event => {
+                if (event.code === "BUNDLE_END") {
+                    let [outFile] = event.output;
+                    outFile = bold(path.relative(root, outFile));
+                    if (isFirstEvent) {
+                        logger.success(formatMsg.built(outFile));
+                    } else {
+                        logger.info(formatMsg.rebuilt(outFile, event.duration));
+                    }
+                    event.result?.close();
                 }
-                event.result?.close();
-            }
 
-            if (event.code === "ERROR") {
-                logger.error(event.error);
-            }
-
-            if (event.code === "END") {
-                logger.log("");
-                if (!waitingChanges) {
-                    logger.info("Watching for changes...");
+                if (event.code === "ERROR") {
+                    logger.error(event.error);
                 }
-                waitingChanges = true;
-            }
+
+                if (event.code === "END") {
+                    if (isFirstEvent) {
+                        resolve();
+                    }
+                    isFirstEvent = false;
+                }
+            });
         });
+
+        await bundleWatchReady;
+        await tasks.watchWidgetAssets(params);
+        await tasks.watchContent(params);
+        logger.info("Waiting for changes...");
 
         onExit(() => {
             bundlesWatcher.close();
             logger.log("");
             logger.log("Build watcher stopped");
+        });
+    },
+    async copyWidgetAssets({ project }: TaskParams): Promise<void> {
+        const stream = fg.stream(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]);
+        for await (const src of stream) {
+            const f = path.parse(src as string);
+            const dst = path.join(project.outputDirs.contentRoot, f.base);
+
+            await fs.cp(src as string, dst, {
+                recursive: true
+            });
+        }
+    },
+    async watchWidgetAssets(params: TaskParams): Promise<void> {
+        const { project, logger } = params;
+
+        await tasks.copyWidgetAssets(params);
+
+        const watcher = chokidar.watch(await fg(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]));
+        watcher.on("change", async file => {
+            logger.info(formatMsg.copy(file));
+            const f = path.parse(file);
+            const dst = path.join(project.outputDirs.contentRoot, f.base);
+            await fs.cp(file, dst);
+        });
+
+        onExit(() => {
+            watcher.close();
+        });
+    },
+
+    async watchContent({ logger, project }: TaskParams): Promise<void> {
+        await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
+        const watcher = chokidar.watch(project.outputDirs.contentRoot);
+
+        let debounceTimer: NodeJS.Timeout | null = null;
+
+        watcher.on("change", async () => {
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
+
+            debounceTimer = setTimeout(async () => {
+                await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
+                logger.success(formatMsg.built(project.outputFiles.mpk));
+            }, 30);
+        });
+
+        onExit(() => {
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
+            watcher.close();
         });
     }
 };
@@ -186,7 +241,8 @@ async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
 
 const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
-    rebuilt: (file: string, duration: number) => `Rebuilt ${bold(file)} in ${green(ms(duration))}`
+    rebuilt: (file: string, duration: number) => `Rebuilt ${bold(file)} in ${green(ms(duration))}`,
+    copy: (file: string) => `Copy ${bold(file)}`
 };
 
 const buildMeasure = {
