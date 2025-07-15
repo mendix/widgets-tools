@@ -7,9 +7,10 @@ import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
-import { STD_EXTERNALS, WIDGET_ASSETS } from "./constants.js";
+import { MODELER_FILES } from "./constants.js";
+import { loadConfig } from "./rolldown.js";
 import { bgBlue, blue, bold, dim, green, greenBright, inverse, white } from "./utils/colors.js";
-import { hasEditorConfig, hasEditorPreview, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
+import { isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
 import { ProjectConfig } from "./utils/project-config.js";
@@ -43,9 +44,10 @@ export async function build(root: string | undefined, options: BuildCommandOptio
         const bundles = await loadConfig(project);
 
         await fs.rm(project.outputDirs.dist, { recursive: true, force: true });
-        // console.dir(project.inputFiles);
-        // console.dir(project.outputDirs);
-        // console.dir(project.outputFiles);
+        console.dir(project.inputFiles);
+        console.dir(project.outputDirs);
+        console.dir(project.outputFiles);
+        console.dir(project.assetsPublicPath);
         if (options.watch) {
             await tasks.watch({ project, bundles, logger, root });
         } else {
@@ -74,7 +76,7 @@ const tasks = {
             logger.success(formatMsg.built(bundle.output?.file!));
         }
 
-        await tasks.copyWidgetAssets(params);
+        await tasks.copyModelerFiles(params);
 
         await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
         logger.success(formatMsg.built(project.outputFiles.mpk));
@@ -116,7 +118,7 @@ const tasks = {
         });
 
         await bundleWatchReady;
-        await tasks.watchWidgetAssets(params);
+        await tasks.watchModelerFiles(params);
         await tasks.watchContent(params);
         logger.info("Waiting for changes...");
 
@@ -126,8 +128,8 @@ const tasks = {
             logger.log("Build watcher stopped");
         });
     },
-    async copyWidgetAssets({ project }: TaskParams): Promise<void> {
-        const stream = fg.stream(WIDGET_ASSETS);
+    async copyModelerFiles({ project }: TaskParams): Promise<void> {
+        const stream = fg.stream(MODELER_FILES);
         for await (const src of stream) {
             const f = path.parse(src as string);
             const dst = path.join(project.outputDirs.contentRoot, f.base);
@@ -137,12 +139,12 @@ const tasks = {
             });
         }
     },
-    async watchWidgetAssets(params: TaskParams): Promise<void> {
+    async watchModelerFiles(params: TaskParams): Promise<void> {
         const { project, logger } = params;
 
-        await tasks.copyWidgetAssets(params);
+        await tasks.copyModelerFiles(params);
 
-        const watcher = chokidar.watch(await fg(WIDGET_ASSETS));
+        const watcher = chokidar.watch(await fg(MODELER_FILES));
         watcher.on("change", async file => {
             logger.info(formatMsg.copy(file));
             const f = path.parse(file);
@@ -180,67 +182,6 @@ const tasks = {
         });
     }
 };
-
-async function defaultConfig(project: ProjectConfig): Promise<BuildOptions[]> {
-    const esmBundle = {
-        input: project.inputFiles.widgetFile,
-        external: [...STD_EXTERNALS],
-        output: {
-            file: project.outputFiles.esm,
-            format: "esm"
-        }
-    } satisfies BuildOptions;
-
-    const umdBundle = {
-        input: project.inputFiles.widgetFile,
-        external: [...STD_EXTERNALS],
-        output: {
-            file: project.outputFiles.umd,
-            format: "umd",
-            name: `${project.pkg.packagePath}.${project.pkg.widgetName}`,
-            globals: {
-                "react/jsx-runtime": "react_jsx_runtime"
-            }
-        }
-    } satisfies BuildOptions;
-
-    const editorConfigBundle = {
-        input: project.inputFiles.editorConfig,
-        output: {
-            file: project.outputFiles.editorConfig,
-            format: "commonjs"
-        }
-    } satisfies BuildOptions;
-
-    const editorPreviewBundle = {
-        input: project.inputFiles.editorPreview,
-        output: {
-            file: project.outputFiles.editorPreview,
-            format: "commonjs"
-        }
-    } satisfies BuildOptions;
-
-    const bundles: BuildOptions[] = [esmBundle, umdBundle];
-
-    const [addEditorConfig, addEditorPreview] = await Promise.all([
-        hasEditorConfig(project),
-        hasEditorPreview(project)
-    ]);
-
-    if (addEditorConfig) {
-        bundles.push(editorConfigBundle);
-    }
-
-    if (addEditorPreview) {
-        bundles.push(editorPreviewBundle);
-    }
-
-    return bundles;
-}
-
-async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
-    return defaultConfig(project);
-}
 
 const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
