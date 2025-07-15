@@ -97,19 +97,19 @@ export class ProjectConfig {
         return { editorConfig, editorPreview, packageXml, widgetFile, widgetXml };
     }
 
-    /** Directory where widget bundles will be output */
-    get widgetDir(): string {
-        const { pkg, contentRoot } = this;
-        return path.join(contentRoot, ...pkg.packagePath.split("."), pkg.widgetName.toLowerCase());
+    /** Relative path to the widget directory from the "widgets" */
+    get relativeWidgetPath(): string {
+        return path.join(...this.pkg.packagePath.split("."), this.pkg.widgetName.toLowerCase());
     }
 
     get outputDirs(): BundleOutputDirs {
+        const widgetDir = path.join(this.contentRoot, this.relativeWidgetPath);
         return {
             dist: this.dist,
             mpkDir: path.join(this.dist, this.pkg.version),
             contentRoot: this.contentRoot,
-            widgetDir: this.widgetDir,
-            widgetAssetsDir: path.join(this.widgetDir, "assets")
+            widgetDir,
+            widgetAssetsDir: path.join(widgetDir, "assets")
         };
     }
 
