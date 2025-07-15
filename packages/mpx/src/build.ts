@@ -19,8 +19,6 @@ interface BuildCommandOptions {
     minify?: boolean;
 }
 
-// TODO: Copy files and add watcher.
-
 export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
     options.watch ??= false;
     options.minify ??= !!env.CI;

@@ -4,7 +4,8 @@ import { cac } from "cac";
 import { build } from "./build.js";
 import { VERSION } from "./constants.js";
 
-const cli = cac("mpx");
+const name = "mpx";
+const cli = cac(name);
 
 cli.command("build [root]", "Build widget")
     .option("-w, --watch", "watch for changes and rebuild")
@@ -16,7 +17,7 @@ cli.version(VERSION);
 
 cli.on("command:*", () => {
     console.error(`Unknown command: "%s"`, cli.args.join(" "));
-    console.error("See 'mpw --help' for a list of available commands.");
+    console.error(`See '${name} --help' for a list of available commands.`);
     process.exit(1);
 });
 
@@ -31,7 +32,3 @@ process.on("uncaughtException", error => {
     console.error("Uncaught Exception:", error.message);
     process.exit(1);
 });
-
-// process.on("unhandledRejection", (reason, promise) => {
-//     console.error("Unhandled Rejection at:", promise, "reason:", reason);
-// });
