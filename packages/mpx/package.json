@@ -23,6 +23,7 @@
         "@types/node": "^24.0.13",
         "cac": "^6.7.14",
         "consola": "^3.4.2",
+        "cpx2": "^8.0.0",
         "fast-glob": "^3.3.3",
         "picocolors": "^1.1.1",
         "premove": "^4.0.0",
