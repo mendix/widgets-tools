@@ -12,3 +12,5 @@ export const STD_EXTERNALS = [
     /^react-dom$/,
     /^big.js$/
 ];
+
+export const WIDGET_ASSETS = ["src/*.xml", "src/*.@(tile|icon)?(.dark).png"];

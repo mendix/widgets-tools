@@ -7,7 +7,7 @@ import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
-import { STD_EXTERNALS } from "./constants.js";
+import { STD_EXTERNALS, WIDGET_ASSETS } from "./constants.js";
 import { bold, green } from "./utils/colors.js";
 import { hasEditorConfig, hasEditorPreview, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
@@ -124,7 +124,7 @@ const tasks = {
         });
     },
     async copyWidgetAssets({ project }: TaskParams): Promise<void> {
-        const stream = fg.stream(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]);
+        const stream = fg.stream(WIDGET_ASSETS);
         for await (const src of stream) {
             const f = path.parse(src as string);
             const dst = path.join(project.outputDirs.contentRoot, f.base);
@@ -139,7 +139,7 @@ const tasks = {
 
         await tasks.copyWidgetAssets(params);
 
-        const watcher = chokidar.watch(await fg(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]));
+        const watcher = chokidar.watch(await fg(WIDGET_ASSETS));
         watcher.on("change", async file => {
             logger.info(formatMsg.copy(file));
             const f = path.parse(file);
