@@ -1,6 +1,7 @@
 import chokidar from "chokidar";
 import { ConsolaInstance } from "consola";
 import fg from "fast-glob";
+import { filesize } from "filesize";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { env } from "node:process";
@@ -77,9 +78,7 @@ const tasks = {
         }
 
         await tasks.copyModelerFiles(params);
-
-        await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
-        logger.success(formatMsg.built(project.outputFiles.mpk));
+        await tasks.buildMpk(params);
 
         const buildInfo = buildMeasure.end();
         logger.success("Done in", green(ms(buildInfo.duration)));
@@ -156,9 +155,9 @@ const tasks = {
             watcher.close();
         });
     },
-
-    async watchContent({ logger, project }: TaskParams): Promise<void> {
-        await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
+    async watchContent(params: TaskParams): Promise<void> {
+        const { project } = params;
+        await tasks.buildMpk({ ...params, quiet: true });
         const watcher = chokidar.watch(project.outputDirs.contentRoot);
 
         let debounceTimer: NodeJS.Timeout | null = null;
@@ -168,10 +167,7 @@ const tasks = {
                 clearTimeout(debounceTimer);
             }
 
-            debounceTimer = setTimeout(async () => {
-                await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
-                logger.success(formatMsg.built(project.outputFiles.mpk));
-            }, 30);
+            debounceTimer = setTimeout(() => tasks.buildMpk(params), 30);
         });
 
         onExit(() => {
@@ -180,11 +176,19 @@ const tasks = {
             }
             watcher.close();
         });
+    },
+    async buildMpk({ project, logger, quiet = false }: TaskParams & { quiet?: boolean }): Promise<void> {
+        await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
+        const mpkStat = await fs.stat(project.outputFiles.mpk);
+        if (!quiet) {
+            logger.success(formatMsg.builtSize(project.outputFiles.mpk, mpkStat.size));
+        }
     }
 };
 
 const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
+    builtSize: (file: string, size: number) => `Built ${bold(file)} (${dim(filesize(size, { standard: "jedec" }))})`,
     rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
     copy: (file: string) => `Copy ${bold(file)}`,
     mxpath: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
