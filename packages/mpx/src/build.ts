@@ -8,7 +8,7 @@ import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
-import { MODELER_FILES } from "./constants.js";
+import { PACKAGE_FILES } from "./constants.js";
 import { loadConfig } from "./rolldown.js";
 import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js";
 import { isTypeScriptProject, readPackageJson } from "./utils/fs.js";
@@ -77,7 +77,7 @@ const tasks = {
             logger.success(formatMsg.built(bundle.output?.file!));
         }
 
-        await tasks.copyModelerFiles(params);
+        await tasks.copyPackageFiles(params);
         await tasks.buildMpk(params);
 
         const buildInfo = buildMeasure.end();
@@ -117,8 +117,8 @@ const tasks = {
         });
 
         await bundleWatchReady;
-        await tasks.watchModelerFiles(params);
-        await tasks.watchContent(params);
+        await tasks.watchPackageFiles(params);
+        await tasks.watchPackageContent(params);
         logger.info("Waiting for changes...");
 
         onExit(() => {
@@ -127,8 +127,8 @@ const tasks = {
             logger.log("Build watcher stopped");
         });
     },
-    async copyModelerFiles({ project }: TaskParams): Promise<void> {
-        const stream = fg.stream(MODELER_FILES);
+    async copyPackageFiles({ project }: TaskParams): Promise<void> {
+        const stream = fg.stream(PACKAGE_FILES);
         for await (const src of stream) {
             const f = path.parse(src as string);
             const dst = path.join(project.outputDirs.contentRoot, f.base);
@@ -138,12 +138,13 @@ const tasks = {
             });
         }
     },
-    async watchModelerFiles(params: TaskParams): Promise<void> {
+    /** Watch & copy static package files */
+    async watchPackageFiles(params: TaskParams): Promise<void> {
         const { project, logger } = params;
 
-        await tasks.copyModelerFiles(params);
+        await tasks.copyPackageFiles(params);
 
-        const watcher = chokidar.watch(await fg(MODELER_FILES));
+        const watcher = chokidar.watch(await fg(PACKAGE_FILES));
         watcher.on("change", async file => {
             logger.info(formatMsg.copy(file));
             const f = path.parse(file);
@@ -155,7 +156,8 @@ const tasks = {
             watcher.close();
         });
     },
-    async watchContent(params: TaskParams): Promise<void> {
+    /** Setup package content watcher to build mpk whenever package files change */
+    async watchPackageContent(params: TaskParams): Promise<void> {
         const { project } = params;
         await tasks.buildMpk({ ...params, quiet: true });
         const watcher = chokidar.watch(project.outputDirs.contentRoot);

@@ -1,8 +1,6 @@
-import { readFileSync } from "node:fs";
+import pkg from "../package.json" with { type: "json" };
 
-const { version } = JSON.parse(readFileSync(new URL("../package.json", import.meta.url)).toString());
-
-export const VERSION = version as string;
+export const VERSION = pkg.version as string;
 
 export const STD_EXTERNALS = [
     // "mendix" and internals under "mendix/"
@@ -13,4 +11,11 @@ export const STD_EXTERNALS = [
     /^big.js$/
 ];
 
-export const MODELER_FILES = ["src/*.xml", "src/*.@(tile|icon)?(.dark).png"];
+export const PACKAGE_FILES = [
+    // XML files
+    "src/*.xml",
+    // Modeler icons
+    "src/*.@(tile|icon)?(.dark).png",
+    // License file
+    "{licen[cs]e,LICEN[CS]E}?(.*)"
+];
