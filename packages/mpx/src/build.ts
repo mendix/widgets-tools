@@ -8,7 +8,7 @@ import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
 import { STD_EXTERNALS, WIDGET_ASSETS } from "./constants.js";
-import { bold, green } from "./utils/colors.js";
+import { bgBlue, blue, bold, dim, green, greenBright, inverse, white } from "./utils/colors.js";
 import { hasEditorConfig, hasEditorPreview, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
@@ -35,12 +35,17 @@ export async function build(root: string | undefined, options: BuildCommandOptio
             isTsProject
         });
 
+        const projectPath = await project.getProjectPath();
+        if (projectPath) {
+            logger.info(formatMsg.mxpath(projectPath));
+        }
+
         const bundles = await loadConfig(project);
 
         await fs.rm(project.outputDirs.dist, { recursive: true, force: true });
-        console.dir(project.inputFiles);
-        console.dir(project.outputDirs);
-        console.dir(project.outputFiles);
+        // console.dir(project.inputFiles);
+        // console.dir(project.outputDirs);
+        // console.dir(project.outputFiles);
         if (options.watch) {
             await tasks.watch({ project, bundles, logger, root });
         } else {
@@ -88,7 +93,7 @@ const tasks = {
             bundlesWatcher.on("event", event => {
                 if (event.code === "BUNDLE_END") {
                     let [outFile] = event.output;
-                    outFile = bold(path.relative(root, outFile));
+                    outFile = path.relative(root, outFile);
                     if (isFirstEvent) {
                         logger.success(formatMsg.built(outFile));
                     } else {
@@ -239,8 +244,10 @@ async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
 
 const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
-    rebuilt: (file: string, duration: number) => `Rebuilt ${bold(file)} in ${green(ms(duration))}`,
-    copy: (file: string) => `Copy ${bold(file)}`
+    rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
+    copy: (file: string) => `Copy ${bold(file)}`,
+    mxpath1: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${bgBlue(white(bold(` ${dir} `)))}`,
+    mxpath: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
 };
 
 const buildMeasure = {

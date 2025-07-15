@@ -34,6 +34,7 @@ interface ProjectConfigInputs {
 }
 
 export class ProjectConfig {
+    #projectPath: string | undefined;
     /** Output directory for built files */
     readonly dist = "dist";
     /** Package root directory that contains all widget files shipped with mpk */
@@ -130,8 +131,11 @@ export class ProjectConfig {
     }
 
     async getProjectPath(): Promise<string | undefined> {
+        if (this.#projectPath) {
+            return this.#projectPath;
+        }
         const { pkg } = this;
-        const projectPath = (() => {
+        let projectPath = (() => {
             if (env.MX_PROJECT_PATH) {
                 return env.MX_PROJECT_PATH;
             }
@@ -141,8 +145,10 @@ export class ProjectConfig {
 
             return path.join("tests", "testProject");
         })();
+        projectPath = path.resolve(projectPath);
 
         if (await access(projectPath)) {
+            this.#projectPath = projectPath;
             return projectPath;
         }
     }
