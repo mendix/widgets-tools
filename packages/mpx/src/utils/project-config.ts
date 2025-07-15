@@ -173,4 +173,20 @@ export class ProjectConfig {
             return projectPath;
         }
     }
+
+    async toPlainObject(): Promise<Record<string, unknown>> {
+        const projectPath = await this.getProjectPath();
+        return {
+            dist: this.dist,
+            contentRoot: this.contentRoot,
+            pkg: this.pkg,
+            isTsProject: this.isTsProject,
+            projectPath,
+            inputFiles: this.inputFiles,
+            outputDirs: this.outputDirs,
+            outputFiles: this.outputFiles,
+            assetsPublicPath: this.assetsPublicPath,
+            relativeWidgetPath: this.relativeWidgetPath
+        };
+    }
 }

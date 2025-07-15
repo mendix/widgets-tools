@@ -45,11 +45,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
         const bundles = await loadConfig(config);
 
         await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
-        console.dir(config.inputFiles);
-        console.dir(config.outputDirs);
-        console.dir(config.outputFiles);
-        console.dir(config.assetsPublicPath);
-        console.dir(config.relativeWidgetPath);
+        console.dir(await config.toPlainObject(), { depth: 3 });
         if (options.watch) {
             await tasks.watch({ config, bundles, logger, root });
         } else {
@@ -185,11 +181,11 @@ const tasks = {
             watcher.close();
         });
     },
-    async buildMpk({ config: project, logger, quiet = false }: TaskParams & { quiet?: boolean }): Promise<void> {
-        await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
-        const mpkStat = await fs.stat(project.outputFiles.mpk);
+    async buildMpk({ config, logger, quiet = false }: TaskParams & { quiet?: boolean }): Promise<void> {
+        await createMPK(config.outputDirs.contentRoot, config.outputFiles.mpk);
+        const mpkStat = await fs.stat(config.outputFiles.mpk);
         if (!quiet) {
-            logger.success(formatMsg.builtSize(project.outputFiles.mpk, mpkStat.size));
+            logger.success(formatMsg.builtSize(config.outputFiles.mpk, mpkStat.size));
         }
     }
 };
