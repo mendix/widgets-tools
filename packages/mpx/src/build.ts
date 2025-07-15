@@ -9,7 +9,7 @@ import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
 import { MODELER_FILES } from "./constants.js";
 import { loadConfig } from "./rolldown.js";
-import { bgBlue, blue, bold, dim, green, greenBright, inverse, white } from "./utils/colors.js";
+import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js";
 import { isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
@@ -187,7 +187,6 @@ const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
     rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
     copy: (file: string) => `Copy ${bold(file)}`,
-    mxpath1: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${bgBlue(white(bold(` ${dir} `)))}`,
     mxpath: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
 };
 

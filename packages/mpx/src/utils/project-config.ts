@@ -19,6 +19,8 @@ interface BundleOutputFiles {
     esm: string;
     umd: string;
     mpk: string;
+    dependenciesTxt: string;
+    dependenciesJson: string;
 }
 
 interface BundleOutputDirs {
@@ -137,6 +139,14 @@ export class ProjectConfig {
             mpk: path.format({
                 dir: outputDirs.mpkDir,
                 base: `${pkg.packagePath}.${pkg.widgetName}.mpk`
+            }),
+            dependenciesTxt: path.format({
+                dir: outputDirs.contentRoot,
+                base: "dependencies.txt"
+            }),
+            dependenciesJson: path.format({
+                dir: outputDirs.contentRoot,
+                base: "dependencies.json"
             })
         };
     }

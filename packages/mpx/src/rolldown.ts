@@ -1,6 +1,7 @@
 import { BuildOptions, RolldownPlugin } from "rolldown";
+import { Dependency } from "rollup-plugin-license";
 import { STD_EXTERNALS } from "./constants.js";
-import { plugins, RollupUrlOptions } from "./plugins.js";
+import { plugins, RollupLicenseOptions, RollupUrlOptions } from "./plugins.js";
 import { hasEditorConfig, hasEditorPreview } from "./utils/fs.js";
 import { ProjectConfig } from "./utils/project-config.js";
 
@@ -9,6 +10,7 @@ export async function defaultConfig(project: ProjectConfig): Promise<BuildOption
         input: project.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
         plugins: stdPlugins(project),
+        platform: "browser",
         output: {
             file: project.outputFiles.esm,
             format: "esm"
@@ -19,6 +21,7 @@ export async function defaultConfig(project: ProjectConfig): Promise<BuildOption
         input: project.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
         plugins: stdPlugins(project),
+        platform: "browser",
         output: {
             file: project.outputFiles.umd,
             format: "umd",
@@ -68,7 +71,7 @@ export async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]
 }
 
 function stdPlugins(project: ProjectConfig): RolldownPlugin[] {
-    const { url, image } = plugins;
+    const { url, image, license } = plugins;
 
     const urlOptions: RollupUrlOptions = {
         include: [
@@ -86,5 +89,39 @@ function stdPlugins(project: ProjectConfig): RolldownPlugin[] {
         destDir: project.outputDirs.widgetAssetsDir
     };
 
-    return [url(urlOptions), image()];
+    const licenseOptions: RollupLicenseOptions = {
+        thirdParty: {
+            includePrivate: true,
+            output: [
+                {
+                    file: project.outputFiles.dependenciesTxt
+                },
+                {
+                    file: project.outputFiles.dependenciesJson,
+                    template: licenseCustomTemplate
+                }
+            ]
+        }
+    };
+
+    return [url(urlOptions), image(), license(licenseOptions)];
 }
+
+export const licenseCustomTemplate = (dependencies: Dependency[]) =>
+    JSON.stringify(
+        dependencies.map(dependency => {
+            const repoUrl =
+                typeof dependency.repository === "string"
+                    ? dependency.repository
+                    : dependency.repository instanceof Object
+                      ? dependency.repository.url
+                      : undefined;
+
+            return {
+                [dependency.name!]: {
+                    version: dependency.version,
+                    url: dependency.homepage ?? repoUrl
+                }
+            };
+        })
+    );
