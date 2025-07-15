@@ -1,3 +1,5 @@
+import { ConsolaInstance } from "consola";
+import fg from "fast-glob";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { env } from "node:process";
@@ -7,7 +9,7 @@ import { onExit } from "signal-exit";
 import { STD_EXTERNALS } from "./constants.js";
 import { bold, green } from "./utils/colors.js";
 import { parsePackageError } from "./utils/error.js";
-import { logger } from "./utils/logger.js";
+import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
 import { PackageJson } from "./utils/parsers/PackageJson.js";
 import { ProjectConfig } from "./utils/project-config.js";
@@ -17,50 +19,77 @@ interface BuildCommandOptions {
     minify?: boolean;
 }
 
+// TODO: Copy files and add watcher.
+
 export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
+    options.watch ??= false;
+    options.minify ??= !!env.CI;
+
+    const logger: ConsolaInstance = createLogger();
     try {
-        await runBuild(root, options);
+        root = path.resolve(root ?? "");
+        process.chdir(root);
+
+        const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
+
+        const project = new ProjectConfig({
+            pkg,
+            isTsProject
+        });
+
+        const bundles = await loadConfig(project);
+
+        await fs.rm(project.outputDirs.dist, { recursive: true, force: true });
+        console.dir(project.inputFiles);
+        console.dir(project.outputDirs);
+        console.dir(project.outputFiles);
+        if (options.watch) {
+            await tasks.watch({ project, bundles, logger, root });
+        } else {
+            await tasks.build({ project, bundles, logger, root });
+        }
     } catch (error) {
         logger.error(error);
         process.exit(1);
     }
 }
 
-export async function runBuild(root: string | undefined, options: BuildCommandOptions = {}): Promise<void> {
-    options.watch ??= false;
-    options.minify ??= !!env.CI;
-    root = path.resolve(root ?? "");
+interface TaskInput {
+    root: string;
+    bundles: BuildOptions[];
+    project: ProjectConfig;
+    logger: ConsolaInstance;
+}
 
-    process.chdir(root);
-
-    const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
-
-    const project = new ProjectConfig({
-        pkg,
-        isTsProject
-    });
-
-    const bundles = await loadConfig(project);
-
-    // await fs.rm(project.outputDirs.dist, { recursive: true, force: true });
-
-    console.dir(project.inputFiles);
-    console.dir(project.outputDirs);
-    console.dir(project.outputFiles);
-
-    if (!options.watch) {
+const tasks = {
+    async build({ project, bundles, logger }: TaskInput): Promise<void> {
         buildMeasure.start();
+
         for (const bundle of bundles) {
             await buildBundle(bundle);
             logger.success(pprintSuccessOutput(bundle.output?.file!));
         }
+
+        const stream = fg.stream(["src/*.xml", "src/*.@(tile|icon)?(.dark).png"]);
+        for await (const src of stream) {
+            const f = path.parse(src as string);
+            const dst = path.join(project.outputDirs.contentRoot, f.base);
+            await fs.cp(src as string, dst, {
+                recursive: true
+            });
+        }
+
         await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
         logger.success(pprintSuccessOutput(project.outputFiles.mpk));
-        buildMeasure.end();
-    } else {
+
+        const buildInfo = buildMeasure.end();
+        logger.success("Done in", green(ms(buildInfo.duration)));
+    },
+    async watch({ root, bundles, logger }: TaskInput): Promise<void> {
         logger.start("Start build in watch mode");
-        const watcher = watch(bundles);
-        watcher.on("event", event => {
+
+        const bundlesWatcher = watch(bundles);
+        bundlesWatcher.on("event", event => {
             if (event.code === "BUNDLE_END") {
                 let [outFile] = event.output;
                 outFile = bold(path.relative(root, outFile));
@@ -78,12 +107,12 @@ export async function runBuild(root: string | undefined, options: BuildCommandOp
         });
 
         onExit(() => {
-            watcher.close();
+            bundlesWatcher.close();
             logger.log("");
             logger.log("Build watcher stopped");
         });
     }
-}
+};
 
 async function defaultConfig(project: ProjectConfig): Promise<BuildOptions[]> {
     const esmBundle = {
@@ -189,7 +218,6 @@ const buildMeasure = {
     },
     end() {
         performance.mark("build-end");
-        const buildInfo = performance.measure("build", "build-start", "build-end");
-        logger.success("Done in", green(ms(buildInfo.duration)));
+        return performance.measure("build", "build-start", "build-end");
     }
 };
