@@ -11,7 +11,7 @@ import { onExit } from "signal-exit";
 import { PACKAGE_FILES } from "./constants.js";
 import { loadConfig } from "./rolldown.js";
 import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js";
-import { isTypeScriptProject, readPackageJson } from "./utils/fs.js";
+import { deployToMxProject, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
 import { ProjectConfig } from "./utils/project-config.js";
@@ -32,27 +32,28 @@ export async function build(root: string | undefined, options: BuildCommandOptio
 
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
-        const project = new ProjectConfig({
+        const config = new ProjectConfig({
             pkg,
             isTsProject
         });
 
-        const projectPath = await project.getProjectPath();
+        const projectPath = await config.getProjectPath();
         if (projectPath) {
             logger.info(formatMsg.mxpath(projectPath));
         }
 
-        const bundles = await loadConfig(project);
+        const bundles = await loadConfig(config);
 
-        await fs.rm(project.outputDirs.dist, { recursive: true, force: true });
-        console.dir(project.inputFiles);
-        console.dir(project.outputDirs);
-        console.dir(project.outputFiles);
-        console.dir(project.assetsPublicPath);
+        await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
+        console.dir(config.inputFiles);
+        console.dir(config.outputDirs);
+        console.dir(config.outputFiles);
+        console.dir(config.assetsPublicPath);
+        console.dir(config.relativeWidgetPath);
         if (options.watch) {
-            await tasks.watch({ project, bundles, logger, root });
+            await tasks.watch({ config, bundles, logger, root });
         } else {
-            await tasks.build({ project, bundles, logger, root });
+            await tasks.build({ config, bundles, logger, root });
         }
     } catch (error) {
         logger.error(error);
@@ -63,13 +64,13 @@ export async function build(root: string | undefined, options: BuildCommandOptio
 interface TaskParams {
     root: string;
     bundles: BuildOptions[];
-    project: ProjectConfig;
+    config: ProjectConfig;
     logger: ConsolaInstance;
 }
 
 const tasks = {
     async build(params: TaskParams): Promise<void> {
-        const { project, bundles, logger } = params;
+        const { config, bundles, logger } = params;
         buildMeasure.start();
 
         for (const bundle of bundles) {
@@ -82,6 +83,11 @@ const tasks = {
 
         const buildInfo = buildMeasure.end();
         logger.success("Done in", green(ms(buildInfo.duration)));
+
+        const projectPath = await config.getProjectPath();
+        if (projectPath) {
+            await deployToMxProject(config, projectPath);
+        }
     },
     async watch(params: TaskParams): Promise<void> {
         const { root, bundles, logger } = params;
@@ -127,11 +133,11 @@ const tasks = {
             logger.log("Build watcher stopped");
         });
     },
-    async copyPackageFiles({ project }: TaskParams): Promise<void> {
+    async copyPackageFiles({ config }: TaskParams): Promise<void> {
         const stream = fg.stream(PACKAGE_FILES);
         for await (const src of stream) {
             const f = path.parse(src as string);
-            const dst = path.join(project.outputDirs.contentRoot, f.base);
+            const dst = path.join(config.outputDirs.contentRoot, f.base);
 
             await fs.cp(src as string, dst, {
                 recursive: true
@@ -140,7 +146,7 @@ const tasks = {
     },
     /** Watch & copy static package files */
     async watchPackageFiles(params: TaskParams): Promise<void> {
-        const { project, logger } = params;
+        const { config, logger } = params;
 
         await tasks.copyPackageFiles(params);
 
@@ -148,7 +154,7 @@ const tasks = {
         watcher.on("change", async file => {
             logger.info(formatMsg.copy(file));
             const f = path.parse(file);
-            const dst = path.join(project.outputDirs.contentRoot, f.base);
+            const dst = path.join(config.outputDirs.contentRoot, f.base);
             await fs.cp(file, dst);
         });
 
@@ -158,9 +164,9 @@ const tasks = {
     },
     /** Setup package content watcher to build mpk whenever package files change */
     async watchPackageContent(params: TaskParams): Promise<void> {
-        const { project } = params;
+        const { config } = params;
         await tasks.buildMpk({ ...params, quiet: true });
-        const watcher = chokidar.watch(project.outputDirs.contentRoot);
+        const watcher = chokidar.watch(config.outputDirs.contentRoot);
 
         let debounceTimer: NodeJS.Timeout | null = null;
 
@@ -179,7 +185,7 @@ const tasks = {
             watcher.close();
         });
     },
-    async buildMpk({ project, logger, quiet = false }: TaskParams & { quiet?: boolean }): Promise<void> {
+    async buildMpk({ config: project, logger, quiet = false }: TaskParams & { quiet?: boolean }): Promise<void> {
         await createMPK(project.outputDirs.contentRoot, project.outputFiles.mpk);
         const mpkStat = await fs.stat(project.outputFiles.mpk);
         if (!quiet) {
