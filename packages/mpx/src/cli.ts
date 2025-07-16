@@ -13,7 +13,8 @@ cli.usage(
 
 cli.option("-w, --watch", "watch for changes and rebuild", { default: false })
     .option("-m, --minify", "minify the output (this option is 'on' in CI environment)", { default: Boolean(env.CI) })
-    .option("-p, --platform <platform>", "build platform (web or node)", { default: "web" });
+    .option("-p, --platform <platform>", "build platform (web or node)", { default: "web" })
+    .option("--show-config", "print project config and exit", { default: false });
 
 cli.help();
 cli.version(VERSION);
