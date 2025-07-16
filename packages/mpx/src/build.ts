@@ -5,21 +5,21 @@ import fg from "fast-glob";
 import { filesize } from "filesize";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
 import { PACKAGE_FILES } from "./constants.js";
-import { loadConfig } from "./rolldown.js";
+import * as bundlesWeb from "./rolldown.web.js";
 import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js";
 import { deployToMxProject, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
-import { ProjectConfig } from "./utils/project-config.js";
+import { ProjectConfig, ProjectConfigWeb } from "./utils/project-config.js";
 
 interface BuildCommandOptions {
     watch?: boolean;
     minify?: boolean;
+    platform?: "web" | "node";
 }
 
 /**
@@ -28,9 +28,6 @@ interface BuildCommandOptions {
  * @param options - Build options
  */
 export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
-    options.watch ??= false;
-    options.minify ??= !!env.CI;
-
     const logger: ConsolaInstance = createLogger();
     try {
         root = path.resolve(root ?? "");
@@ -39,16 +36,19 @@ export async function build(root: string | undefined, options: BuildCommandOptio
 
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
-        const config = await ProjectConfig.create({
-            pkg,
-            isTsProject
-        });
+        let config: ProjectConfig;
+        let bundles: BuildOptions[];
+
+        if (options.platform === "web") {
+            config = await ProjectConfigWeb.create({ pkg, isTsProject });
+            bundles = await bundlesWeb.loadConfig(config as ProjectConfigWeb, logger);
+        } else {
+            throw new Error(`Build for native is not implemented yet`);
+        }
 
         if (config.projectPath) {
             logger.info(formatMsg.mxpath(config.projectPath));
         }
-
-        const bundles = await loadConfig(config, logger);
 
         await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
         // console.dir(config.toPlainObject(), { depth: 3 });
@@ -87,7 +87,7 @@ const tasks = {
         logger.success("Done in", green(ms(buildInfo.duration)));
 
         if (config.projectPath) {
-            await deployToMxProject(config, config.projectPath);
+            await deployToMxProject(config, config.projectPath, config.deploymentPath);
         }
     },
     async watch(params: TaskParams): Promise<void> {

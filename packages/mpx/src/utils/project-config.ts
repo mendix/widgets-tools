@@ -36,29 +36,39 @@ interface ProjectConfigInputs {
     isTsProject: boolean;
 }
 
-export class ProjectConfig {
+export abstract class ProjectConfig {
     readonly projectPath: string | null = null;
+
     /** Output directory for built files */
     readonly dist = "dist";
     /** Package root directory that contains all widget files shipped with mpk */
     readonly contentRoot = path.join(this.dist, "tmp", "widgets");
     /** Widget package.json */
     readonly pkg: PackageJson;
+
     readonly isTsProject: boolean;
 
-    constructor(inputs: ProjectConfigInputs, projectPath: string | null) {
+    readonly platform: "web" | "native";
+
+    readonly deploymentPath: string[];
+
+    constructor(
+        inputs: ProjectConfigInputs & {
+            projectPath: string | null;
+            platform: "web" | "native";
+            deploymentPath: string[];
+        }
+    ) {
+        this.projectPath = inputs.projectPath;
         this.pkg = inputs.pkg;
         this.isTsProject = inputs.isTsProject;
-        this.projectPath = projectPath;
+        this.platform = inputs.platform;
+        this.deploymentPath = inputs.deploymentPath;
     }
 
-    /** Public path (aka base url) for widget assets */
-    get assetsPublicPath(): string {
-        const {
-            pkg: { packagePath, widgetName }
-        } = this;
-        const publicPath = ["widgets", ...packagePath.split("."), widgetName.toLowerCase(), "assets"].join("/");
-        return `${publicPath}/`;
+    /** Relative path to the widget directory from the "widgets" */
+    get relativeWidgetPath(): string {
+        return path.join(...this.pkg.packagePath.split("."), this.pkg.widgetName.toLowerCase());
     }
 
     get inputFiles(): BundleInputFiles {
@@ -98,11 +108,6 @@ export class ProjectConfig {
         return { editorConfig, editorPreview, packageXml, widgetFile, widgetXml };
     }
 
-    /** Relative path to the widget directory from the "widgets" */
-    get relativeWidgetPath(): string {
-        return path.join(...this.pkg.packagePath.split("."), this.pkg.widgetName.toLowerCase());
-    }
-
     get outputDirs(): BundleOutputDirs {
         const widgetDir = path.join(this.contentRoot, this.relativeWidgetPath);
         return {
@@ -112,6 +117,59 @@ export class ProjectConfig {
             widgetDir,
             widgetAssetsDir: path.join(widgetDir, "assets")
         };
+    }
+
+    get outputFiles(): BundleOutputFiles {
+        throw new Error("Method 'outputFiles' must be implemented.");
+    }
+
+    toPlainObject(): Record<string, unknown> {
+        return {
+            dist: this.dist,
+            contentRoot: this.contentRoot,
+            pkg: this.pkg,
+            isTsProject: this.isTsProject,
+            projectPath: this.projectPath,
+            inputFiles: this.inputFiles,
+            outputDirs: this.outputDirs,
+            outputFiles: this.outputFiles,
+            relativeWidgetPath: this.relativeWidgetPath
+        };
+    }
+
+    static async getProjectPath(pkg: PackageJson): Promise<string | null> {
+        let projectPath = (() => {
+            if (env.MX_PROJECT_PATH) {
+                return env.MX_PROJECT_PATH;
+            }
+            if (pkg.config?.projectPath) {
+                return pkg.config.projectPath;
+            }
+
+            return path.join("tests", "testProject");
+        })();
+        projectPath = path.resolve(projectPath);
+
+        if (await access(projectPath)) {
+            return projectPath;
+        }
+
+        return null;
+    }
+}
+
+export class ProjectConfigWeb extends ProjectConfig {
+    constructor(inputs: ProjectConfigInputs, projectPath: string | null) {
+        super({ ...inputs, projectPath, platform: "web", deploymentPath: ["deployment", "web", "widgets"] });
+    }
+
+    /** Public path (aka base url) for widget assets */
+    get assetsPublicPath(): string {
+        const {
+            pkg: { packagePath, widgetName }
+        } = this;
+        const publicPath = ["widgets", ...packagePath.split("."), widgetName.toLowerCase(), "assets"].join("/");
+        return `${publicPath}/`;
     }
 
     get outputFiles(): BundleOutputFiles {
@@ -152,43 +210,8 @@ export class ProjectConfig {
         };
     }
 
-    toPlainObject(): Record<string, unknown> {
-        return {
-            dist: this.dist,
-            contentRoot: this.contentRoot,
-            pkg: this.pkg,
-            isTsProject: this.isTsProject,
-            projectPath: this.projectPath,
-            inputFiles: this.inputFiles,
-            outputDirs: this.outputDirs,
-            outputFiles: this.outputFiles,
-            assetsPublicPath: this.assetsPublicPath,
-            relativeWidgetPath: this.relativeWidgetPath
-        };
-    }
-
-    static async getProjectPath(pkg: PackageJson): Promise<string | null> {
-        let projectPath = (() => {
-            if (env.MX_PROJECT_PATH) {
-                return env.MX_PROJECT_PATH;
-            }
-            if (pkg.config?.projectPath) {
-                return pkg.config.projectPath;
-            }
-
-            return path.join("tests", "testProject");
-        })();
-        projectPath = path.resolve(projectPath);
-
-        if (await access(projectPath)) {
-            return projectPath;
-        }
-
-        return null;
-    }
-
-    static async create(inputs: ProjectConfigInputs): Promise<ProjectConfig> {
+    static async create(inputs: ProjectConfigInputs): Promise<ProjectConfigWeb> {
         const projectPath = await ProjectConfig.getProjectPath(inputs.pkg);
-        return new ProjectConfig(inputs, projectPath);
+        return new ProjectConfigWeb(inputs, projectPath);
     }
 }

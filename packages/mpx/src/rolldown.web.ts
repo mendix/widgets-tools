@@ -1,21 +1,16 @@
 import { ConsolaInstance } from "consola";
-import fg from "fast-glob";
-import assert from "node:assert";
-import path from "node:path";
 import { BuildOptions, RolldownPlugin } from "rolldown";
-import { Dependency } from "rollup-plugin-license";
 import { STD_EXTERNALS } from "./constants.js";
 import { plugins, RollupLicenseOptions, RollupUrlOptions } from "./plugins.js";
-import { bold, green } from "./utils/colors.js";
-import { hasEditorConfig, hasEditorPreview } from "./utils/fs.js";
-import { ProjectConfig } from "./utils/project-config.js";
+import { hasEditorConfig, hasEditorPreview, loadCustomConfigFactory } from "./utils/fs.js";
+import { licenseCustomTemplate } from "./utils/helpers.js";
+import { ProjectConfigWeb } from "./utils/project-config.js";
 
-export async function defaultConfig(config: ProjectConfig): Promise<BuildOptions[]> {
+export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOptions[]> {
     const esmBundle = {
         input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
         plugins: stdPlugins(config),
-        platform: "browser",
         output: {
             file: config.outputFiles.esm,
             format: "esm"
@@ -26,7 +21,6 @@ export async function defaultConfig(config: ProjectConfig): Promise<BuildOptions
         input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
         plugins: stdPlugins(config),
-        platform: "browser",
         output: {
             file: config.outputFiles.umd,
             format: "umd",
@@ -59,7 +53,6 @@ export async function defaultConfig(config: ProjectConfig): Promise<BuildOptions
         const editorPreviewBundle = {
             input: config.inputFiles.editorPreview,
             external: [...STD_EXTERNALS],
-            platform: "browser",
             output: {
                 file: config.outputFiles.editorPreview,
                 format: "commonjs"
@@ -72,22 +65,18 @@ export async function defaultConfig(config: ProjectConfig): Promise<BuildOptions
     return bundles;
 }
 
-export async function loadConfig(project: ProjectConfig, logger: ConsolaInstance): Promise<BuildOptions[]> {
-    const [configFile] = await fg(["rollup.config.{js,mjs}"]);
-    if (configFile) {
-        logger.info(formatMsg.usingCustomConfig());
-        const { default: customConfig } = await import(path.resolve(configFile));
-        assert(
-            typeof customConfig === "function",
-            `Rollup config error: expected default export to be a function, got ${typeof customConfig}`
-        );
-        const configDefaultConfig = await defaultConfig(project);
-        return customConfig({ configDefaultConfig });
+export async function loadConfig(config: ProjectConfigWeb, logger: ConsolaInstance): Promise<BuildOptions[]> {
+    const [configFactory, configDefaultConfig] = await Promise.all([
+        loadCustomConfigFactory(logger),
+        defaultConfig(config)
+    ]);
+    if (configFactory) {
+        return configFactory({ configDefaultConfig });
     }
-    return defaultConfig(project);
+    return configDefaultConfig;
 }
 
-function stdPlugins(project: ProjectConfig): RolldownPlugin[] {
+function stdPlugins(project: ProjectConfigWeb): RolldownPlugin[] {
     const { url, image, license } = plugins;
 
     const urlOptions: RollupUrlOptions = {
@@ -123,26 +112,3 @@ function stdPlugins(project: ProjectConfig): RolldownPlugin[] {
 
     return [url(urlOptions), image(), license(licenseOptions)];
 }
-
-export const licenseCustomTemplate = (dependencies: Dependency[]) =>
-    JSON.stringify(
-        dependencies.map(dependency => {
-            const repoUrl =
-                typeof dependency.repository === "string"
-                    ? dependency.repository
-                    : dependency.repository instanceof Object
-                      ? dependency.repository.url
-                      : undefined;
-
-            return {
-                [dependency.name!]: {
-                    version: dependency.version,
-                    url: dependency.homepage ?? repoUrl
-                }
-            };
-        })
-    );
-
-const formatMsg = {
-    usingCustomConfig: () => green(bold(`Loading custom rollup config...`))
-};
