@@ -21,6 +21,7 @@ interface BundleOutputFiles {
     mpk: string;
     dependenciesTxt: string;
     dependenciesJson: string;
+    css: string;
 }
 
 interface BundleOutputDirs {
@@ -40,10 +41,15 @@ interface ProjectConfigInputs {
 export abstract class ProjectConfig {
     readonly projectPath: string | null = null;
 
-    /** Output directory for built files */
+    /** Output directory for built files. */
     readonly dist = "dist";
-    /** Package root directory that contains all widget files shipped with mpk */
+
+    /**
+     * Package root directory that contains all widget files shipped with mpk.
+     * By default "dist/tmp/widgets".
+     */
     readonly contentRoot = path.join(this.dist, "tmp", "widgets");
+
     /** Widget package.json */
     readonly pkg: PackageJson;
 
@@ -53,10 +59,9 @@ export abstract class ProjectConfig {
 
     readonly deploymentPath: string[];
 
-    /** MPK name including extension */
+    /** MPK name including extension. */
     readonly mpkBase: string;
 
-    /** Minify */
     readonly minify: boolean;
 
     constructor(
@@ -76,9 +81,21 @@ export abstract class ProjectConfig {
         this.minify = inputs.minify;
     }
 
-    /** Relative path to the widget directory from the "widgets" */
-    get relativeWidgetPath(): string {
+    /**
+     * Relative fs path to the widget directory from the "widgets".
+     * Used to compute widget directory in dist.
+     * Example: com\\mendix\\widget\\web\\accordion (on Windows)
+     */
+    get widgetDirectory(): string {
         return path.join(...this.pkg.packagePath.split("."), this.pkg.widgetName.toLowerCase());
+    }
+
+    /**
+     * Public URL path. Used to compute asset urls.
+     * Example: com/mendix/widget/web/accordion
+     */
+    get publicPath(): string {
+        return [...this.pkg.packagePath.split("."), this.pkg.widgetName.toLowerCase()].join("/");
     }
 
     get inputFiles(): BundleInputFiles {
@@ -119,7 +136,7 @@ export abstract class ProjectConfig {
     }
 
     get outputDirs(): BundleOutputDirs {
-        const widgetDir = path.join(this.contentRoot, this.relativeWidgetPath);
+        const widgetDir = path.join(this.contentRoot, this.widgetDirectory);
         return {
             dist: this.dist,
             mpkDir: path.join(this.dist, this.pkg.version),
@@ -143,7 +160,8 @@ export abstract class ProjectConfig {
             inputFiles: this.inputFiles,
             outputDirs: this.outputDirs,
             outputFiles: this.outputFiles,
-            relativeWidgetPath: this.relativeWidgetPath,
+            widgetDirectory: this.widgetDirectory,
+            publicPath: this.publicPath,
             mpkBase: this.mpkBase
         };
     }
@@ -174,7 +192,10 @@ export class ProjectConfigWeb extends ProjectConfig {
         super({ ...inputs, projectPath, platform: "web", deploymentPath: ["deployment", "web", "widgets"] });
     }
 
-    /** Public path (aka base url) for widget assets */
+    /**
+     * Public path (aka base url) for widget assets.
+     * Example: widgets/com/mendix/widget/web/accordion/assets
+     */
     get assetsPublicPath(): string {
         const {
             pkg: { packagePath, widgetName }
@@ -217,6 +238,11 @@ export class ProjectConfigWeb extends ProjectConfig {
             dependenciesJson: path.format({
                 dir: outputDirs.contentRoot,
                 base: "dependencies.json"
+            }),
+            css: path.format({
+                dir: outputDirs.widgetDir,
+                name: pkg.widgetName,
+                ext: "css"
             })
         };
     }
