@@ -11,9 +11,11 @@ export const STD_EXTERNALS = [
     /^big.js$/
 ];
 
+export const XML_FILES = "src/*.xml";
+
 export const PACKAGE_FILES = [
     // XML files
-    "src/*.xml",
+    XML_FILES,
     // Modeler icons
     "src/*.@(tile|icon)?(.dark).png",
     // License file
