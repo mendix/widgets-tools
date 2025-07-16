@@ -7,10 +7,18 @@ import { licenseCustomTemplate } from "./utils/helpers.js";
 import { ProjectConfigWeb } from "./utils/project-config.js";
 
 export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOptions[]> {
+    const jsx: BuildOptions["jsx"] = {
+        mode: "classic",
+        factory: "createElement",
+        fragment: "Fragment",
+        importSource: "react"
+    };
+
     const esmBundle = {
         input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
-        plugins: stdPlugins(config),
+        plugins: [...stdPlugins(config)],
+        jsx,
         output: {
             file: config.outputFiles.esm,
             format: "esm"
@@ -20,13 +28,15 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
     const umdBundle = {
         input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
-        plugins: stdPlugins(config),
+        plugins: [...stdPlugins(config)],
+        jsx,
         output: {
             file: config.outputFiles.umd,
             format: "umd",
             name: `${config.pkg.packagePath}.${config.pkg.widgetName}`,
             globals: {
-                "react/jsx-runtime": "react_jsx_runtime"
+                "react/jsx-runtime": "react_jsx_runtime",
+                react: "React"
             }
         }
     } satisfies BuildOptions;
@@ -53,6 +63,7 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
         const editorPreviewBundle = {
             input: config.inputFiles.editorPreview,
             external: [...STD_EXTERNALS],
+            jsx,
             output: {
                 file: config.outputFiles.editorPreview,
                 format: "commonjs"
@@ -76,7 +87,7 @@ export async function loadConfig(config: ProjectConfigWeb, logger: ConsolaInstan
     return configDefaultConfig;
 }
 
-function stdPlugins(project: ProjectConfigWeb): RolldownPlugin[] {
+function stdPlugins(config: ProjectConfigWeb): RolldownPlugin[] {
     const { url, image, license } = plugins;
 
     const urlOptions: RollupUrlOptions = {
@@ -91,8 +102,8 @@ function stdPlugins(project: ProjectConfigWeb): RolldownPlugin[] {
             "**/*.eot"
         ],
         limit: 0,
-        publicPath: project.assetsPublicPath,
-        destDir: project.outputDirs.widgetAssetsDir
+        publicPath: config.assetsPublicPath,
+        destDir: config.outputDirs.widgetAssetsDir
     };
 
     const licenseOptions: RollupLicenseOptions = {
@@ -100,10 +111,10 @@ function stdPlugins(project: ProjectConfigWeb): RolldownPlugin[] {
             includePrivate: true,
             output: [
                 {
-                    file: project.outputFiles.dependenciesTxt
+                    file: config.outputFiles.dependenciesTxt
                 },
                 {
-                    file: project.outputFiles.dependenciesJson,
+                    file: config.outputFiles.dependenciesJson,
                     template: licenseCustomTemplate
                 }
             ]

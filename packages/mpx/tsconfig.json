@@ -1,6 +1,7 @@
 {
     "extends": "@tsconfig/node22/tsconfig.json",
     "exclude": ["input"],
+    "include": ["src/**/*", "../../../pluggable-widgets-tools/src/typings-generator"],
     "compilerOptions": {
         "noEmit": true,
         "resolveJsonModule": true

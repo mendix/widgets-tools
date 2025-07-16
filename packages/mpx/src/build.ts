@@ -8,7 +8,8 @@ import path from "node:path";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
-import { PACKAGE_FILES } from "./constants.js";
+import { transformPackage } from "../../pluggable-widgets-tools/src/typings-generator/index.js";
+import { PACKAGE_FILES, XML_FILES } from "./constants.js";
 import * as bundlesWeb from "./rolldown.web.js";
 import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js";
 import { deployToMxProject, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
@@ -73,7 +74,11 @@ interface TaskParams {
 const tasks = {
     async build(params: TaskParams): Promise<void> {
         const { config, bundles, logger } = params;
+
         buildMeasure.start();
+        if (config.isTsProject) {
+            await tasks.generateTypings(params);
+        }
 
         for (const bundle of bundles) {
             await buildBundle(bundle);
@@ -126,6 +131,9 @@ const tasks = {
         await bundleWatchReady;
         await tasks.watchPackageFiles(params);
         await tasks.watchPackageContent(params);
+        if (params.config.isTsProject) {
+            await tasks.watchTypings(params);
+        }
         logger.info("Waiting for changes...");
 
         onExit(() => {
@@ -192,6 +200,25 @@ const tasks = {
         if (!quiet) {
             logger.success(formatMsg.builtSize(config.outputFiles.mpk, mpkStat.size));
         }
+    },
+    async generateTypings({ config }: TaskParams): Promise<void> {
+        const packageXml = await fs.readFile(config.inputFiles.packageXml, { encoding: "utf8" });
+        const src = path.dirname(config.inputFiles.packageXml);
+        await transformPackage(packageXml, src);
+    },
+    async watchTypings(params: TaskParams): Promise<void> {
+        await tasks.generateTypings(params);
+
+        const watcher = chokidar.watch(await fg(XML_FILES));
+
+        watcher.on("change", async () => {
+            await tasks.generateTypings(params);
+            params.logger.info(formatMsg.rebuiltTypings());
+        });
+
+        onExit(() => {
+            watcher.close();
+        });
     }
 };
 
@@ -199,6 +226,7 @@ const formatMsg = {
     built: (file: string) => `Built ${bold(file)}`,
     builtSize: (file: string, size: number) => `Built ${bold(file)} (${dim(filesize(size, { standard: "jedec" }))})`,
     rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
+    rebuiltTypings: () => `Rebuilt typings`,
     copy: (file: string) => `Copy ${bold(file)}`,
     mxpath: (dir: string) => `${inverse(greenBright(bold("  MX PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
 };
