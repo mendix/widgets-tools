@@ -1,5 +1,10 @@
+import { ConsolaInstance } from "consola";
+import fg from "fast-glob";
+import assert from "node:assert";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { BuildOptions } from "rolldown";
+import { bold, green } from "./colors.js";
 import { parsePackageError } from "./error.js";
 import { PackageJson } from "./parsers/PackageJson.js";
 import { ProjectConfig } from "./project-config.js";
@@ -32,7 +37,11 @@ export async function readPackageJson(root: string): Promise<PackageJson> {
     }
 }
 
-export async function deployToMxProject(config: ProjectConfig, projectPath: string): Promise<void> {
+export async function deployToMxProject(
+    config: ProjectConfig,
+    projectPath: string,
+    deploymentPath: string[]
+): Promise<void> {
     const mpkDst = path.join(projectPath, "widgets");
     const deploymentDir = path.join(projectPath, "deployment", "web", "widgets");
 
@@ -49,3 +58,24 @@ export async function deployToMxProject(config: ProjectConfig, projectPath: stri
     await fs.mkdir(mpkDst, { recursive: true });
     await fs.cp(config.outputDirs.mpkDir, mpkDst, { recursive: true, force: true });
 }
+
+type ConfigFactory = (args: { configDefaultConfig: BuildOptions[] }) => Promise<BuildOptions[]>;
+
+export async function loadCustomConfigFactory(logger: ConsolaInstance): Promise<ConfigFactory | null> {
+    const [configFile] = await fg(["rollup.config.{js,mjs}"]);
+    if (configFile) {
+        logger.info(formatMsg.usingCustomConfig());
+        const { default: customConfig } = await import(path.resolve(configFile));
+        assert(
+            typeof customConfig === "function",
+            `Rollup config error: expected default export to be a function, got ${typeof customConfig}`
+        );
+
+        return customConfig;
+    }
+    return null;
+}
+
+const formatMsg = {
+    usingCustomConfig: () => green(bold(`Loading custom rollup config...`))
+};
