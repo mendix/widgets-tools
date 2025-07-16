@@ -6,11 +6,15 @@
     "bin": {
         "mpx": "./bin/mpx.js"
     },
+    "files": [
+        "bin",
+        "dist"
+    ],
     "scripts": {
         "test": "echo 'test is missing'",
         "dev": "premove dist && rolldown -c rolldown.config.ts -w",
         "build": "premove dist && rolldown -c rolldown.config.ts",
-        "postinstall": "pnpm build"
+        "prepack": "pnpm build"
     },
     "keywords": [
         "mendix",
