@@ -1,5 +1,6 @@
 import chokidar from "chokidar";
 import { ConsolaInstance } from "consola";
+import dotenv from "dotenv";
 import fg from "fast-glob";
 import { filesize } from "filesize";
 import fs from "node:fs/promises";
@@ -21,6 +22,11 @@ interface BuildCommandOptions {
     minify?: boolean;
 }
 
+/**
+ * Build the widget project.
+ * @param root - Widget directory containing package.json
+ * @param options - Build options
+ */
 export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
     options.watch ??= false;
     options.minify ??= !!env.CI;
@@ -29,6 +35,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
     try {
         root = path.resolve(root ?? "");
         process.chdir(root);
+        dotenv.config();
 
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
