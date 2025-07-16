@@ -7,10 +7,10 @@
         "mpx": "./bin/mpx.js"
     },
     "scripts": {
-        "preinstall": "npx only-allow pnpm",
         "test": "echo 'test is missing'",
         "dev": "premove dist && rolldown -c rolldown.config.ts -w",
-        "build": "premove dist && rolldown -c rolldown.config.ts"
+        "build": "premove dist && rolldown -c rolldown.config.ts",
+        "postinstall": "pnpm build"
     },
     "keywords": [
         "mendix",
