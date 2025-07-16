@@ -3,6 +3,9 @@
     "version": "0.1.0",
     "description": "Mendix tool for bundling pluggable widgets",
     "type": "module",
+    "bin": {
+        "mpx": "./bin/mpx.js"
+    },
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "test": "echo 'test is missing'",
@@ -30,17 +33,24 @@
         "fast-glob": "^3.3.3",
         "filesize": "^11.0.1",
         "picocolors": "^1.1.1",
+        "postcss": "^8.5.6",
         "premove": "^4.0.0",
         "prettier": "^3.6.2",
         "pretty-ms": "^9.2.0",
+        "rolldown": "1.0.0-beta.26",
         "rollup-plugin-license": "^3.6.0",
+        "rollup-plugin-postcss": "^4.0.2",
+        "sass": "^1.89.2",
         "signal-exit": "^4.1.0",
         "typescript": "^5.8.3",
-        "xml2js": "^0.6.2",
         "zip-a-folder": "^3.1.9",
         "zod": "^4.0.5"
     },
     "dependencies": {
-        "rolldown": "1.0.0-beta.26"
+        "postcss": "^8.5.6",
+        "rolldown": "1.0.0-beta.26",
+        "rollup-plugin-postcss": "^4.0.2",
+        "sass": "^1.89.2",
+        "xml2js": "^0.6.2"
     }
 }

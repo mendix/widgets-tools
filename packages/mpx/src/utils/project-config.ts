@@ -34,6 +34,7 @@ interface BundleOutputDirs {
 interface ProjectConfigInputs {
     pkg: PackageJson;
     isTsProject: boolean;
+    minify: boolean;
 }
 
 export abstract class ProjectConfig {
@@ -55,6 +56,9 @@ export abstract class ProjectConfig {
     /** MPK name including extension */
     readonly mpkBase: string;
 
+    /** Minify */
+    readonly minify: boolean;
+
     constructor(
         inputs: ProjectConfigInputs & {
             projectPath: string | null;
@@ -69,6 +73,7 @@ export abstract class ProjectConfig {
         this.platform = inputs.platform;
         this.deploymentPath = inputs.deploymentPath;
         this.mpkBase = env.MPKOUTPUT ?? `${pkg.packagePath}.${pkg.widgetName}.mpk`;
+        this.minify = inputs.minify;
     }
 
     /** Relative path to the widget directory from the "widgets" */

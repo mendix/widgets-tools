@@ -16,21 +16,15 @@ import { blue, bold, dim, green, greenBright, inverse } from "./utils/colors.js"
 import { deployToMxProject, isTypeScriptProject, readPackageJson } from "./utils/fs.js";
 import { createLogger } from "./utils/logger.js";
 import { createMPK } from "./utils/mpk.js";
+import { CliBuildOptions } from "./utils/parsers/CliBuildOptions.js";
 import { ProjectConfig, ProjectConfigWeb } from "./utils/project-config.js";
-
-interface BuildCommandOptions {
-    watch?: boolean;
-    minify?: boolean;
-    platform?: "web" | "native";
-    showConfig?: boolean;
-}
 
 /**
  * Build the widget project.
  * @param root - Widget directory containing package.json
  * @param options - Build options
  */
-export async function build(root: string | undefined, options: BuildCommandOptions): Promise<void> {
+export async function build(root: string | undefined, options: CliBuildOptions): Promise<void> {
     const logger: ConsolaInstance = createLogger();
     try {
         root = path.resolve(root ?? "");
@@ -41,7 +35,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
 
         let config: ProjectConfig;
         if (options.platform === "web") {
-            config = await ProjectConfigWeb.create({ pkg, isTsProject });
+            config = await ProjectConfigWeb.create({ pkg, isTsProject, minify: options.minify });
         } else {
             throw new Error(`Build for native is not implemented yet`);
         }

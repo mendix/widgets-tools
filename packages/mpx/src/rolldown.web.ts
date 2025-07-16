@@ -123,3 +123,32 @@ function stdPlugins(config: ProjectConfigWeb): RolldownPlugin[] {
 
     return [url(urlOptions), image(), license(licenseOptions)];
 }
+
+export function widgetPostcssPlugin(config: ProjectConfigWeb) {
+    return plugins.postcss({
+        extensions: [".css", ".sass", ".scss"],
+        inject: false,
+        minimize: config.minify,
+        // plugins: [
+        // postcssImport(),
+        /**
+         * We need two copies of postcss-url because of final styles bundling in studio (pro).
+         * On line below, we just copying assets to widget bundle directory (com.mendix.widgets...)
+         * To make it work, this plugin have few requirements:
+         * 1. You should put your assets in src/assets/
+         * 2. You should use relative path in your .scss files (e.g. url(../assets/icon.png)
+         * 3. This plugin relies on `to` property of postcss plugin and it should be present, when
+         * copying files to destination.
+         */
+        // postcssUrl({ url: "copy", assetsPath: "assets" }),
+        /**
+         * This instance of postcss-url is just for adjusting asset path.
+         * Check doc comment for *createCssUrlTransform* for explanation.
+         */
+        // postcssUrl({ url: cssUrlTransform })
+        // ],
+        sourceMap: false,
+        use: ["sass"]
+        // to: join(outDir, `${outWidgetFile}.css`)
+    });
+}
