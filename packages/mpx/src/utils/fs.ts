@@ -34,13 +34,18 @@ export async function readPackageJson(root: string): Promise<PackageJson> {
 
 export async function deployToMxProject(config: ProjectConfig, projectPath: string): Promise<void> {
     const mpkDst = path.join(projectPath, "widgets");
-    const widgetDst = path.join(projectPath, "deployment", "web", "widgets", config.relativeWidgetPath);
+    const deploymentDir = path.join(projectPath, "deployment", "web", "widgets");
 
-    await fs.mkdir(widgetDst, { recursive: true });
+    // Get the list of files in contentRoot
+    const files = await fs.readdir(config.outputDirs.contentRoot, { withFileTypes: true });
+
+    // Copy directories from contentRoot to deploymentDir
+    for (const file of files.filter(file => file.isDirectory())) {
+        const src = path.join(config.outputDirs.contentRoot, file.name);
+        const dst = path.join(deploymentDir, file.name);
+        await fs.cp(src, dst, { recursive: true, force: true });
+    }
+    // Copy MPK file to widgets directory
     await fs.mkdir(mpkDst, { recursive: true });
-    // Copy widget assets to deployment
-    // Note: in pwt we copy all files (including xml) which probably not needed
-    await fs.cp(config.outputDirs.widgetDir, widgetDst, { recursive: true, force: true });
-    // Copy mpk to "widgets" directory
     await fs.cp(config.outputDirs.mpkDir, mpkDst, { recursive: true, force: true });
 }
