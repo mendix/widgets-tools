@@ -52,6 +52,9 @@ export abstract class ProjectConfig {
 
     readonly deploymentPath: string[];
 
+    /** MPK name including extension */
+    readonly mpkBase: string;
+
     constructor(
         inputs: ProjectConfigInputs & {
             projectPath: string | null;
@@ -59,11 +62,13 @@ export abstract class ProjectConfig {
             deploymentPath: string[];
         }
     ) {
+        const { pkg } = inputs;
         this.projectPath = inputs.projectPath;
-        this.pkg = inputs.pkg;
+        this.pkg = pkg;
         this.isTsProject = inputs.isTsProject;
         this.platform = inputs.platform;
         this.deploymentPath = inputs.deploymentPath;
+        this.mpkBase = env.MPKOUTPUT ?? `${pkg.packagePath}.${pkg.widgetName}.mpk`;
     }
 
     /** Relative path to the widget directory from the "widgets" */
@@ -133,7 +138,8 @@ export abstract class ProjectConfig {
             inputFiles: this.inputFiles,
             outputDirs: this.outputDirs,
             outputFiles: this.outputFiles,
-            relativeWidgetPath: this.relativeWidgetPath
+            relativeWidgetPath: this.relativeWidgetPath,
+            mpkBase: this.mpkBase
         };
     }
 
@@ -197,7 +203,7 @@ export class ProjectConfigWeb extends ProjectConfig {
             }),
             mpk: path.format({
                 dir: outputDirs.mpkDir,
-                base: `${pkg.packagePath}.${pkg.widgetName}.mpk`
+                base: this.mpkBase
             }),
             dependenciesTxt: path.format({
                 dir: outputDirs.contentRoot,
