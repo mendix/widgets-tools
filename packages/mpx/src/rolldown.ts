@@ -10,61 +10,62 @@ import { bold, green } from "./utils/colors.js";
 import { hasEditorConfig, hasEditorPreview } from "./utils/fs.js";
 import { ProjectConfig } from "./utils/project-config.js";
 
-export async function defaultConfig(project: ProjectConfig): Promise<BuildOptions[]> {
+export async function defaultConfig(config: ProjectConfig): Promise<BuildOptions[]> {
     const esmBundle = {
-        input: project.inputFiles.widgetFile,
+        input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
-        plugins: stdPlugins(project),
+        plugins: stdPlugins(config),
         platform: "browser",
         output: {
-            file: project.outputFiles.esm,
+            file: config.outputFiles.esm,
             format: "esm"
         }
     } satisfies BuildOptions;
 
     const umdBundle = {
-        input: project.inputFiles.widgetFile,
+        input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
-        plugins: stdPlugins(project),
+        plugins: stdPlugins(config),
         platform: "browser",
         output: {
-            file: project.outputFiles.umd,
+            file: config.outputFiles.umd,
             format: "umd",
-            name: `${project.pkg.packagePath}.${project.pkg.widgetName}`,
+            name: `${config.pkg.packagePath}.${config.pkg.widgetName}`,
             globals: {
                 "react/jsx-runtime": "react_jsx_runtime"
             }
         }
     } satisfies BuildOptions;
 
-    const editorConfigBundle = {
-        input: project.inputFiles.editorConfig,
-        output: {
-            file: project.outputFiles.editorConfig,
-            format: "commonjs"
-        }
-    } satisfies BuildOptions;
-
-    const editorPreviewBundle = {
-        input: project.inputFiles.editorPreview,
-        output: {
-            file: project.outputFiles.editorPreview,
-            format: "commonjs"
-        }
-    } satisfies BuildOptions;
-
     const bundles: BuildOptions[] = [esmBundle, umdBundle];
 
-    const [addEditorConfig, addEditorPreview] = await Promise.all([
-        hasEditorConfig(project),
-        hasEditorPreview(project)
-    ]);
+    const [addEditorConfig, addEditorPreview] = await Promise.all([hasEditorConfig(config), hasEditorPreview(config)]);
 
     if (addEditorConfig) {
+        const editorConfigBundle = {
+            input: config.inputFiles.editorConfig,
+            external: [...STD_EXTERNALS],
+            treeshake: { moduleSideEffects: false },
+            output: {
+                file: config.outputFiles.editorConfig,
+                format: "commonjs"
+            }
+        } satisfies BuildOptions;
+
         bundles.push(editorConfigBundle);
     }
 
     if (addEditorPreview) {
+        const editorPreviewBundle = {
+            input: config.inputFiles.editorPreview,
+            external: [...STD_EXTERNALS],
+            platform: "browser",
+            output: {
+                file: config.outputFiles.editorPreview,
+                format: "commonjs"
+            }
+        } satisfies BuildOptions;
+
         bundles.push(editorPreviewBundle);
     }
 
