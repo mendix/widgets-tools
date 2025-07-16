@@ -1,7 +1,12 @@
+import { ConsolaInstance } from "consola";
+import fg from "fast-glob";
+import assert from "node:assert";
+import path from "node:path";
 import { BuildOptions, RolldownPlugin } from "rolldown";
 import { Dependency } from "rollup-plugin-license";
 import { STD_EXTERNALS } from "./constants.js";
 import { plugins, RollupLicenseOptions, RollupUrlOptions } from "./plugins.js";
+import { bold, green } from "./utils/colors.js";
 import { hasEditorConfig, hasEditorPreview } from "./utils/fs.js";
 import { ProjectConfig } from "./utils/project-config.js";
 
@@ -66,7 +71,18 @@ export async function defaultConfig(project: ProjectConfig): Promise<BuildOption
     return bundles;
 }
 
-export async function loadConfig(project: ProjectConfig): Promise<BuildOptions[]> {
+export async function loadConfig(project: ProjectConfig, logger: ConsolaInstance): Promise<BuildOptions[]> {
+    const [configFile] = await fg(["rollup.config.{js,mjs}"]);
+    if (configFile) {
+        logger.info(formatMsg.usingCustomConfig());
+        const { default: customConfig } = await import(path.resolve(configFile));
+        assert(
+            typeof customConfig === "function",
+            `Rollup config error: expected default export to be a function, got ${typeof customConfig}`
+        );
+        const configDefaultConfig = await defaultConfig(project);
+        return customConfig({ configDefaultConfig });
+    }
     return defaultConfig(project);
 }
 
@@ -125,3 +141,7 @@ export const licenseCustomTemplate = (dependencies: Dependency[]) =>
             };
         })
     );
+
+const formatMsg = {
+    usingCustomConfig: () => green(bold(`Loading custom rollup config...`))
+};
