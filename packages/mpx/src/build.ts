@@ -5,6 +5,7 @@ import fg from "fast-glob";
 import { filesize } from "filesize";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { env } from "node:process";
 import ms from "pretty-ms";
 import { BuildOptions, build as buildBundle, watch } from "rolldown";
 import { onExit } from "signal-exit";
@@ -20,7 +21,8 @@ import { ProjectConfig, ProjectConfigWeb } from "./utils/project-config.js";
 interface BuildCommandOptions {
     watch?: boolean;
     minify?: boolean;
-    platform?: "web" | "node";
+    platform?: "web" | "native";
+    showConfig?: boolean;
 }
 
 /**
@@ -38,11 +40,8 @@ export async function build(root: string | undefined, options: BuildCommandOptio
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
         let config: ProjectConfig;
-        let bundles: BuildOptions[];
-
         if (options.platform === "web") {
             config = await ProjectConfigWeb.create({ pkg, isTsProject });
-            bundles = await bundlesWeb.loadConfig(config as ProjectConfigWeb, logger);
         } else {
             throw new Error(`Build for native is not implemented yet`);
         }
@@ -51,8 +50,24 @@ export async function build(root: string | undefined, options: BuildCommandOptio
             logger.info(formatMsg.mxpath(config.projectPath));
         }
 
+        if (env.MPKOUTPUT) {
+            logger.info(formatMsg.mpk(env.MPKOUTPUT));
+        }
+
+        if (options.showConfig) {
+            console.dir(config.toPlainObject(), { depth: 3 });
+            return;
+        }
+
+        let bundles: BuildOptions[];
+        if (options.platform === "web") {
+            bundles = await bundlesWeb.loadConfig(config as ProjectConfigWeb, logger);
+        } else {
+            throw new Error(`Build for native is not implemented yet`);
+        }
+
         await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
-        // console.dir(config.toPlainObject(), { depth: 3 });
+
         if (options.watch) {
             await tasks.watch({ config, bundles, logger, root });
         } else {
@@ -228,7 +243,8 @@ const formatMsg = {
     rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
     rebuiltTypings: () => `Rebuilt typings`,
     copy: (file: string) => `Copy ${bold(file)}`,
-    mxpath: (dir: string) => `${inverse(greenBright(bold("  MX PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
+    mxpath: (dir: string) => `${inverse(greenBright(bold("  MX PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`,
+    mpk: (name: string) => `${inverse(bold("  MPKOUTPUT  "))}${blue(bold(` ${name} `))}`
 };
 
 const buildMeasure = {
