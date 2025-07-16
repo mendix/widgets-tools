@@ -32,20 +32,19 @@ export async function build(root: string | undefined, options: BuildCommandOptio
 
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
-        const config = new ProjectConfig({
+        const config = await ProjectConfig.create({
             pkg,
             isTsProject
         });
 
-        const projectPath = await config.getProjectPath();
-        if (projectPath) {
-            logger.info(formatMsg.mxpath(projectPath));
+        if (config.projectPath) {
+            logger.info(formatMsg.mxpath(config.projectPath));
         }
 
         const bundles = await loadConfig(config);
 
         await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
-        console.dir(await config.toPlainObject(), { depth: 3 });
+        console.dir(config.toPlainObject(), { depth: 3 });
         if (options.watch) {
             await tasks.watch({ config, bundles, logger, root });
         } else {
@@ -80,9 +79,8 @@ const tasks = {
         const buildInfo = buildMeasure.end();
         logger.success("Done in", green(ms(buildInfo.duration)));
 
-        const projectPath = await config.getProjectPath();
-        if (projectPath) {
-            await deployToMxProject(config, projectPath);
+        if (config.projectPath) {
+            await deployToMxProject(config, config.projectPath);
         }
     },
     async watch(params: TaskParams): Promise<void> {

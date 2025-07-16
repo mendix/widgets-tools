@@ -37,7 +37,7 @@ interface ProjectConfigInputs {
 }
 
 export class ProjectConfig {
-    #projectPath: string | undefined;
+    readonly projectPath: string | null = null;
     /** Output directory for built files */
     readonly dist = "dist";
     /** Package root directory that contains all widget files shipped with mpk */
@@ -46,9 +46,10 @@ export class ProjectConfig {
     readonly pkg: PackageJson;
     readonly isTsProject: boolean;
 
-    constructor(inputs: ProjectConfigInputs) {
+    constructor(inputs: ProjectConfigInputs, projectPath: string | null) {
         this.pkg = inputs.pkg;
         this.isTsProject = inputs.isTsProject;
+        this.projectPath = projectPath;
     }
 
     /** Public path (aka base url) for widget assets */
@@ -151,11 +152,22 @@ export class ProjectConfig {
         };
     }
 
-    async getProjectPath(): Promise<string | undefined> {
-        if (this.#projectPath) {
-            return this.#projectPath;
-        }
-        const { pkg } = this;
+    toPlainObject(): Record<string, unknown> {
+        return {
+            dist: this.dist,
+            contentRoot: this.contentRoot,
+            pkg: this.pkg,
+            isTsProject: this.isTsProject,
+            projectPath: this.projectPath,
+            inputFiles: this.inputFiles,
+            outputDirs: this.outputDirs,
+            outputFiles: this.outputFiles,
+            assetsPublicPath: this.assetsPublicPath,
+            relativeWidgetPath: this.relativeWidgetPath
+        };
+    }
+
+    static async getProjectPath(pkg: PackageJson): Promise<string | null> {
         let projectPath = (() => {
             if (env.MX_PROJECT_PATH) {
                 return env.MX_PROJECT_PATH;
@@ -169,24 +181,14 @@ export class ProjectConfig {
         projectPath = path.resolve(projectPath);
 
         if (await access(projectPath)) {
-            this.#projectPath = projectPath;
             return projectPath;
         }
+
+        return null;
     }
 
-    async toPlainObject(): Promise<Record<string, unknown>> {
-        const projectPath = await this.getProjectPath();
-        return {
-            dist: this.dist,
-            contentRoot: this.contentRoot,
-            pkg: this.pkg,
-            isTsProject: this.isTsProject,
-            projectPath,
-            inputFiles: this.inputFiles,
-            outputDirs: this.outputDirs,
-            outputFiles: this.outputFiles,
-            assetsPublicPath: this.assetsPublicPath,
-            relativeWidgetPath: this.relativeWidgetPath
-        };
+    static async create(inputs: ProjectConfigInputs): Promise<ProjectConfig> {
+        const projectPath = await ProjectConfig.getProjectPath(inputs.pkg);
+        return new ProjectConfig(inputs, projectPath);
     }
 }
