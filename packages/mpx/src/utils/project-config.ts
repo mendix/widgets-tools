@@ -216,6 +216,13 @@ export class ProjectConfigWeb extends ProjectConfig {
         };
     }
 
+    toPlainObject(): Record<string, unknown> {
+        return {
+            ...super.toPlainObject(),
+            assetsPublicPath: this.assetsPublicPath
+        };
+    }
+
     static async create(inputs: ProjectConfigInputs): Promise<ProjectConfigWeb> {
         const projectPath = await ProjectConfig.getProjectPath(inputs.pkg);
         return new ProjectConfigWeb(inputs, projectPath);
