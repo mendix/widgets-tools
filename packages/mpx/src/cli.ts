@@ -4,6 +4,7 @@ import { cac } from "cac";
 import { env } from "node:process";
 import { build } from "./build.js";
 import { VERSION } from "./constants.js";
+import { CliBuildOptions } from "./utils/parsers/CliBuildOptions.js";
 
 const name = "mpx";
 const cli = cac(name);
@@ -28,7 +29,7 @@ if (options.help || options.version) {
     process.exit(0);
 }
 
-build(root, options);
+build(root, CliBuildOptions.parse(options));
 
 process.on("uncaughtException", error => {
     console.error("Uncaught Exception:", error.message);
