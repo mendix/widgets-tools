@@ -23,6 +23,10 @@ const {
     options
 } = cli.parse();
 
+if (options.help || options.version) {
+    process.exit(0);
+}
+
 build(root, options);
 
 process.on("uncaughtException", error => {
