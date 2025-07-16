@@ -35,7 +35,7 @@ export async function build(root: string | undefined, options: BuildCommandOptio
     try {
         root = path.resolve(root ?? "");
         process.chdir(root);
-        dotenv.config();
+        dotenv.config({ quiet: true });
 
         const [pkg, isTsProject] = await Promise.all([readPackageJson(root), isTypeScriptProject(root)]);
 
@@ -48,10 +48,10 @@ export async function build(root: string | undefined, options: BuildCommandOptio
             logger.info(formatMsg.mxpath(config.projectPath));
         }
 
-        const bundles = await loadConfig(config);
+        const bundles = await loadConfig(config, logger);
 
         await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
-        console.dir(config.toPlainObject(), { depth: 3 });
+        // console.dir(config.toPlainObject(), { depth: 3 });
         if (options.watch) {
             await tasks.watch({ config, bundles, logger, root });
         } else {
@@ -200,7 +200,7 @@ const formatMsg = {
     builtSize: (file: string, size: number) => `Built ${bold(file)} (${dim(filesize(size, { standard: "jedec" }))})`,
     rebuilt: (file: string, duration: number) => `Rebuilt ${dim(file)} in ${green(ms(duration))}`,
     copy: (file: string) => `Copy ${bold(file)}`,
-    mxpath: (dir: string) => `${inverse(greenBright(bold("  PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
+    mxpath: (dir: string) => `${inverse(greenBright(bold("  MX PROJECT PATH  ")))}${blue(bold(` ${dir} `))}`
 };
 
 const buildMeasure = {

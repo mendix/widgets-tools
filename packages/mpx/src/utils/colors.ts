@@ -22,5 +22,7 @@ export const {
     bgGreenBright,
     bgBlackBright,
     bgBlack,
-    white
+    white,
+    magenta,
+    magentaBright
 } = pc.createColors(env.FORCE_COLOR !== "0" && !env.NO_COLOR);
