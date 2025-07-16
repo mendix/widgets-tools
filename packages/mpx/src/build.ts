@@ -176,7 +176,7 @@ const tasks = {
                 clearTimeout(debounceTimer);
             }
 
-            debounceTimer = setTimeout(() => tasks.buildMpk(params), 30);
+            debounceTimer = setTimeout(() => tasks.buildMpk(params), 150);
         });
 
         onExit(() => {
