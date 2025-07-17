@@ -17,11 +17,16 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
         importSource: "react"
     };
 
+    const define = {
+        "process.env.NODE_ENV": "'production'"
+    } as const;
+
     const esmBundle = {
         input: config.inputFiles.widgetFile,
         external: [...STD_EXTERNALS],
         plugins: [...stdPlugins(config), widgetPostcssPlugin(config)],
         jsx,
+        define,
         output: {
             file: config.outputFiles.esm,
             format: "esm"
@@ -33,6 +38,7 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
         external: [...STD_EXTERNALS],
         plugins: [...stdPlugins(config), widgetPostcssPlugin(config)],
         jsx,
+        define,
         output: {
             file: config.outputFiles.umd,
             format: "umd",
@@ -56,6 +62,7 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
             external: [...STD_EXTERNALS],
             treeshake: { moduleSideEffects: false },
             plugins: [plugins.url({ include: ["**/*.svg"], limit: 143360 }), plugins.image()],
+            define,
             output: {
                 file: config.outputFiles.editorConfig,
                 format: "commonjs"
@@ -69,6 +76,7 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
         const editorPreviewBundle = {
             input: config.inputFiles.editorPreview,
             external: [...STD_EXTERNALS],
+            define,
             plugins: [
                 plugins.postcss({
                     extensions: [".css", ".sass", ".scss"],
@@ -76,7 +84,13 @@ export async function defaultConfig(config: ProjectConfigWeb): Promise<BuildOpti
                     inject: true,
                     minimize: config.minify,
                     plugins: [postcssImport(), postcssUrl({ url: "inline" })],
-                    use: ["sass"]
+                    // Disable warnings until it's fixed in postcss plugin
+                    // https://github.com/egoist/rollup-plugin-postcss/issues/463
+                    use: {
+                        sass: {
+                            silenceDeprecations: ["legacy-js-api"]
+                        }
+                    } as any
                 }),
                 plugins.image()
             ],
@@ -182,6 +196,12 @@ export function widgetPostcssPlugin(config: ProjectConfigWeb) {
             postcssUrl({ url: cssUrlTransform })
         ],
         sourceMap: false,
-        use: ["sass"]
+        // Disable warnings until it's fixed in postcss plugin
+        // https://github.com/egoist/rollup-plugin-postcss/issues/463
+        use: {
+            sass: {
+                silenceDeprecations: ["legacy-js-api"]
+            }
+        } as any
     });
 }
