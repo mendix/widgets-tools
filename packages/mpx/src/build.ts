@@ -60,7 +60,10 @@ export async function build(root: string | undefined, options: CliBuildOptions):
             throw new Error(`Build for native is not implemented yet`);
         }
 
-        await fs.rm(config.outputDirs.dist, { recursive: true, force: true });
+        await Promise.all([
+            fs.rm(config.outputDirs.tmpDir, { recursive: true, force: true }),
+            fs.rm(config.outputDirs.mpkDir, { recursive: true, force: true })
+        ]);
 
         if (options.watch) {
             await tasks.watch({ config, bundles, logger, root });
