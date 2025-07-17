@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@rollup/plugin-image':
+        specifier: ^3.0.3
+        version: 3.0.3(rollup@4.45.0)
+      '@rollup/plugin-url':
+        specifier: ^8.0.2
+        version: 8.0.2(rollup@4.45.0)
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -20,6 +26,9 @@ importers:
       rolldown:
         specifier: 1.0.0-beta.26
         version: 1.0.0-beta.26
+      rollup-plugin-license:
+        specifier: ^3.6.0
+        version: 3.6.0(picomatch@4.0.2)(rollup@4.45.0)
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.5.6)
@@ -30,12 +39,6 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
     devDependencies:
-      '@rollup/plugin-image':
-        specifier: ^3.0.3
-        version: 3.0.3(rollup@4.45.0)
-      '@rollup/plugin-url':
-        specifier: ^8.0.2
-        version: 8.0.2(rollup@4.45.0)
       '@tsconfig/node22':
         specifier: ^22.0.2
         version: 22.0.2
@@ -78,9 +81,6 @@ importers:
       pretty-ms:
         specifier: ^9.2.0
         version: 9.2.0
-      rollup-plugin-license:
-        specifier: ^3.6.0
-        version: 3.6.0(picomatch@4.0.2)(rollup@4.45.0)
       signal-exit:
         specifier: ^4.1.0
         version: 4.1.0
