@@ -26,6 +26,7 @@ interface BundleOutputFiles {
 
 interface BundleOutputDirs {
     dist: string;
+    tmpDir: string;
     mpkDir: string;
     contentRoot: string;
     widgetDir: string;
@@ -40,15 +41,6 @@ interface ProjectConfigInputs {
 
 export abstract class ProjectConfig {
     readonly projectPath: string | null = null;
-
-    /** Output directory for built files. */
-    readonly dist = "dist";
-
-    /**
-     * Package root directory that contains all widget files shipped with mpk.
-     * By default "dist/tmp/widgets".
-     */
-    readonly contentRoot = path.join(this.dist, "tmp", "widgets");
 
     /** Widget package.json */
     readonly pkg: PackageJson;
@@ -136,13 +128,26 @@ export abstract class ProjectConfig {
     }
 
     get outputDirs(): BundleOutputDirs {
-        const widgetDir = path.join(this.contentRoot, this.widgetDirectory);
+        // dist
+        const dist = "dist";
+        // dist/tmp
+        const tmpDir = path.join(dist, "tmp");
+        // dist/tmp/widgets
+        const contentRoot = path.join(tmpDir, "widgets");
+        // dist/tmp/widgets/com/mendix/my/awesome/button
+        const widgetDir = path.join(contentRoot, this.widgetDirectory);
+        // dist/x.y.z
+        const mpkDir = path.join(dist, this.pkg.version);
+        // dist/widgets/com/mendix/my/awesome/button/assets
+        const widgetAssetsDir = path.join(widgetDir, "assets");
+
         return {
-            dist: this.dist,
-            mpkDir: path.join(this.dist, this.pkg.version),
-            contentRoot: this.contentRoot,
+            dist,
+            tmpDir,
+            mpkDir,
+            contentRoot,
             widgetDir,
-            widgetAssetsDir: path.join(widgetDir, "assets")
+            widgetAssetsDir
         };
     }
 
@@ -152,8 +157,8 @@ export abstract class ProjectConfig {
 
     toPlainObject(): Record<string, unknown> {
         return {
-            dist: this.dist,
-            contentRoot: this.contentRoot,
+            dist: this.outputDirs.dist,
+            contentRoot: this.outputDirs.contentRoot,
             pkg: this.pkg,
             isTsProject: this.isTsProject,
             projectPath: this.projectPath,
