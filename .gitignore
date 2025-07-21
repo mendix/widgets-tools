@@ -10,4 +10,5 @@ node_modules
 mxproject
 coverage
 
-# tests
+# Packed packages
+mendix-*.tgz
