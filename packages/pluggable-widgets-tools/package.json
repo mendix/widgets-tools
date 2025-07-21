@@ -11,7 +11,7 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "prepare": "shx rm -rf dist && tsc",
+    "prepack": "shx rm -rf dist && tsc",
     "test": "jest"
   },
   "files": [
