@@ -3,6 +3,12 @@
   "engines": {
     "node": ">=16"
   },
+  "overrides": {
+    "cheerio": "1.0.0-rc.12"
+  },
+  "resolutions": {
+    "cheerio": "1.0.0-rc.12"
+  },
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
   "repository": {
