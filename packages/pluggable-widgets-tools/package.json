@@ -121,18 +121,6 @@
     "tree-kill": "^1.2.2",
     "yeoman-test": "^6.2.0"
   },
-  "overrides": {
-    "colors": "1.4.0",
-    "react": "$react",
-    "react-dom": "$react-dom",
-    "react-native": "$react-native"
-  },
-  "resolutions": {
-    "colors": "1.4.0",
-    "react": "$react",
-    "react-dom": "$react-dom",
-    "react-native": "$react-native"
-  },
   "keywords": [
     "typings",
     "typescript",

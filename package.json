@@ -4,10 +4,11 @@
     "node": ">=16"
   },
   "overrides": {
-    "cheerio": "1.0.0-rc.12"
-  },
-  "resolutions": {
-    "cheerio": "1.0.0-rc.12"
+    "cheerio": "1.0.0-rc.12",
+    "colors": "1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "^0.72.7"
   },
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
