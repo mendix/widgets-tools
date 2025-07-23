@@ -1,0 +1,30 @@
+{
+  "name": "release-tools",
+  "version": "1.0.0",
+  "description": "Scripts used for release management of the widgets tools packages.",
+  "private": true,
+  "main": "./createRelease.ts",
+  "scripts": {
+    "lint": "eslint --fix --config .eslintrc.js --ext .jsx,.js,.ts,.tsx",
+    "release:pwt": "ts-node --project ./tsconfig.json ./createRelease.ts pwt",
+    "release:gw": "ts-node --project ./tsconfig.json ./createRelease.ts gw",
+    "build:release:parser": "peggy -o ./utils/changelog-parser/changelog.js ./utils/changelog-parser/changelog.pegjs"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.19",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "peggy": "^1.2.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1"
+}

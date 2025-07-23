@@ -34,7 +34,7 @@ async function main(): Promise<void> {
     const mendixPackage = packages.get(arg);
     if (!mendixPackage) throw new Error(`Argument "${arg}" is not a valid package name`);
 
-    const pwtPath = join(process.cwd(), `packages/${mendixPackage.name}`);
+    const pwtPath = join(__dirname, "../", mendixPackage.name);
 
     // 1. Get release info
     console.log(`Getting the release information for ${mendixPackage.name}...`);
