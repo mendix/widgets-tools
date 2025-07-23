@@ -1,0 +1,24 @@
+{
+  "name": "@mendix/pluggable-widgets-native",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "prepack": "shx rm -rf dist && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/yargs": "^17.0.33",
+    "shx": "^0.3.4",
+    "typescript": "^5.8.3"
+  }
+}

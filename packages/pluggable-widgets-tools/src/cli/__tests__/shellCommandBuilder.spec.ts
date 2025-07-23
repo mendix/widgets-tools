@@ -1,5 +1,5 @@
-import { join } from "path";
-import { shell, shellCommandBuilder, ShellCommandContext } from "../shellCommandBuilder";
+import { join } from "node:path";
+import { shell, shellCommandBuilder, ShellCommandContext } from "../shellCommandBuilder.js";
 
 const ctx: ShellCommandContext = {
     toolsRoot: "/opt/textBox/node_modules/@mendix/pluggable-widgets-tools",

@@ -1,5 +1,5 @@
 {
-    "include": ["./src/cli"],
+    "include": ["./src"],
     "compilerOptions": {
         "module": "nodenext",
         "lib": ["esnext"],
@@ -8,12 +8,8 @@
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "outDir": "./dist/cli",
+        "outDir": "./dist",
         "declaration": true,
         "sourceMap": false
-    },
-    "ts-node": {
-        "esm": true,
-        "experimentalSpecifierResolution": "node"
     }
 }
