@@ -1,5 +1,5 @@
 module.exports = {
-    ignorePatterns: ["scripts/release/utils/changelog-parser/changelog.js"],
+    ignorePatterns: ["utils/changelog-parser/changelog.js"],
     rules: {
         "@typescript-eslint/ban-ts-ignore": "off",
         "no-unused-expressions": "off",
@@ -9,7 +9,7 @@ module.exports = {
     extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
-        project: "./scripts/tsconfig.json",
+        project: "./tsconfig.json",
         ecmaVersion: 2018,
         sourceType: "module"
     },
