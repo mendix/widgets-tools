@@ -35,7 +35,7 @@ jobs:
           cache: 'pnpm'
 
       - name: "Installing dependencies"
-        run: pnpm --dir packages/release-tools install
+        run: pnpm install
 
       - name: "Creating GW release and MR"
         run: "pnpm --dir packages/release-tools run release:gw"

@@ -60,15 +60,14 @@ jobs:
           cache: 'pnpm'
 
       - name: "Installing dependencies"
-        working-directory: ./
         if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
-        run: pnpm --dir packages/command-tests install
+        run: pnpm install
 
       - name: Increase number of watchers
         if: (steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true') && startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: "Testing PWT commands"
-        working-directory: ./
+        working-directory: ./packages/command-tests
         if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
-        run: pnpm --dir packages/command-tests test
+        run: pnpm test
