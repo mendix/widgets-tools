@@ -48,12 +48,10 @@ jobs:
           cache: 'pnpm'
 
       - name: "Installing dependencies"
-        working-directory: ./
         if: steps.filter.outputs.packages == 'true'
-        run: pnpm -r install
+        run: pnpm install
 
       - name: "Running unit tests"
-        working-directory: ./
         if: steps.filter.outputs.packages == 'true'
         run: pnpm -r test
 
