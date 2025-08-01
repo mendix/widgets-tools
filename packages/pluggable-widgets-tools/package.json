@@ -52,7 +52,7 @@
     "@types/react-native": "^0.72.7",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
-    "@typescript-eslint/parser": "^5.8.1",
+    "@typescript-eslint/parser": "^5.62.0",
     "ansi-colors": "4.1.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.0.0",
