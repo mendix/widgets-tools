@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "10.21.2",
+  "version": "10.21.4",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=20"
@@ -11,7 +11,7 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "prepare": "shx rm -rf dist && tsc",
+    "prepack": "shx rm -rf dist && tsc",
     "test": "jest"
   },
   "files": [
@@ -111,6 +111,8 @@
   },
   "devDependencies": {
     "@mendix/generator-widget": ">=8.9.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^16.18.126",
     "@types/xml2js": "^0.4.5",
     "async-mutex": "^0.2.4",
     "react": "^18.2.0",
@@ -118,18 +120,6 @@
     "react-native": "^0.72.7",
     "tree-kill": "^1.2.2",
     "yeoman-test": "^6.2.0"
-  },
-  "overrides": {
-    "colors": "1.4.0",
-    "react": "$react",
-    "react-dom": "$react-dom",
-    "react-native": "$react-native"
-  },
-  "resolutions": {
-    "colors": "1.4.0",
-    "react": "$react",
-    "react-dom": "$react-dom",
-    "react-native": "$react-native"
   },
   "keywords": [
     "typings",

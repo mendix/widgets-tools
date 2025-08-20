@@ -16,30 +16,32 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
+        with:
+          version: 10
+
       - name: "Defining Environment Variables"
         id: variables
         run: echo "::set-output name=tag::$(git tag --points-at HEAD)"
+
       - name: "Defining node version"
-        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: ".nvmrc"
-      - name: "Installing root dependencies"
-        working-directory: ./
-        run: npm install
-      - name: "Installing pluggable-widgets-tools dependencies"
-        working-directory: ./packages/pluggable-widgets-tools
-        if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
-        run: npm install
+          cache: 'pnpm'
+
       - name: "Installing generator-widget dependencies"
-        working-directory: ./packages/generator-widget
-        if: contains(steps.variables.outputs.tag, 'generator-widget-v')
-        run: npm install
+        run: pnpm install
+
       - name: "Targeting Pluggable Widgets Tools"
         if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
         uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1
         with:
           package: "./packages/pluggable-widgets-tools/package.json"
           token: ${{ secrets.NPM_TOKEN }}
+
       - name: "Targeting Pluggable Widgets Generator"
         if: contains(steps.variables.outputs.tag, 'generator-widget-v')
         uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1

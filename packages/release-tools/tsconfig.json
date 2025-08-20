@@ -1,5 +1,5 @@
 {
-    "include": ["./release"],
+    "include": ["./"],
     "compilerOptions": {
         "strict": true,
         "noEmitOnError": true,
