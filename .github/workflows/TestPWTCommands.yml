@@ -58,4 +58,4 @@ jobs:
 
       - name: "Testing PWT commands"
         working-directory: ./packages/command-tests
-        run: pnpm test
+        run: pnpm start
