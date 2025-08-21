@@ -40,6 +40,6 @@ jobs:
       - name: "Running unit tests"
         run: pnpm -r test
 
-      - name: "Linting generator-widget"
+      - name: "Linting packages"
         working-directory: ./packages/generator-widget
-        run: pnpm run lint
+        run: pnpm -r lint
