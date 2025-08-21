@@ -34,14 +34,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Defining cache"
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
         if: matrix.node == 16
