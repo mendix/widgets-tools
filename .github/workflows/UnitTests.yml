@@ -3,8 +3,14 @@ name: Run unit tests
 on:
   push:
     branches: [master]
+    paths:
+      - 'pnpm-lock.yaml'
+      - 'packages/**'
   pull_request:
     branches: [master]
+    paths:
+      - 'pnpm-lock.yaml'
+      - 'packages/**'
 
 jobs:
   test:
@@ -16,25 +22,6 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
-
-      - name: "Checking changed files"
-        id: filter
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
-        if: github.event_name == 'pull_request'
-        with:
-          filters: |
-            packages:
-              - 'packages/**/*'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "Defining cache"
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
@@ -48,14 +35,11 @@ jobs:
           cache: 'pnpm'
 
       - name: "Installing dependencies"
-        if: steps.filter.outputs.packages == 'true'
         run: pnpm install
 
       - name: "Running unit tests"
-        if: steps.filter.outputs.packages == 'true'
         run: pnpm -r test
 
       - name: "Linting generator-widget"
         working-directory: ./packages/generator-widget
-        if: steps.filter.outputs.packages == 'true'
         run: pnpm run lint

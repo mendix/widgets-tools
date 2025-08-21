@@ -2,9 +2,21 @@ name: Script tests
 
 on:
   push:
-    branches: [master]
+    branches: 
+      - master
+    paths:
+      - 'pnpm-lock.yaml'
+      - 'packages/generator-widget/**'
+      - 'packages/pluggable-widgets-tools/**'
+      - 'packages/command-tests/**'
   pull_request:
-    branches: [master]
+    branches:
+      - master
+    paths:
+      - 'pnpm-lock.yaml'
+      - 'packages/generator-widget/**'
+      - 'packages/pluggable-widgets-tools/**'
+      - 'packages/command-tests/**'
 
 jobs:
   test:
@@ -19,20 +31,6 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
         with:
           submodules: false
-
-      - name: "Checking changed files"
-        id: filter
-        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # v2.11.1
-        if: github.event_name == 'pull_request'
-        with:
-          filters: |
-            packages:
-              - 'packages/generator-widget/*'
-              - 'packages/pluggable-widgets-tools/*'
-            tests:
-              - 'packages/command-tests/*'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
@@ -52,14 +50,12 @@ jobs:
           cache: 'pnpm'
 
       - name: "Installing dependencies"
-        if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
         run: pnpm install
 
       - name: Increase number of watchers
-        if: (steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true') && startsWith(matrix.os, 'ubuntu')
+        if: startsWith(matrix.os, 'ubuntu')
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: "Testing PWT commands"
         working-directory: ./packages/command-tests
-        if: steps.filter.outputs.packages == 'true' || steps.filter.outputs.tests == 'true'
         run: pnpm test
