@@ -5,7 +5,7 @@
   "private": true,
   "main": "commands.js",
   "scripts": {
-    "test": "node commands.js"  
+    "start": "node commands.js"  
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^2.2.0",
