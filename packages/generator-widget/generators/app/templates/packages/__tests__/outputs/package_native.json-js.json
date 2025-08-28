@@ -6,7 +6,7 @@
   "copyright": "Mendix 2023",
   "author": "Jest",
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "license": "Apache-2.0",
   "config": {
@@ -29,10 +29,10 @@
   },
   "resolutions": {
     "react": "^18.2.0",
-    "react-native": "0.72.7"
+    "react-native": "0.77.3"
   },
   "overrides": {
     "react": "^18.2.0",
-    "react-native": "0.72.7"
+    "react-native": "0.77.3"
   }
 }

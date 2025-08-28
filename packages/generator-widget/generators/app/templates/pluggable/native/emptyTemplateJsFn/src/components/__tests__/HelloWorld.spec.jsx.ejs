@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react-native";
 import { Platform } from "react-native";
 
 import { HelloWorld } from "../HelloWorld";
@@ -15,9 +15,9 @@ describe.each(["ios", "android"])("HelloWorld for %s", (os) => {
             name: "Mendix",
             style: []
         };
-        const helloWorld = shallow(<HelloWorld {...helloWorldProps} />);
+        const component = render(<HelloWorld {...helloWorldProps} />);
 
-        expect(helloWorld).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 
     it("renders the structure correctly with custom style", () => {
@@ -25,8 +25,8 @@ describe.each(["ios", "android"])("HelloWorld for %s", (os) => {
             name: "Mendix",
             style: [{ container: { borderColor: "white" }, label: { color: "black" } }]
         };
-        const helloWorld = shallow(<HelloWorld {...helloWorldProps} />);
+        const component = render(<HelloWorld {...helloWorldProps} />);
 
-        expect(helloWorld).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 });
