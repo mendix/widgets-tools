@@ -22,12 +22,6 @@ function promptWidgetProperties(mxProjectDir, widgetName) {
         },
         {
             type: "input",
-            name: "prompt",
-            message: "Enter prompt for your widget (optional)",
-            default: ""
-        },
-        {
-            type: "input",
             name: "organization",
             message: "Organization name",
             default: "Mendix",
