@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We upgraded React Native to version 0.77.3 for generated widgets.
+
+-   We updated the required Node.js version to 20 or newer for the generator and generated widget projects.
+
+-   We switched from Enzyme to React Native Testing Library for generated widget tests.
+
 ## [10.15.1] - 2025-05-19
 
 ### Changed
