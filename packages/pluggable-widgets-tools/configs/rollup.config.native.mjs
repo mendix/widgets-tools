@@ -66,7 +66,8 @@ const nativeExternal = [
     /^react-native-svg($|\/)/,
     /^react-native-vector-icons($|\/)/,
     /^@?react-navigation($|\/)/,
-    /^react-native-safe-area-context($|\/)/
+    /^react-native-safe-area-context($|\/)/,
+    /^@d11\/react-native-fast-image($|\/)/
 ];
 
 export default async args => {
