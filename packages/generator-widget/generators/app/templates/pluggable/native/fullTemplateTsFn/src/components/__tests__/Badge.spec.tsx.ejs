@@ -1,6 +1,6 @@
 import { createElement } from "react";
-import { shallow } from "enzyme";
-import { Platform, TouchableNativeFeedback, TouchableOpacity } from "react-native";
+import { render, fireEvent } from "@testing-library/react-native";
+import { Platform } from "react-native";
 
 import { Badge, BadgeProps } from "../Badge";
 
@@ -16,9 +16,9 @@ describe.each(["ios", "android"])("Badge for %s", (os: "ios" | "android") => {
             onClick: jest.fn(),
             value: "0"
         };
-        const badge = shallow(<Badge {...badgeProps} />);
+        const component = render(<Badge {...badgeProps} />);
 
-        expect(badge).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 
     it("renders the structure correctly with custom style", () => {
@@ -27,9 +27,9 @@ describe.each(["ios", "android"])("Badge for %s", (os: "ios" | "android") => {
             onClick: jest.fn(),
             value: "0"
         };
-        const badge = shallow(<Badge {...badgeProps} />);
+        const component = render(<Badge {...badgeProps} />);
 
-        expect(badge).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 
     it("triggers the onClick action when pressed", () => {
@@ -38,13 +38,10 @@ describe.each(["ios", "android"])("Badge for %s", (os: "ios" | "android") => {
             onClick: jest.fn(),
             value: "0"
         };
-        const badge = shallow(<Badge {...badgeProps} />);
+        const component = render(<Badge {...badgeProps} />);
 
-        const Touchable = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
-
-        expect(badge.children().find(Touchable)).not.toBeNull();
-
-        badge.children().simulate("press");
+        const touchable = component.getByRole("button");
+        fireEvent.press(touchable);
 
         expect(badgeProps.onClick).toHaveBeenCalled();
     });

@@ -6,7 +6,7 @@
   "copyright": <%- JSON.stringify(copyright) %>,
   "author": <%- JSON.stringify(author) %>,
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "license": <%- JSON.stringify(license) %>,
   "config": {
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": "^10.15.0"<% if (isLanguageTS) { %>,
     "@types/big.js": "^6.0.2"<% if (hasUnitTests) { %>,
-    "@types/enzyme": "^3.10.8",
     "@types/jest": "^29.0.0"<% } %><% } %>
   },
   "dependencies": {
@@ -38,11 +37,11 @@
   "resolutions": {
     "react": "^18.2.0",<% if (isLanguageTS) { %>
     "@types/react": "^18.2.0",<% } %>
-    "react-native": "0.72.7"
+    "react-native": "0.77.3"
   },
   "overrides": {
     "react": "^18.2.0",<% if (isLanguageTS) { %>
     "@types/react": "^18.2.0",<% } %>
-    "react-native": "0.72.7"
+    "react-native": "0.77.3"
   }
 }
