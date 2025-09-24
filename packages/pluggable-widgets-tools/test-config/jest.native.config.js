@@ -3,7 +3,7 @@ const { join } = require("path");
 const projectDir = process.cwd();
 
 module.exports = {
-    preset: hasDependency("@testing-library/react-native") ? "@testing-library/react-native" : "react-native",
+    preset: "react-native",
     testRunner: "jest-jasmine2",
     clearMocks: true,
     haste: {
@@ -14,9 +14,7 @@ module.exports = {
     setupFilesAfterEnv: [
         join(__dirname, "test-index-native.js"),
         ...(hasDependency("react-native-gesture-handler") ? ["react-native-gesture-handler/jestSetup.js"] : []),
-        ...(hasDependency("@testing-library/jest-native") ? ["@testing-library/jest-native/extend-expect"] : [])
     ],
-    snapshotSerializers: ["enzyme-to-json/serializer"],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
     transform: {
@@ -35,7 +33,6 @@ module.exports = {
         "react-hot-loader/root": join(__dirname, "__mocks__/hot")
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
-    collectCoverage: !process.env.CI,
     coverageDirectory: join(projectDir, "dist/coverage"),
     testEnvironment: "jsdom"
 };

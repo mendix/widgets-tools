@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 -   We added @d11/react-native-fast-image as an external native dependency in rollup config.
 -   We migrated to pnpm as our package manager. Users of the widgets tools should be able to continue using their package manager of choice.
 
+-   We updated React Native to version 0.77.3 to align with the Native Widgets project requirements.
+
+-   We updated Jest configuration for React Native testing to use the recommended preset and removed Enzyme support for improved compatibility and performance.
+
 ## [10.21.2] - 2025-07-02
 
 ### Changed
