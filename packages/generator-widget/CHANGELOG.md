@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.24.0] - 2025-09-24
+
 ### Changed
 
 -   We upgraded React Native to version 0.77.3 for generated widgets.
