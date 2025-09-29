@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+-   We added @d11/react-native-fast-image as an external native dependency in rollup config.
 -   We migrated to pnpm as our package manager. Users of the widgets tools should be able to continue using their package manager of choice.
 
 -   We updated React Native to version 0.77.3 to align with the Native Widgets project requirements.
