@@ -7,44 +7,64 @@ on:
       - "generator-widget-v*"
 
 jobs:
+  discover:
+    name: Discover packages to publish
+    runs-on: ubuntu-latest
+    outputs:
+      releases: ${{ steps.export.outputs.releases }}
+    steps:
+      - name: Checking-out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Get tags for HEAD
+        id: export
+        run: |
+          echo "releases=$(
+            (
+              for tag in $(git tag --points-at HEAD); do
+                echo "{ \"package\": \"${tag%-v*}\", \"version\": \"${tag##*-v}\" }"
+              done
+            ) | jq --slurp '.'
+          )" >> "$GITHUB_OUTPUT"
+
   publish:
     name: "Publish NPM packages"
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        release: ${{ fromJSON(needs.discover.outputs.releases) }}
+    environment: ${{ matrix.release.package }}
+
     steps:
-      - name: "Checking-out code"
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
+      - name: Check-out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Setup node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          submodules: false
+          node-version-file: ".nvmrc"
+          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
         with:
           version: 10
 
-      - name: "Defining Environment Variables"
-        id: variables
-        run: echo "::set-output name=tag::$(git tag --points-at HEAD)"
-
-      - name: "Defining node version"
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version-file: ".nvmrc"
-          cache: 'pnpm'
-
-      - name: "Installing generator-widget dependencies"
+      - name: Install dependencies
+        working-directory: ./packages/${{ matrix.release.package }}
         run: pnpm install
 
-      - name: "Targeting Pluggable Widgets Tools"
-        if: contains(steps.variables.outputs.tag, 'pluggable-widgets-tools-v')
-        uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1
-        with:
-          package: "./packages/pluggable-widgets-tools/package.json"
-          token: ${{ secrets.NPM_TOKEN }}
+      - name: Pack package
+        working-directory: ./packages/${{ matrix.release.package }}
+        run: pnpm pack
 
-      - name: "Targeting Pluggable Widgets Generator"
-        if: contains(steps.variables.outputs.tag, 'generator-widget-v')
-        uses: JS-DevTools/npm-publish@0f451a94170d1699fd50710966d48fb26194d939 # v1
+      - name: Setup node for npm publishing
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          package: "./packages/generator-widget/package.json"
-          token: ${{ secrets.NPM_TOKEN }}
+          node-version: '24' # Includes a version of npm higher than 11.5.1, which is needed for OIDC
+
+      - name: Publish package
+        working-directory: ./packages/${{ matrix.release.package }}
+        run: npm publish mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz
