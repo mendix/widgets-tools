@@ -24,15 +24,19 @@ jobs:
               for tag in $(git tag --points-at HEAD); do
                 package=${tag%-v*}
                 version=${tag##*-v}
-                jq -nc --arg p $package --arg v $version '{ package: $p, version: $v }'
+                # Without a file argument, jq will wait for stdin, unless you specify --null-input.
+                # By default jq pretty prints json. We need all of it on 1 line, so we use --compact-output here.
+                jq --null-input --compact-output --arg p $package --arg v $version '{ package: $p, version: $v }'
               done
-            ) | jq --slurp '.'
+              # The github outputs don't support unescaped newlines. So we use compact output here as well.
+            ) | jq --compact-output --slurp '.'
           )" >> "$GITHUB_OUTPUT"
 
   publish:
     name: "Publish NPM packages"
     runs-on: ubuntu-latest
-
+    needs: discovery
+    if: ${{ needs.discover.outputs.releases != '[]' }}
     strategy:
       fail-fast: false
       matrix:

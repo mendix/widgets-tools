@@ -6,8 +6,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [11.3.0] - 2025-11-11
-
 ### Changed
 
 -   We added @d11/react-native-fast-image as an external native dependency in rollup config.
