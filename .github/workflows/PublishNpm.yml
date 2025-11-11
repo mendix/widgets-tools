@@ -22,7 +22,9 @@ jobs:
           echo "releases=$(
             (
               for tag in $(git tag --points-at HEAD); do
-                echo "{ \"package\": \"${tag%-v*}\", \"version\": \"${tag##*-v}\" }"
+                package=${tag%-v*}
+                version=${tag##*-v}
+                jq -nc --arg p $package --arg v $version '{ package: $p, version: $v }'
               done
             ) | jq --slurp '.'
           )" >> "$GITHUB_OUTPUT"
