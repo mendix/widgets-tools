@@ -6,6 +6,10 @@ on:
       - "pluggable-widgets-tools-v*"
       - "generator-widget-v*"
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   discover:
     name: Discover packages to publish
