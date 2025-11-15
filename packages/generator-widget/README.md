@@ -35,6 +35,7 @@ The Mendix Pluggable Widget Generator is a scaffolding tool to let you quickly c
 
     - Widget name
     - Description
+    - Prompt
     - Organization
     - Copyright
     - License
