@@ -1,22 +1,19 @@
 import { createElement } from "react";
-import { shallow, ShallowWrapper } from "enzyme";
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import { HelloWorldSample, HelloWorldSampleProps } from "../HelloWorldSample";
 
 describe("HelloWorldSample", () => {
-    const createHelloWorld = (props: HelloWorldSampleProps): ShallowWrapper => shallow(<HelloWorldSample {...props} />);
-
     it("should render the structure correctly", () => {
         const helloWorldProps: HelloWorldSampleProps = {
             sampleText: "World"
         };
 
-        const helloWorld = createHelloWorld(helloWorldProps);
+        const { container } = render(<HelloWorldSample {...helloWorldProps} />);
 
-        expect(
-            helloWorld.equals(
-                <div className="widget-hello-world">Hello {helloWorldProps.sampleText}</div>
-            )
-        ).toEqual(true);
+        const helloWorld = container.querySelector(".widget-hello-world");
+        expect(helloWorld).toBeInTheDocument();
+        expect(helloWorld).toHaveTextContent(`Hello ${helloWorldProps.sampleText}`);
     });
 });
