@@ -21,8 +21,8 @@
     "build": "pluggable-widgets-tools build:web",
     "lint": "pluggable-widgets-tools lint",
     "lint:fix": "pluggable-widgets-tools lint:fix",
-    "test": "pluggable-widgets-tools test:unit:web --no-cache --ci && npm run test:e2e",
-    "test:unit": "pluggable-widgets-tools test:unit:web --coverage",
+    "test": "pluggable-widgets-tools test:unit:web:enzyme-free && npm run test:e2e",
+    "test:unit": "pluggable-widgets-tools test:unit:web:enzyme-free",
     "test:e2e": "npx cypress open --browser chrome --e2e",
     "prerelease": "npm run lint",
     "release": "pluggable-widgets-tools release:web"
@@ -30,10 +30,8 @@
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": "^10.15.0",
     "@types/big.js": "^6.0.2",
-    "@types/enzyme": "^3.10.8",
     "@types/jasmine": "^3.6.9",
     "@types/jest": "^29.0.0",
-    "@types/react-test-renderer": "~18.0.0",
     "cypress": "^10.10.0"
   },
   "dependencies": {
@@ -41,12 +39,16 @@
   },
   "resolutions": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",
     "react-native": "0.72.7"
   },
   "overrides": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",
     "react-native": "0.72.7"
   }
 }
