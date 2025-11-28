@@ -1,9 +1,8 @@
+import "@testing-library/jest-dom";
+import { BadgeSample } from "../BadgeSample";
 import { createElement } from "react";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
-
-import { BadgeSample } from "../BadgeSample";
 
 describe("Badge", () => {
     it("should render the structure", () => {
