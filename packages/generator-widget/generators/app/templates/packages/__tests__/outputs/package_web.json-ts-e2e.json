@@ -28,7 +28,6 @@
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": "^10.15.0",
     "@types/big.js": "^6.0.2",
-    "@types/enzyme": "^3.10.8",
     "@types/jasmine": "^3.6.9",
     "cypress": "^10.10.0"
   },
@@ -37,12 +36,16 @@
   },
   "resolutions": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",
     "react-native": "0.72.7"
   },
   "overrides": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",
     "react-native": "0.72.7"
   }
 }

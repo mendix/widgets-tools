@@ -1,21 +1,19 @@
 import { createElement } from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import { HelloWorldSample } from "../HelloWorldSample";
 
 describe("HelloWorldSample", () => {
-    const createHelloWorld = (props) => shallow(<HelloWorldSample {...props} />);
-
     it("should render the structure correctly", () => {
         const helloWorldProps = {
             sampleText: "World"
         };
-        const helloWorld = createHelloWorld(helloWorldProps);
 
-        expect(
-            helloWorld.equals(
-                <div className="widget-hello-world">Hello {helloWorldProps.sampleText}</div>
-            )
-        ).toEqual(true);
+        const { container } = render(<HelloWorldSample {...helloWorldProps} />);
+
+        const helloWorld = container.querySelector(".widget-hello-world");
+        expect(helloWorld).toBeInTheDocument();
+        expect(helloWorld).toHaveTextContent(`Hello ${helloWorldProps.sampleText}`);
     });
 });
