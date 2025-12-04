@@ -7,7 +7,6 @@ module.exports = {
     testRunner: "jest-jasmine2",
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
-    snapshotSerializers: ["enzyme-to-json/serializer"],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transform: {
         "^.+\\.tsx?$": [
