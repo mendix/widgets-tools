@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Breaking changes
+
+-   We removed Enzyme testing library and associated dependencies from pluggable-widgets-tools. Tests using Enzyme should be updated to use React Testing Library. See the [migration guide](https://testing-library.com/docs/react-testing-library/migrate-from-enzyme) for more information.
+
 ## [11.3.0] - 2025-11-12
 
 ### Changed
