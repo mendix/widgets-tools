@@ -3,6 +3,7 @@ const { execSync, spawnSync } = require("child_process");
 const { existsSync } = require("fs");
 const { delimiter, dirname, join, parse } = require("path");
 const { checkMigration } = require("../utils/migration");
+const { checkForEnzymeUsage } = require("../utils/enzyme-detector");
 const { red } = require("ansi-colors");
 
 checkNodeVersion();
@@ -21,6 +22,11 @@ checkNodeVersion();
     if (args.indexOf("--subprojectPath") > -1) {
         args.splice(args.indexOf("--subprojectPath"), 2);
     }
+    
+    if (cmd && cmd.startsWith("test:unit")) {
+        checkForEnzymeUsage();
+    }
+    
     const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
     console.log(`Running MX Widgets Tools script ${cmd}...`);
 
@@ -90,8 +96,6 @@ function getRealCommand(cmd, toolsRoot) {
             return `jest --projects "${join(toolsRoot, "test-config/jest.config.js")}"`;
         case "test:unit:native":
             return `jest --projects "${join(toolsRoot, "test-config/jest.native.config.js")}"`;
-        case "test:unit:web:enzyme-free":
-            return `jest --projects "${join(toolsRoot, "test-config/jest.enzyme-free.config.js")}"`;
         case "test:e2e":
         case "test:e2e:ts":
         case "test:e2e:web:cypress":

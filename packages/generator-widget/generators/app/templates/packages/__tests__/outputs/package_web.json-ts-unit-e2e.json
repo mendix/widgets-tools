@@ -21,8 +21,8 @@
     "build": "pluggable-widgets-tools build:web",
     "lint": "pluggable-widgets-tools lint",
     "lint:fix": "pluggable-widgets-tools lint:fix",
-    "test": "pluggable-widgets-tools test:unit:web:enzyme-free && npm run test:e2e",
-    "test:unit": "pluggable-widgets-tools test:unit:web:enzyme-free",
+    "test": "pluggable-widgets-tools test:unit:web && npm run test:e2e",
+    "test:unit": "pluggable-widgets-tools test:unit:web",
     "test:e2e": "npx cypress open --browser chrome --e2e",
     "prerelease": "npm run lint",
     "release": "pluggable-widgets-tools release:web"

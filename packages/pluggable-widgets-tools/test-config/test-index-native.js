@@ -1,5 +1,4 @@
 const { TextEncoder, TextDecoder } = require("util");
-const enableHooks = require("jest-react-hooks-shallow").default;
 
 Object.defineProperties(global, {
     TextEncoder: {
@@ -10,7 +9,6 @@ Object.defineProperties(global, {
     }
 });
 
-enableHooks(jest);
 global.setImmediate = global.setTimeout;
 
 const origConsole = console.error;

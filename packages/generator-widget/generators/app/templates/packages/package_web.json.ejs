@@ -21,8 +21,8 @@
     "build": "pluggable-widgets-tools build:web",
     "lint": "pluggable-widgets-tools lint",
     "lint:fix": "pluggable-widgets-tools lint:fix",<% if (hasUnitTests) { %>
-    "test": "pluggable-widgets-tools test:unit:web:enzyme-free<% if (hasE2eTests) { %> && npm run test:e2e<% } %>",
-    "test:unit": "pluggable-widgets-tools test:unit:web:enzyme-free",<% } %><% if (hasE2eTests) { %>
+    "test": "pluggable-widgets-tools test:unit:web<% if (hasE2eTests) { %> && npm run test:e2e<% } %>",
+    "test:unit": "pluggable-widgets-tools test:unit:web",<% } %><% if (hasE2eTests) { %>
     "test:e2e": "npx cypress open --browser chrome --e2e",<% } %>
     "prerelease": "npm run lint",
     "release": "pluggable-widgets-tools release:web"
