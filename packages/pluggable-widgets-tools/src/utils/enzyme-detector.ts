@@ -1,8 +1,8 @@
-const { existsSync, readdirSync, readFileSync, statSync } = require("fs");
-const { join } = require("path");
-const { yellow } = require("ansi-colors");
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { join } from "path";
+import { yellow } from "ansi-colors";
 
-function checkForEnzymeUsage(srcDir = "src") {
+export function checkForEnzymeUsage(srcDir: string = "src"): void {
     const projectRoot = process.cwd();
     const srcPath = join(projectRoot, srcDir);
 
@@ -10,38 +10,38 @@ function checkForEnzymeUsage(srcDir = "src") {
         return;
     }
 
-    const enzymeFiles = [];
+    const enzymeFiles: string[] = [];
 
-    function scanDirectory(dir) {
+    function scanDirectory(dir: string): void {
         try {
             const entries = readdirSync(dir);
+            const isTestDir = /__tests__|[/\\]test[/\\]/.test(dir);
+
             for (const entry of entries) {
                 const fullPath = join(dir, entry);
                 const stat = statSync(fullPath);
 
                 if (stat.isDirectory()) {
                     scanDirectory(fullPath);
-                } else if (
-                    stat.isFile() &&
-                    (entry.endsWith(".js") ||
-                        entry.endsWith(".jsx") ||
-                        entry.endsWith(".ts") ||
-                        entry.endsWith(".tsx"))
+                    continue;
+                }
+
+                const isTestFile = /\.(spec|test)\.(jsx?|tsx?)$/.test(entry);
+                if (!stat.isFile() || (!isTestFile && !isTestDir)) {
+                    continue;
+                }
+
+                const content = readFileSync(fullPath, "utf8");
+                if (
+                    /(from|require\s*\()\s*['"]enzyme['"]|enzyme.*(?:shallow|mount|render)|(?:shallow|mount|render).*enzyme/.test(
+                        content
+                    )
                 ) {
-                    const content = readFileSync(fullPath, "utf8");
-                    // Check for enzyme imports or requires
-                    if (
-                        /from\s+['"]enzyme['"]/.test(content) ||
-                        /require\s*\(\s*['"]enzyme['"]\s*\)/.test(content) ||
-                        /import\s+.*\s+from\s+['"]enzyme['"]/.test(content) ||
-                        /shallow|mount|render/.test(content) && /enzyme/.test(content)
-                    ) {
-                        enzymeFiles.push(fullPath.replace(projectRoot, "."));
-                    }
+                    enzymeFiles.push(fullPath.replace(projectRoot, "."));
                 }
             }
         } catch (error) {
-
+            console.error(`Error scanning directory ${dir}:`, error);
         }
     }
 
@@ -64,5 +64,3 @@ function checkForEnzymeUsage(srcDir = "src") {
         console.log();
     }
 }
-
-module.exports = { checkForEnzymeUsage };
