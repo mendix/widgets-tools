@@ -3,7 +3,7 @@ const { execSync, spawnSync } = require("child_process");
 const { existsSync } = require("fs");
 const { delimiter, dirname, join, parse } = require("path");
 const { checkMigration } = require("../utils/migration");
-const { checkForEnzymeUsage } = require("../utils/enzyme-detector");
+const { checkForEnzymeUsage } = require("../dist/utils/enzyme-detector");
 const { red } = require("ansi-colors");
 
 checkNodeVersion();
@@ -100,7 +100,8 @@ function getRealCommand(cmd, toolsRoot) {
         case "test:e2e:ts":
         case "test:e2e:web:cypress":
         case "test:e2e:web:cypress:local":
-            return "echo This command has been removed.";
+        case "test:unit:web:enzyme-free":
+            return "echo This command has been removed, use test:unit:web instead!";
         case "start:js":
         case "start:ts":
             return "echo This command has no effect, use pluggable-widgets-tools start:web instead!";
