@@ -1,4 +1,9 @@
-const UNSUPPORTED_IMPORTS = new Set(["use", "useState"])
+const UNSUPPORTED_IMPORTS = new Set([
+	"use",
+	"useActionState",
+	"useFormState",
+	"useOptimistic",
+])
 
 const AST_NODE_TYPES = {
 	Identifier: "Identifier",
@@ -23,7 +28,10 @@ const rule = {
 	create(context) {
 		let reactImports = {}
 
-		context.getFilename().match(/\.Preview\.(jsx|tsx)$/)
+		if (context.getFilename().match(/\.editorPreview\.(jsx|tsx)$/) === null) {
+			return {
+			}
+		}
 
 		return {
 			Program() {
@@ -41,11 +49,11 @@ const rule = {
 			},
 			CallExpression(node) {
 				if (node.callee.type === AST_NODE_TYPES.Identifier && node.callee.name in reactImports && UNSUPPORTED_IMPORTS.has(reactImports[node.callee.name])) {
-					context.report({ node, messageId: 'UsesUse' })
+					context.report({ node: node, messageId: 'UsesUse' })
 				}
 			}
 		}
 	},
 }
 
-export default rule;
+module.exports = rule;

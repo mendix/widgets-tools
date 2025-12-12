@@ -1,4 +1,4 @@
-import react19PreviewComponent from "./rules/react-19-preview-component.js"
+const react19PreviewComponent = require("./rules/react-19-preview-component.js");
 
 const plugin = {
 	meta: { name: "@mendix/eslint-plugin-pluggable-widgets" },
@@ -7,4 +7,4 @@ const plugin = {
 	}
 }
 
-export default plugin;
+module.exports = plugin;

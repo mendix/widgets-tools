@@ -1,5 +1,5 @@
-import { RuleTester } from "eslint"
-import react19PreviewComponent from "./react-19-preview-component.js"
+const { RuleTester } = require("eslint")
+const react19PreviewComponent = require("./react-19-preview-component.js")
 
 const ruleTester = new RuleTester({
 	languageOptions: { ecmaVersion: 2022, parserOptions: { ecmaFeatures: { jsx: true } } },
