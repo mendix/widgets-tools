@@ -1,0 +1,22 @@
+{
+  "name": "preview-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0",
+  "dependencies": {
+    "@mendix/eslint-plugin-pluggable-widgets": "workspace:../eslint-plugin-pluggable-widgets"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.5.0"
+  }
+}
