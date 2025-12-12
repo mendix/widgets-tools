@@ -12,6 +12,8 @@ const AST_NODE_TYPES = {
 
 console.log("Reached the rule!")
 
+// TODO: Initialize the imports graph
+
 const rule = {
 	name: "no-react-19-editor-preview",
 	meta: {
@@ -30,6 +32,7 @@ const rule = {
 
 		if (context.getFilename().match(/\.editorPreview\.(jsx|tsx)$/) === null) {
 			return {
+				// TODO: Register the imports between files
 			}
 		}
 
@@ -38,6 +41,7 @@ const rule = {
 				reactImports = {}
 			},
 			ImportDeclaration(node) {
+				// TODO: Register the imports between files
 				if (node.source.value === "react") {
 					reactImports = node.specifiers.reduce((imports, specifier) => {
 						if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
@@ -49,10 +53,12 @@ const rule = {
 			},
 			CallExpression(node) {
 				if (node.callee.type === AST_NODE_TYPES.Identifier && node.callee.name in reactImports && UNSUPPORTED_IMPORTS.has(reactImports[node.callee.name])) {
+					// TODO: Register the nodes and unsupported symbol to a file
 					context.report({ node: node, messageId: 'UsesUse' })
 				}
 			}
 		}
+		// TODO: Somehow report each use of unsupported symbols for files imported by editorPreview
 	},
 }
 
