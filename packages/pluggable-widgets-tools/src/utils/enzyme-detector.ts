@@ -15,7 +15,6 @@ export function checkForEnzymeUsage(srcDir: string = "src"): void {
     function scanDirectory(dir: string): void {
         try {
             const entries = readdirSync(dir);
-            const isTestDir = /__tests__|[/\\]test[/\\]/.test(dir);
 
             for (const entry of entries) {
                 const fullPath = join(dir, entry);
@@ -26,8 +25,8 @@ export function checkForEnzymeUsage(srcDir: string = "src"): void {
                     continue;
                 }
 
-                const isTestFile = /\.(spec|test)\.(jsx?|tsx?)$/.test(entry);
-                if (!stat.isFile() || (!isTestFile && !isTestDir)) {
+                const isJsOrTsFile = /\.(jsx?|tsx?)$/.test(entry);
+                if (!stat.isFile() || !isJsOrTsFile) {
                     continue;
                 }
 
