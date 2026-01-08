@@ -4,6 +4,7 @@ import { existsSync, readdirSync, promises as fs, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { config } from "dotenv";
 import colors from "ansi-colors";
+import { throwOnIllegalChars, throwOnNoMatch } from "../dist/utils/validation.js";
 
 config({ path: join(process.cwd(), ".env") });
 
@@ -24,6 +25,10 @@ export const widgetVersion = widgetPackageJson.version;
 if (!widgetName || !widgetPackageJson) {
     throw new Error("Widget does not define widgetName in its package.json");
 }
+
+throwOnIllegalChars(widgetName, "a-zA-Z", "The `widgetName` property in package.json")
+throwOnIllegalChars(widgetPackage, "a-zA-Z0-9_.-", "The `packagePath` property in package.json")
+throwOnNoMatch(widgetPackage, /^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/, "The `packagePath` property in package.json")
 
 const widgetSrcFiles = readdirSync(join(sourcePath, "src")).map(file => join(sourcePath, "src", file));
 export const widgetEntry = widgetSrcFiles.filter(file =>
