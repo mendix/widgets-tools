@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- We fixed an issue where `require` was not transformed to `import` for the `es` output format which could result in an error when the widget was used in a project with React client enabled.  
+
 ## [11.3.0] - 2025-11-12
 
 ### Changed

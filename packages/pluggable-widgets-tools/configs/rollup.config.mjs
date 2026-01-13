@@ -133,7 +133,7 @@ export default async args => {
                         presets: [["@babel/preset-env", { targets: { safari: "12" } }]],
                         allowAllFormats: true
                     },
-                    external: webExternal,
+                    external: outputFormat === "es" ? [] : webExternal,
                     licenses: production && outputFormat === "amd"
                 })
             ],
