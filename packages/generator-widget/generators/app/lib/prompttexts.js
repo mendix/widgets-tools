@@ -23,6 +23,15 @@ function promptWidgetProperties(mxProjectDir, widgetName) {
         {
             type: "input",
             name: "organization",
+            validate: input => {
+                if (/[^a-zA-Z0-9_.-]/.test(input)) {
+                    return "Your organization name can only contain alphanumeric characters, '_', '-', and '.'. Please provide a valid name";
+                }
+                if (!/^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/.test(input)) {
+                    return "Your organization name must follow the structure [namespace.]org-name, for example 'mendix' or 'com.mendix.widgets'. Please provide a valid name";
+                }
+                return true;
+            },
             message: "Organization name",
             default: "Mendix",
             store: true
