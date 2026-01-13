@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We changed the copyright prompt to prefill the current year.
 
+-   We now enforce validation when choosing an organization name for a widget.
+
 ## [10.24.0] - 2025-09-24
 
 ### Changed
