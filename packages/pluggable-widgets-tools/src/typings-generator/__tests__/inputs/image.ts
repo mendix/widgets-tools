@@ -1,19 +1,19 @@
-export const fileInput = `<?xml version="1.0" encoding="utf-8"?>
+export const imageWebInput = `<?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.mywidget.MyWidget" needsEntityContext="true" offlineCapable="true" pluginWidget="true"
         xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
         <propertyGroup caption="General">
-            <property key="file" type="file">
-                <caption>File</caption>
+            <property key="image" type="image">
+                <caption>Image</caption>
                 <description />
             </property>
-            <property key="file2" type="file" required="false">
-                <caption>File 2</caption>
+            <property key="image2" type="image" required="false">
+                <caption>Image 2</caption>
                 <description />
             </property>
-            <property key="file3" type="file" allowUpload="true">
-                <caption>File 3</caption>
+            <property key="image3" type="image" allowUpload="true">
+                <caption>Image 3</caption>
                 <description />
             </property>
         </propertyGroup>
@@ -39,22 +39,22 @@ export const fileInput = `<?xml version="1.0" encoding="utf-8"?>
     </properties>
 </widget>`;
 
-export const fileInputNative = `<?xml version="1.0" encoding="utf-8"?>
+export const imageNativeInput = `<?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.mywidget.MyWidget" needsEntityContext="true" offlineCapable="true" pluginWidget="true" supportedPlatform="Native"
         xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../xsd/widget.xsd">
     <properties>
          <propertyGroup caption="General">
-            <property key="file" type="file">
-                <caption>File</caption>
+            <property key="image" type="image">
+                <caption>Image</caption>
                 <description />
             </property>
-            <property key="file2" type="file" required="false">
-                <caption>File 2</caption>
+            <property key="image2" type="image" required="false">
+                <caption>Image 2</caption>
                 <description />
             </property>
-             <property key="file3" type="file" allowUpload="true">
-                <caption>File 3</caption>
+             <property key="image3" type="image" allowUpload="true">
+                <caption>Image 3</caption>
                 <description />
             </property>
         </propertyGroup>

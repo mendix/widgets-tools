@@ -51,6 +51,7 @@ export interface Property {
         isDefault?: string;
         dataSource?: string;
         onChange?: string;
+        allowUpload?: string;
     };
     caption?: string[];
     category?: string[];
