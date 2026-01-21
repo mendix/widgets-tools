@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "11.3.0",
+  "version": "11.8.0",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=20"
@@ -82,7 +82,7 @@
     "jest-junit": "^13.0.0",
     "jest-react-hooks-shallow": "^1.5.1",
     "make-dir": "^3.1.0",
-    "mendix": "^10.21.64362",
+    "mendix": "^11.8.0",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
     "postcss": "^8.3.11",
