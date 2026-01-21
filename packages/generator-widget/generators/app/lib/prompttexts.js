@@ -9,7 +9,7 @@ function promptWidgetProperties(mxProjectDir, widgetName) {
                 if (/^([a-zA-Z]+)$/.test(input)) {
                     return true;
                 }
-                return "Your widget name can only contain one or more letters (a-z & A-Z). Please provide a valid name";
+                return "Your widget name may only contain characters matching [a-zA-Z]. Please provide a valid name.";
             },
             message: "What is the name of your widget?",
             default: widgetName ? widgetName : "MyWidget"
@@ -25,10 +25,10 @@ function promptWidgetProperties(mxProjectDir, widgetName) {
             name: "organization",
             validate: input => {
                 if (/[^a-zA-Z0-9_.-]/.test(input)) {
-                    return "Your organization name can only contain alphanumeric characters, '_', '-', and '.'. Please provide a valid name";
+                    return "Your organization name may only contain characters matching [a-zA-Z0-9_.-]. Please provide a valid name.";
                 }
                 if (!/^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/.test(input)) {
-                    return "Your organization name must follow the structure [namespace.]org-name, for example 'mendix' or 'com.mendix.widgets'. Please provide a valid name";
+                    return "Your organization name must follow the structure (namespace.)org-name, for example 'mendix' or 'com.mendix.widgets'. Please provide a valid name.";
                 }
                 return true;
             },
