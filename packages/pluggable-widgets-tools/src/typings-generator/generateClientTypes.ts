@@ -128,12 +128,15 @@ function toClientPropType(
             return "number";
         case "decimal":
             return "Big";
-        case "icon":
+        case "icon": 
             return isNative ? "DynamicValue<NativeIcon>" : "DynamicValue<WebIcon>";
-        case "image":
-            return isNative ? "DynamicValue<NativeImage>" : "DynamicValue<WebImage>";
+        case "image": {
+            const allowUpload = prop.$.allowUpload === "true";
+            const imageType = isNative ? "NativeImage" : "WebImage";
+            return allowUpload ? `EditableImageValue<${imageType}>` : `DynamicValue<${imageType}>`;
+        }
         case "file":
-            return "DynamicValue<FileValue>";
+            return prop.$.allowUpload ? "EditableFileValue<FileValue>" : "DynamicValue<FileValue>";
         case "datasource":
             return "ListValue";
         case "attribute": {
