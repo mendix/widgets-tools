@@ -1,101 +1,100 @@
 import { createElement } from "react";
-import { shallow, ShallowWrapper } from "enzyme";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
 
 import { BadgeSample, BadgeSampleProps } from "../BadgeSample";
 
 describe("Badge", () => {
-    const createBadge = (props: BadgeSampleProps): ShallowWrapper => shallow(<BadgeSample {...props} />);
-
     it("should render the structure", () => {
         const badgeProps: BadgeSampleProps = {
             type: "badge",
             bootstrapStyle: "default",
             value: "0"
         };
-        const badge = createBadge(badgeProps);
+        const { container } = render(<BadgeSample {...badgeProps} />);
 
-        expect(
-            badge.equals(
-                <span className="widget-<%- packageName %> badge label-default">0</span>
-            )
-        ).toEqual(true);
+        const badge = container.querySelector("span.widget-<%- packageName %>.badge.label-default");
+        expect(badge).toBeInTheDocument();
+        expect(badge).toHaveTextContent("0");
     });
 
     it("should show value when no value or default value provided", () => {
         const value = "value";
-        const badge = createBadge({ type: "label", value, defaultValue: "default value" });
+        const { container } = render(<BadgeSample type="label" value={value} defaultValue="default value" />);
 
-        expect(badge.text()).toBe(value);
+        expect(container.querySelector("span")).toHaveTextContent(value);
     });
 
     it("should show default value when no value is provided", () => {
         const defaultValue = "default";
-        const badge = createBadge({ type: "label", value: undefined, defaultValue });
+        const { container } = render(<BadgeSample type="label" value={undefined} defaultValue={defaultValue} />);
 
-        expect(badge.text()).toBe(defaultValue);
+        expect(container.querySelector("span")).toHaveTextContent(defaultValue);
     });
 
     it("should show no value when no value or default value provided", () => {
-        const badge = createBadge({ type: "label", value: undefined });
+        const { container } = render(<BadgeSample type="label" value={undefined} />);
 
-        expect(badge.text()).toBe("");
+        expect(container.querySelector("span")).toHaveTextContent("");
     });
 
     it("configured as a label should have the class label", () => {
-        const badge = createBadge({ type: "label" });
+        const { container } = render(<BadgeSample type="label" />);
 
-        expect(badge.hasClass("label")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label");
     });
 
     it("configured as a badge should have the class badge", () => {
-        const badge = createBadge({ type: "badge" });
+        const { container } = render(<BadgeSample type="badge" />);
 
-        expect(badge.hasClass("badge")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("badge");
     });
 
-    it("with a click action should respond to click events", () => {
-        const badgeProps: BadgeSampleProps = { onClickAction: jest.fn(), type: "badge" };
-        const onClick = badgeProps.onClickAction = jest.fn();
-        const badge = createBadge(badgeProps);
+    it("with a click action should respond to click events", async () => {
+        const user = userEvent.setup();
+        const onClick = jest.fn();
+        const { container } = render(<BadgeSample onClickAction={onClick} type="badge" />);
 
-        badge.simulate("click");
+        const badge = container.querySelector("span");
+        await user.click(badge!);
 
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 
     it("with the Bootstrap style default should have the class label-default", () => {
-        const badge = createBadge({ bootstrapStyle: "default", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="default" type="badge" />);
 
-        expect(badge.hasClass("label-default")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-default");
     });
 
     it("with the Bootstrap style primary should have the class label-primary", () => {
-        const badge = createBadge({ bootstrapStyle: "primary", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="primary" type="badge" />);
 
-        expect(badge.hasClass("label-primary")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-primary");
     });
 
     it("with the Bootstrap style success should have the class label-success", () => {
-        const badge = createBadge({ bootstrapStyle: "success", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="success" type="badge" />);
 
-        expect(badge.hasClass("label-success")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-success");
     });
 
     it("with the Bootstrap style info should have the class label-info", () => {
-        const badge = createBadge({ bootstrapStyle: "info", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="info" type="badge" />);
 
-        expect(badge.hasClass("label-info")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-info");
     });
 
     it("with the Bootstrap style warning should have the class label-warning", () => {
-        const badge = createBadge({ bootstrapStyle: "warning", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="warning" type="badge" />);
 
-        expect(badge.hasClass("label-warning")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-warning");
     });
 
     it("with the Bootstrap style danger should have the class label-danger", () => {
-        const badge = createBadge({ bootstrapStyle: "danger", type: "badge" });
+        const { container } = render(<BadgeSample bootstrapStyle="danger" type="badge" />);
 
-        expect(badge.hasClass("label-danger")).toBe(true);
+        expect(container.querySelector("span")).toHaveClass("label-danger");
     });
 });

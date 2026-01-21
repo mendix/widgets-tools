@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Breaking changes
+
+-   We removed Enzyme testing library and associated dependencies from pluggable-widgets-tools. Tests using Enzyme should be updated to use React Testing Library. See the [migration guide](https://testing-library.com/docs/react-testing-library/migrate-from-enzyme) for more information. The `test:unit:web:enzyme-free` command has been removed; use `test:unit:web` instead.
+
+### Changed
+
+- We fixed an issue where `require` was not transformed to `import` for the `es` output format which could result in an error when the widget was used in a project with React client enabled.  
+
+-   We now enforce the same validation for the `widgetName` in the widget bundler as we do in the generator. Validation is now also enforced for the organization name (`packagePath`).
+
 ## [11.3.0] - 2025-11-12
 
 ### Changed

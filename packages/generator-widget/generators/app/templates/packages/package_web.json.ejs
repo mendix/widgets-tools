@@ -21,32 +21,34 @@
     "build": "pluggable-widgets-tools build:web",
     "lint": "pluggable-widgets-tools lint",
     "lint:fix": "pluggable-widgets-tools lint:fix",<% if (hasUnitTests) { %>
-    "test": "pluggable-widgets-tools test:unit:web --no-cache --ci<% if (hasE2eTests) { %> && npm run test:e2e<% } %>",
-    "test:unit": "pluggable-widgets-tools test:unit:web --coverage",<% } %><% if (hasE2eTests) { %>
+    "test": "pluggable-widgets-tools test:unit:web<% if (hasE2eTests) { %> && npm run test:e2e<% } %>",
+    "test:unit": "pluggable-widgets-tools test:unit:web",<% } %><% if (hasE2eTests) { %>
     "test:e2e": "npx cypress open --browser chrome --e2e",<% } %>
     "prerelease": "npm run lint",
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.15.0"<% if (isLanguageTS) { %>,
-    "@types/big.js": "^6.0.2"<% if (hasUnitTests || hasE2eTests) { %>,
-    "@types/enzyme": "^3.10.8"<% } %><% if (hasE2eTests) { %>,
+    "@mendix/pluggable-widgets-tools": "^11.3.1"<% if (isLanguageTS) { %>,
+    "@types/big.js": "^6.0.2"<% if (hasE2eTests) { %>,
     "@types/jasmine": "^3.6.9"<% } %><% if (hasUnitTests) { %>,
-    "@types/jest": "^29.0.0",
-    "@types/react-test-renderer": "~18.0.0"<% } %><% } %><% if (hasE2eTests) { %>,
+    "@types/jest": "^29.0.0"<% } %><% } %><% if (hasE2eTests) { %>,
     "cypress": "^10.10.0"<% } %>
   },
   "dependencies": {
     "classnames": "^2.2.6"
   },
   "resolutions": {
-    "react": "^18.2.0",<% if (isLanguageTS) { %>
-    "@types/react": "^18.2.0",<% } %>
+    "react": "^18.2.0",
+    "react-dom": "18.2.0",<% if (isLanguageTS) { %>
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",<% } %>
     "react-native": "0.72.7"
   },
   "overrides": {
-    "react": "^18.2.0",<% if (isLanguageTS) { %>
-    "@types/react": "^18.2.0",<% } %>
+    "react": "^18.2.0",
+    "react-dom": "18.2.0",<% if (isLanguageTS) { %>
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "18.2.0",<% } %>
     "react-native": "0.72.7"
   }
 }

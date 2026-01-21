@@ -1,6 +1,6 @@
 {
   "name": "@mendix/generator-widget",
-  "version": "10.24.0",
+  "version": "11.3.1",
   "description": "Mendix Pluggable Widgets Generator",
   "engines": {
     "node": ">=16"

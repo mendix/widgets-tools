@@ -21,14 +21,14 @@
     "build": "pluggable-widgets-tools build:web",
     "lint": "pluggable-widgets-tools lint",
     "lint:fix": "pluggable-widgets-tools lint:fix",
-    "test": "pluggable-widgets-tools test:unit:web --no-cache --ci && npm run test:e2e",
-    "test:unit": "pluggable-widgets-tools test:unit:web --coverage",
+    "test": "pluggable-widgets-tools test:unit:web && npm run test:e2e",
+    "test:unit": "pluggable-widgets-tools test:unit:web",
     "test:e2e": "npx cypress open --browser chrome --e2e",
     "prerelease": "npm run lint",
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.15.0",
+    "@mendix/pluggable-widgets-tools": "^11.3.1",
     "cypress": "^10.10.0"
   },
   "dependencies": {
@@ -36,10 +36,12 @@
   },
   "resolutions": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.72.7"
   },
   "overrides": {
     "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.72.7"
   }
 }
