@@ -10,6 +10,8 @@ const mxExports = [
     "DynamicValue",
     "EditableValue",
     "EditableListValue",
+    "EditableFileValue",
+    "EditableImageValue",
     "FileValue",
     "ListValue",
     "NativeIcon",
