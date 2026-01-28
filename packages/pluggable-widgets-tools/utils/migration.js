@@ -64,6 +64,12 @@ function extractVersions(version) {
 }
 
 async function question(question) {
+    // Auto-accept in non-interactive environments (CI, automated tests)
+    if (!process.stdin.isTTY || process.env.CI || process.env.NO_INPUT) {
+        console.log(yellow(question) + "Y (auto-accepted in non-interactive mode)");
+        return "y";
+    }
+    
     const rl = createInterface({ input: process.stdin, output: process.stdout });
     return new Promise(resolve =>
         rl.question(yellow(question), answer => {

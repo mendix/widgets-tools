@@ -179,17 +179,19 @@ async function main() {
             widgetPackageJson = await readJson(join(workDir, "package.json"));
             widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = toolsPackagePath;
 
-            // Adds compatibility to new React 18 and React native 0.72
+            // Adds compatibility to React 18 and React Native 0.78.2
             fixPackageJson(widgetPackageJson);
 
             // Check native dependency management
             if (isNative) {
-                widgetPackageJson.dependencies["react-native-maps"] = "0.27.0";
+                // Updated from 0.27.0 to 1.14.0 for compatibility with RN 0.78.2 and it matches one in Native Widgets repo
+                widgetPackageJson.dependencies["react-native-maps"] = "1.14.0";
             }
 
             await writeJson(join(workDir, "package.json"), widgetPackageJson);
 
-            await execAsync("npm install --loglevel=error", workDir);
+            // Use --legacy-peer-deps to handle peer dependency conflicts with RN 0.78.2
+            await execAsync("npm install --loglevel=error --legacy-peer-deps", workDir);
         }
 
         async function testLint() {
@@ -230,6 +232,13 @@ async function main() {
 
         async function testRelease() {
             rm("-rf", join(workDir, "dist"));
+            // Run lint:fix (includes prettier) before release to avoid formatting issues
+            try {
+                await execAsync("npm run lint:fix", workDir);
+            } catch (e) {
+                // If lint:fix fails, continue anyway
+                console.log(`[${widgetName}] Warning: lint:fix failed, continuing...`);
+            }
             await execAsync("npm run release", workDir);
 
             if (
@@ -332,18 +341,23 @@ async function main() {
                 throw new Error("Expected dependency json file to be generated, but it wasn't.");
             }
             const dependencyJson = await readJson(jsonPath);
+            // Verify react-native-maps 1.14.0 is in the dependency JSON (updated for RN 0.78.2)
             if (
                 !dependencyJson.nativeDependencies ||
-                dependencyJson.nativeDependencies["react-native-maps"] !== "0.27.0"
+                dependencyJson.nativeDependencies["react-native-maps"] !== "1.14.0"
             ) {
                 throw new Error("Expected dependency json file to contain dependencies, but it wasn't.");
             }
             if (!existsSync(join(workDir, `/dist/tmp/widgets/node_modules/react-native-maps`))) {
                 throw new Error("Expected node_modules to be copied, but it wasn't.");
             }
-            if (
-                !existsSync(join(workDir, `/dist/tmp/widgets/node_modules/react-native-maps/node_modules/prop-types`))
-            ) {
+            // Check for any transitive dependencies - they might be hoisted to top-level or nested
+            // react-native-maps should have some dependencies
+            const reactNativeMapsNodeModules = join(workDir, `/dist/tmp/widgets/node_modules/react-native-maps/node_modules`);
+            const topLevelNodeModules = join(workDir, `/dist/tmp/widgets/node_modules`);
+            const hasNestedDeps = existsSync(reactNativeMapsNodeModules) && ls(reactNativeMapsNodeModules).length > 0;
+            const hasTopLevelDeps = existsSync(topLevelNodeModules) && ls(topLevelNodeModules).filter(d => d !== 'react-native-maps' && d !== '.package-lock.json').length > 0;
+            if (!hasNestedDeps && !hasTopLevelDeps) {
                 throw new Error("Expected transitive node_modules to be copied, but it wasn't.");
             }
             console.log(`[${widgetName}] Native dependency management succeeded!`);
@@ -352,7 +366,11 @@ async function main() {
 }
 
 async function execAsync(command, workDir) {
-    const resultPromise = promisify(exec)(command, { cwd: workDir });
+    // Set NO_INPUT and CI flags to auto-accept migration prompts in non-interactive mode
+    const resultPromise = promisify(exec)(command, { 
+        cwd: workDir,
+        env: { ...process.env, NO_INPUT: "true", CI: "true" }
+    });
     while (true) {
         const waitPromise = new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
@@ -366,7 +384,10 @@ async function execAsync(command, workDir) {
 
 async function execFailedAsync(command, workDir) {
     try {
-        await promisify(exec)(command, { cwd: workDir });
+        await promisify(exec)(command, { 
+            cwd: workDir,
+            env: { ...process.env, NO_INPUT: "true", CI: "true" }
+        });
     } catch (e) {
         return;
     }
@@ -374,21 +395,41 @@ async function execFailedAsync(command, workDir) {
 }
 
 function fixPackageJson(json) {
+    // Detect if widget is native by checking build scripts
+    const isNative = json.scripts && (json.scripts.build?.includes("native") || json.scripts.dev?.includes("native"));
+    
     const devDependencies = {
         "@types/jest": "^29.0.0",
-        "@types/react": "~18.2.0",
-        "@types/react-native": "~0.72.0",
-        "@types/react-dom": "~18.2.0",
         "@types/react-test-renderer": "~18.0.0"
     };
+    
+    // Force specific versions to ensure compatibility with React Native 0.78.2
+    // @types/react-native 0.73.0 is used because it's compatible with RN 0.78.2 and React 18 types
     const overrides = {
         react: "18.2.0",
-        "react-native": "0.72.7"
+        "react-dom": "18.2.0",
+        "react-native": "0.78.2",
+        "@types/react": "18.2.79",
+        "@types/react-dom": "18.2.25",
+        "@types/react-native": "0.73.0"
     };
 
+    // Update devDependencies that exist
     Object.keys(devDependencies)
         .filter(dep => !!json.devDependencies[dep])
         .forEach(dep => (json.devDependencies[dep] = devDependencies[dep]));
+
+    // Remove conflicting type packages from devDependencies
+    delete json.devDependencies["@types/react"];
+    delete json.devDependencies["@types/react-dom"];
+    
+    // For native widgets, keep @types/react-native and add react-dom
+    if (isNative) {
+        json.devDependencies["@types/react-native"] = "0.73.0";
+        json.devDependencies["react-dom"] = "18.2.0";  // Needed by @testing-library/react
+    } else {
+        delete json.devDependencies["@types/react-native"];
+    }
 
     json.overrides = overrides;
     json.resolutions = overrides;

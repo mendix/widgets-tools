@@ -31,7 +31,7 @@
     "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
-    "@react-native/babel-preset": "0.77.3",
+    "@react-native/babel-preset": "0.78.2",
     "@prettier/plugin-xml": "^1.2.0",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-babel": "^6.0.4",
@@ -113,7 +113,7 @@
     "async-mutex": "^0.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-native": "~0.77.3",
+    "react-native": "0.78.2",
     "tree-kill": "^1.2.2",
     "yeoman-test": "^6.2.0"
   },
