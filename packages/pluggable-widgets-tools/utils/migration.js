@@ -20,10 +20,9 @@ const dependencies = [
     { name: "react-native", version: "remove", check: CheckType.MINOR },
     { name: "@types/jest", version: "^29.0.0", check: CheckType.MAJOR },
     { name: "@types/react", version: "remove", check: CheckType.MAJOR },
-    { name: "@types/react-native", version: "remove", check: CheckType.MINOR },
     { name: "@types/react-native-push-notification", version: "8.1.1", check: CheckType.MAJOR_MINOR },
     { name: "@types/react-dom", version: "remove", check: CheckType.MAJOR },
-    { name: "@types/react-test-renderer", version: "18.0.0", check: CheckType.MAJOR },
+    { name: "@types/react-test-renderer", version: "19.0.0", check: CheckType.MAJOR },
     { name: "@types/enzyme-adapter-react-16", version: "remove", check: CheckType.MAJOR },
     { name: "@react-native-firebase/app", version: "17.3.0", check: CheckType.MAJOR_MINOR },
     { name: "@react-native-firebase/messaging", version: "17.3.0", check: CheckType.MAJOR_MINOR },
@@ -46,16 +45,18 @@ const dependencies = [
     { name: "react-native-webview", version: "11.26.1", check: CheckType.MAJOR_MINOR }
 ];
 
-const reactPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
-const reactDomPackage = { version: "18.2.0", check: CheckType.MAJOR_MINOR };
-const reactNativePackage = { version: "0.72.7", check: CheckType.MINOR };
+const reactPackage = { version: "^19.0.0", check: CheckType.MAJOR_MINOR };
+const reactDomPackage = { version: "^19.0.0", check: CheckType.MAJOR_MINOR };
+const reactNativePackage = { version: "0.78.2", check: CheckType.MINOR };
 
+// React 19 overrides for Mendix Studio Pro 11.6+ compatibility
 const resolutionsOverrides = [
     { name: "react", ...reactPackage },
     { name: "react-dom", ...reactDomPackage },
     { name: "react-native", ...reactNativePackage },
     { name: "@types/react", ...reactPackage },
     { name: "@types/react-dom", ...reactDomPackage },
+    // Note: @types/react-native removed - React Native 0.78.2 has built-in TypeScript types
     { name: "@types/react-native", ...reactNativePackage }
 ];
 
@@ -64,6 +65,12 @@ function extractVersions(version) {
 }
 
 async function question(question) {
+    // Auto-accept in non-interactive environments (CI, automated tests)
+    if (!process.stdin.isTTY || process.env.CI || process.env.NO_INPUT) {
+        console.log(yellow(question) + "Y (auto-accepted in non-interactive mode)");
+        return "y";
+    }
+    
     const rl = createInterface({ input: process.stdin, output: process.stdout });
     return new Promise(resolve =>
         rl.question(yellow(question), answer => {

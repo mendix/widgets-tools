@@ -16,7 +16,7 @@ export interface BadgeSampleProps {
 export type BootstrapStyle = "default" | "info" | "inverse" | "primary" | "danger" | "success" | "warning";
 
 export class BadgeSample extends Component<BadgeSampleProps> {
-    render(): ReactNode {
+    render(): React.JSX.Element {
         return (
             <span
                 className={classNames("widget-<%- packageName %>", this.props.type, this.props.className, {

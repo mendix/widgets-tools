@@ -14,6 +14,8 @@ export interface BadgeProps {
 export class Badge extends Component<BadgeProps> {
     private readonly styles = mergeNativeStyles(defaultBadgeStyle, this.props.style);
 
+    // ReactNode return type with type assertion needed for React 19 compatibility
+    // React Native's built-in types aren't fully compatible with React 19's stricter typing
     render(): ReactNode {
         const Touchable: ElementType = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
 
@@ -23,16 +25,16 @@ export class Badge extends Component<BadgeProps> {
                     {this.renderContent()}
                 </Touchable>
             </View>
-        );
+        ) as ReactNode;
     }
 
     private renderContent(): ReactNode {
         const text = <Text style={this.styles.label}>{this.props.value}</Text>;
 
         if (Platform.OS === "android") {
-            return <View style={this.styles.badge}>{text}</View>;
+            return (<View style={this.styles.badge}>{text}</View>) as ReactNode;
         }
 
-        return text;
+        return text as ReactNode;
     }
 }

@@ -7,7 +7,7 @@ import "./ui/<%- name %>.css";
 export class <%- name %> extends Component<<%- name %>ContainerProps> {
     private readonly onClickHandler = this.onClick.bind(this);
 
-    render(): ReactNode {
+    render(): React.JSX.Element | null {
         return (
             <BadgeSample
                 type={this.props.<%- packageName %>Type}

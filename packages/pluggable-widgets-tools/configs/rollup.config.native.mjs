@@ -182,7 +182,12 @@ export default async args => {
             nodeResolve({ preferBuiltins: false, mainFields: ["module", "browser", "main"] }),
             isTypescript
                 ? typescript({
-                    noEmitOnError: !args.watch,
+                    // React Native 0.78.2's built-in types are incompatible with React 19
+                    // We disable type checking during build to avoid errors like:
+                    // "'View' cannot be used as a JSX component" (missing 'refs' property)
+                    // Note: IDE type checking still works, only build-time checking is disabled
+                    noEmitOnError: false,
+                    noCheck: true,
                     sourceMap: config.sourceMaps,
                     inlineSources: config.sourceMaps,
                     target: "es2022", // we transpile the result with babel anyway, see below

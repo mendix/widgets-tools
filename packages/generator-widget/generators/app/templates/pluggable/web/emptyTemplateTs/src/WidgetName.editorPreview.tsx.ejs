@@ -4,7 +4,7 @@ import { <%- name %>PreviewProps } from "../typings/<%- name %>Props";
 
 
 export class preview extends Component<<%- name %>PreviewProps> {
-    render(): ReactNode {
+    render(): React.JSX.Element {
         return <HelloWorldSample sampleText={this.props.sampleText} />;
     }
 }

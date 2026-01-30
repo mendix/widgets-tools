@@ -1,4 +1,4 @@
-import { Component, ReactNode, createElement } from "react";
+import { Component, createElement } from "react";
 import { TextStyle, ViewStyle } from "react-native";
 
 import { Style } from "@mendix/pluggable-widgets-tools";
@@ -12,7 +12,7 @@ export interface CustomStyle extends Style {
 }
 
 export class <%- name %> extends Component<<%- name %>Props<CustomStyle>> {
-    render(): ReactNode {
+    render() {
         return <HelloWorld name={this.props.yourName} style={this.props.style} />;
     }
 }

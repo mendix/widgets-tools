@@ -8,7 +8,8 @@ export interface AlertProps {
 }
 
 export class Alert extends Component<AlertProps> {
-    render(): ReactNode {
+    // React.JSX.Element is the proper return type for React 19 web components
+    render(): React.JSX.Element | null {
         return this.props.message
             ? (<div className={classNames(`alert alert-${this.props.bootstrapStyle}`, this.props.className)}>{this.props.message}</div>)
             : null;
