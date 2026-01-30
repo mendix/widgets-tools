@@ -32,7 +32,7 @@ export const imageNativeOutput = `export interface MyWidgetProps<Style> {
     style: Style[];
     image: DynamicValue<NativeImage>;
     image2?: DynamicValue<NativeImage>;
-    image3: EditableImageValue<NativeImage>;
+    image3: DynamicValue<NativeImage>;
     description: EditableValue<string>;
     action?: ActionValue;
 }`;
