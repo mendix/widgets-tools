@@ -5,7 +5,7 @@ export interface HelloWorldSampleProps {
 }
 
 export class HelloWorldSample extends Component<HelloWorldSampleProps> {
-    render(): ReactNode {
+    render(): React.JSX.Element {
         return <div className="widget-hello-world">Hello {this.props.sampleText}</div>;
     }
 }

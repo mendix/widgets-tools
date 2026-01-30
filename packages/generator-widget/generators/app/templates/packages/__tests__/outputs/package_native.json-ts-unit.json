@@ -35,13 +35,13 @@
 
   },
   "resolutions": {
-    "react": "^18.2.0",
-    "@types/react": "^18.2.0",
+    "react": "^19.0.0",
+    "@types/react": "~19.0.12",
     "react-native": "0.78.2"
   },
   "overrides": {
-    "react": "^18.2.0",
-    "@types/react": "^18.2.0",
+    "react": "^19.0.0",
+    "@types/react": "~19.0.12",
     "react-native": "0.78.2"
   }
 }

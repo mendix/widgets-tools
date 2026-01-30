@@ -14,12 +14,14 @@ const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
 
 const CONFIGS = [
-    ["web", "full", "ts", "8.0"],
-    ["native", "full", "ts", "8.6"],
-    ["web", "full", "ts", "8.6"],
-    ["web", "full", "js", "8.7"],
-    ["web", "full", "ts", "8.9"],
-    ["native", "full", "ts", "8.9"],
+    // Mendix 8.x tests excluded - incompatible with React 19 (Mendix 8.x uses React 16)
+    // Only testing latest versions (Mendix 10.x/11.x) which support React 19
+    // ["web", "full", "ts", "8.0"],
+    // ["native", "full", "ts", "8.6"],
+    // ["web", "full", "ts", "8.6"],
+    // ["web", "full", "js", "8.7"],
+    // ["web", "full", "ts", "8.9"],
+    // ["native", "full", "ts", "8.9"],
     ["web", "full", "js", "latest"],
     ["web", "full", "ts", "latest"],
     ["native", "full", "js", "latest"],
@@ -179,19 +181,17 @@ async function main() {
             widgetPackageJson = await readJson(join(workDir, "package.json"));
             widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = toolsPackagePath;
 
-            // Adds compatibility to React 18 and React Native 0.78.2
-            fixPackageJson(widgetPackageJson);
-
             // Check native dependency management
             if (isNative) {
-                // Updated from 0.27.0 to 1.14.0 for compatibility with RN 0.78.2 and it matches one in Native Widgets repo
+                // react-native-maps updated from 0.27.0 to 1.14.0 for React Native 0.78.2 compatibility
                 widgetPackageJson.dependencies["react-native-maps"] = "1.14.0";
             }
 
             await writeJson(join(workDir, "package.json"), widgetPackageJson);
 
-            // Use --legacy-peer-deps to handle peer dependency conflicts with RN 0.78.2
-            await execAsync("npm install --loglevel=error --legacy-peer-deps", workDir);
+            // --legacy-peer-deps: Handle React 19 peer dependency conflicts
+            // --install-strategy=hoisted: Ensure React types are properly hoisted for TypeScript
+            await execAsync("npm install --loglevel=error --legacy-peer-deps --install-strategy=hoisted", workDir);
         }
 
         async function testLint() {
@@ -400,18 +400,17 @@ function fixPackageJson(json) {
     
     const devDependencies = {
         "@types/jest": "^29.0.0",
-        "@types/react-test-renderer": "~18.0.0"
+        "@types/react-test-renderer": "^19.0.0"
     };
     
-    // Force specific versions to ensure compatibility with React Native 0.78.2
-    // @types/react-native 0.73.0 is used because it's compatible with RN 0.78.2 and React 18 types
+    // React 19 + React Native 0.78.2 compatibility for Mendix Studio Pro 11.6+
+    // Note: @types/react-native removed - React Native 0.78.2 has built-in TypeScript types
     const overrides = {
-        react: "18.2.0",
-        "react-dom": "18.2.0",
+        react: "^19.0.0",
+        "react-dom": "^19.0.0",
         "react-native": "0.78.2",
-        "@types/react": "18.2.79",
-        "@types/react-dom": "18.2.25",
-        "@types/react-native": "0.73.0"
+        "@types/react": "~19.0.12",
+        "@types/react-dom": "~19.0.0"
     };
 
     // Update devDependencies that exist
@@ -419,14 +418,11 @@ function fixPackageJson(json) {
         .filter(dep => !!json.devDependencies[dep])
         .forEach(dep => (json.devDependencies[dep] = devDependencies[dep]));
 
-    // Remove conflicting type packages from devDependencies
-    delete json.devDependencies["@types/react"];
-    delete json.devDependencies["@types/react-dom"];
-    
-    // For native widgets, keep @types/react-native and add react-dom
+    // For native widgets: add react-dom (needed by testing libraries)
+    // For web widgets: ensure no react-native types
     if (isNative) {
-        json.devDependencies["@types/react-native"] = "0.73.0";
-        json.devDependencies["react-dom"] = "18.2.0";  // Needed by @testing-library/react
+        json.devDependencies["react-dom"] = "^19.0.0";
+        delete json.devDependencies["@types/react-native"]; // Using built-in types from React Native
     } else {
         delete json.devDependencies["@types/react-native"];
     }

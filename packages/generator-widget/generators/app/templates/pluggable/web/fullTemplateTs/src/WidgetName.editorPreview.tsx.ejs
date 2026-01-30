@@ -6,7 +6,7 @@ import { BadgeSample, BadgeSampleProps } from "./components/BadgeSample";
 import { <%- name %>PreviewProps } from "../typings/<%- name %>Props";
 
 export class preview extends Component<<%- name %>PreviewProps> {
-    render(): ReactNode {
+    render(): React.JSX.Element {
         return (
             <div ref={this.parentInline}>
                 <BadgeSample {...this.transformProps(this.props)}></BadgeSample>
