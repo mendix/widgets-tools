@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.3.1] - 2026-02-04
+
 ### Changed
 
 -   We migrated the generated unit tests to use React Testing Library instead of enzyme.
