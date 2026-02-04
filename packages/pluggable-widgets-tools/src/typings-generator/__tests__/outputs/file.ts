@@ -11,7 +11,7 @@ export interface MyWidgetContainerProps {
     id: string;
     file: DynamicValue<FileValue>;
     file2?: DynamicValue<FileValue>;
-    file3: EditableFileValue<FileValue>;
+    file3: EditableFileValue;
     description: EditableValue<string>;
     action?: ActionValue;
 }
@@ -32,7 +32,7 @@ export const fileNativeOutput = `export interface MyWidgetProps<Style> {
     style: Style[];
     file: DynamicValue<FileValue>;
     file2?: DynamicValue<FileValue>;
-    file3: EditableFileValue<FileValue>;
+    file3: EditableFileValue;
     description: EditableValue<string>;
     action?: ActionValue;
 }`;
