@@ -1,6 +1,6 @@
 {
     "name": "@mendix/mpx",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Mendix tool for bundling pluggable widgets",
     "type": "module",
     "bin": {
