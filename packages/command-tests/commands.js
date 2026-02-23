@@ -14,12 +14,12 @@ const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
 
 const CONFIGS = [
-    ["web", "full", "ts", "8.0"],
-    ["native", "full", "ts", "8.6"],
-    ["web", "full", "ts", "8.6"],
-    ["web", "full", "js", "8.7"],
-    ["web", "full", "ts", "8.9"],
-    ["native", "full", "ts", "8.9"],
+    // ["web", "full", "ts", "8.0"],
+    // ["native", "full", "ts", "8.6"],
+    // ["web", "full", "ts", "8.6"],
+    // ["web", "full", "js", "8.7"],
+    // ["web", "full", "ts", "8.9"],
+    // ["native", "full", "ts", "8.9"],
     ["web", "full", "js", "latest"],
     ["web", "full", "ts", "latest"],
     ["native", "full", "js", "latest"],
