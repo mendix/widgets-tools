@@ -1,4 +1,4 @@
-import { ReactElement, createElement, ElementType, useMemo } from "react";
+import { ReactElement, createElement, useMemo } from "react";
 import { Platform, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
 import { mergeNativeStyles } from "@mendix/pluggable-widgets-tools";
@@ -14,7 +14,7 @@ export interface BadgeProps {
 export function Badge({ value, style, onClick }: BadgeProps): ReactElement {
     const styles = mergeNativeStyles(defaultBadgeStyle, style);
 
-    const Touchable: ElementType = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
+    const isAndroid = Platform.OS === "android";
 
     const renderContent = useMemo(() => {
         const text = <Text style={styles.label}>{value}</Text>;
@@ -28,9 +28,19 @@ export function Badge({ value, style, onClick }: BadgeProps): ReactElement {
 
     return (
         <View style={styles.container}>
-            <Touchable accessibilityRole={"button"} style={styles.badge} onPress={onClick} useForeground={true}>
-                {renderContent}
-            </Touchable>
+            {isAndroid ? (
+                <TouchableNativeFeedback
+                    accessibilityRole={"button"}
+                    onPress={onClick}
+                    useForeground={true}
+                >
+                    {renderContent}
+                </TouchableNativeFeedback>
+            ) : (
+                <TouchableOpacity accessibilityRole={"button"} style={styles.badge} onPress={onClick}>
+                    {renderContent}
+                </TouchableOpacity>
+            )}
         </View>
     );
 

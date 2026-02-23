@@ -1,4 +1,4 @@
-import { Component, ReactNode, createElement, ElementType } from "react";
+import { Component, ReactNode, createElement } from "react";
 import { Platform, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
 import { mergeNativeStyles } from "@mendix/pluggable-widgets-tools";
@@ -14,25 +14,41 @@ export interface BadgeProps {
 export class Badge extends Component<BadgeProps> {
     private readonly styles = mergeNativeStyles(defaultBadgeStyle, this.props.style);
 
+    // React 19 + RN 0.78.x: RN's built-in types still expect legacy component typings (e.g. `refs`).
+    // We return and assert `ReactNode` here to avoid JSX element type errors until upstream types align.
     render(): ReactNode {
-        const Touchable: ElementType = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
+        const isAndroid = Platform.OS === "android";
 
         return (
             <View style={this.styles.container}>
-                <Touchable accessibilityRole={"button"} style={this.styles.badge} onPress={this.props.onClick} useForeground={true}>
-                    {this.renderContent()}
-                </Touchable>
+                {isAndroid ? (
+                    <TouchableNativeFeedback
+                        accessibilityRole={"button"}
+                        onPress={this.props.onClick}
+                        useForeground={true}
+                    >
+                        {this.renderContent()}
+                    </TouchableNativeFeedback>
+                ) : (
+                    <TouchableOpacity
+                        accessibilityRole={"button"}
+                        style={this.styles.badge}
+                        onPress={this.props.onClick}
+                    >
+                        {this.renderContent()}
+                    </TouchableOpacity>
+                )}
             </View>
-        );
+        ) as ReactNode;
     }
 
     private renderContent(): ReactNode {
         const text = <Text style={this.styles.label}>{this.props.value}</Text>;
 
         if (Platform.OS === "android") {
-            return <View style={this.styles.badge}>{text}</View>;
+            return (<View style={this.styles.badge}>{text}</View>) as ReactNode;
         }
 
-        return text;
+        return text as ReactNode;
     }
 }

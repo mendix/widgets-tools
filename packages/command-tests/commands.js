@@ -376,14 +376,15 @@ async function execFailedAsync(command, workDir) {
 function fixPackageJson(json) {
     const devDependencies = {
         "@types/jest": "^29.0.0",
-        "@types/react": "~18.2.0",
-        "@types/react-native": "~0.72.0",
-        "@types/react-dom": "~18.2.0",
+        "@types/react": "^19.0.0",
+        "@types/react-native": "0.78.2",
+        "@types/react-dom": "^19.0.0",
         "@types/react-test-renderer": "~18.0.0"
     };
     const overrides = {
-        react: "18.2.0",
-        "react-native": "0.72.7"
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-native": "0.78.2"
     };
 
     Object.keys(devDependencies)

@@ -64,7 +64,7 @@ class MxGenerator extends Generator {
 
     install() {
         this.log(text.INSTALL_FINISH_MSG);
-        this.npmInstall(undefined, { legacyPeerDeps: true });
+        this.npmInstall(undefined, { legacyPeerDeps: false });
     }
 
     async end() {
