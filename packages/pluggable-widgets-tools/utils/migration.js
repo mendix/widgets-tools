@@ -226,6 +226,7 @@ async function checkMigration() {
                     execSync("shx rm -rf ./{node_modules,package-lock.json}", { cwd: process.cwd(), stdio: "inherit" });
                     console.log("Done.");
                     execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
+                    execSync(`npx eslint --no-eslintrc --rule '@typescript-eslint/no-unused-vars: ["error", { enableAutofixRemoval: { imports: true } }]' --ext ts,tsx,js,jsx --parser @typescript-eslint/parser --plugin '@typescript-eslint' --fix ./src`, { cwd: process.cwd(), stdio: "inherit" })
                 } catch (e) {
                     console.log(red("An error occurred while auto updating your dependencies"));
                     console.error(e);
