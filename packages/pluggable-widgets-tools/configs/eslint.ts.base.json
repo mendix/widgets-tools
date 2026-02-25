@@ -32,20 +32,8 @@
     "plugins": ["@typescript-eslint", "react", "jest"],
     "rules": {
         "linebreak-style": ["error", "unix"],
-        "no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "createElement",
-                "args": "none"
-            }
-        ],
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "createElement",
-                "args": "none"
-            }
-        ],
+        "no-unused-vars": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/ban-types": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/camelcase": "off",
@@ -94,6 +82,7 @@
         "react/no-deprecated": "warn",
         "react/jsx-uses-vars": "error",
         "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
 
         "array-callback-return": "error",
         "curly": "error",

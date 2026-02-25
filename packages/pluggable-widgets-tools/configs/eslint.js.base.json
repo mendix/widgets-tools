@@ -29,18 +29,12 @@
     },
     "plugins": ["jest", "react"],
     "rules": {
-        "no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "createElement",
-                "args": "none"
-            }
-        ],
-
+        "no-unused-vars": "warn",
         "react/prop-types": "off",
         "react/no-deprecated": "warn",
         "react/jsx-uses-vars": "error",
         "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
 
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
