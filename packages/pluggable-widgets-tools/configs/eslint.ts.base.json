@@ -34,7 +34,6 @@
         "linebreak-style": ["error", "unix"],
         "no-unused-vars": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/ban-types": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-name-casing": "off",
