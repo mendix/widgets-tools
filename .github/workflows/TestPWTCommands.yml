@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [16, 18, 20]
+        node: [18, 20]
         os: [windows-latest, ubuntu-latest]
     steps:
       - name: "Checking-out code"
