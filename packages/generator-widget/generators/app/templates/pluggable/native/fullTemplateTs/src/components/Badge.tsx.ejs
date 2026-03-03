@@ -14,8 +14,6 @@ export interface BadgeProps {
 export class Badge extends Component<BadgeProps> {
     private readonly styles = mergeNativeStyles(defaultBadgeStyle, this.props.style);
 
-    // React 19 + RN 0.78.x: RN's built-in types still expect legacy component typings (e.g. `refs`).
-    // We return and assert `ReactNode` here to avoid JSX element type errors until upstream types align.
     render(): ReactNode {
         const isAndroid = Platform.OS === "android";
 
