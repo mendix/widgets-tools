@@ -33,7 +33,7 @@
     },
     "plugins": ["jest", "react"],
     "rules": {
-        "no-unused-vars": "warn",
+        "no-unused-vars": ["warn", { "args": "none" }],
         "react/prop-types": "off",
         "react/no-deprecated": "warn",
         "react/jsx-uses-vars": "error",
