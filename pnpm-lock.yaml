@@ -219,7 +219,7 @@ importers:
         specifier: ^5.14.5
         version: 5.14.9
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.0.0
+        specifier: ^8.53.0
         version: 8.56.1(@typescript-eslint/parser@8.56.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/parser':
         specifier: ^8.0.0
