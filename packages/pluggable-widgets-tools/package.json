@@ -78,7 +78,7 @@
     "jest-jasmine2": "^29.0.3",
     "jest-junit": "^13.0.0",
     "make-dir": "^3.1.0",
-    "mendix": "^11.0.0",
+    "mendix": "^11.6.0",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
     "postcss": "^8.3.11",
