@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--   We upgraded React Native to version 0.78.2 for generated widgets.
+-   We upgraded React to version 19 and React Native to version 0.78.2 for generated widgets.
 
 ## [11.3.1] - 2026-02-04
 
