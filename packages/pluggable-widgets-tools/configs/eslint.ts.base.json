@@ -39,7 +39,7 @@
         "@typescript-eslint/class-name-casing": "off",
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/no-object-literal-type-assertion": "off",
-        "@typescript-eslint/no-require-imports": "warn",
+        "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "warn",
