@@ -32,8 +32,8 @@
     "plugins": ["@typescript-eslint", "react", "jest"],
     "rules": {
         "linebreak-style": ["error", "unix"],
-        "no-unused-vars": "warn",
-        "@typescript-eslint/no-unused-vars": "warn",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-name-casing": "off",
