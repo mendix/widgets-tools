@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.6.0] - 2026-03-04
+
 ### Changed
 
 -   We upgraded the Pluggable Widgets Tools to React 19 and React Native 0.78.2. After installation upgrade all dependencies by running `npm run build`.
