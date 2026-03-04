@@ -27,19 +27,17 @@
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^11.3.1"
+    "@mendix/pluggable-widgets-tools": "^11.6.0"
   },
   "dependencies": {
     "classnames": "^2.2.6"
   },
   "resolutions": {
-    "react": "^18.2.0",
-    "react-dom": "18.2.0",
-    "react-native": "0.72.7"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "overrides": {
-    "react": "^18.2.0",
-    "react-dom": "18.2.0",
-    "react-native": "0.72.7"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

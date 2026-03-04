@@ -1,4 +1,4 @@
-import { Component, ReactNode, createElement, ElementType } from "react";
+import { Component, ReactNode, JSX } from "react";
 import { Platform, Text, TouchableNativeFeedback, TouchableOpacity, View } from "react-native";
 
 import { mergeNativeStyles } from "@mendix/pluggable-widgets-tools";
@@ -15,18 +15,32 @@ export class Badge extends Component<BadgeProps> {
     private readonly styles = mergeNativeStyles(defaultBadgeStyle, this.props.style);
 
     render(): ReactNode {
-        const Touchable: ElementType = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
+        const isAndroid = Platform.OS === "android";
 
         return (
             <View style={this.styles.container}>
-                <Touchable accessibilityRole={"button"} style={this.styles.badge} onPress={this.props.onClick} useForeground={true}>
-                    {this.renderContent()}
-                </Touchable>
+                {isAndroid ? (
+                    <TouchableNativeFeedback
+                        accessibilityRole={"button"}
+                        onPress={this.props.onClick}
+                        useForeground={true}
+                    >
+                        {this.renderContent()}
+                    </TouchableNativeFeedback>
+                ) : (
+                    <TouchableOpacity
+                        accessibilityRole={"button"}
+                        style={this.styles.badge}
+                        onPress={this.props.onClick}
+                    >
+                        {this.renderContent()}
+                    </TouchableOpacity>
+                )}
             </View>
         );
     }
 
-    private renderContent(): ReactNode {
+    private renderContent(): JSX.Element {
         const text = <Text style={this.styles.label}>{this.props.value}</Text>;
 
         if (Platform.OS === "android") {

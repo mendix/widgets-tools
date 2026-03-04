@@ -1,4 +1,4 @@
-import { Component, createElement } from "react";
+import { Component } from "react";
 import { HelloWorldSample } from "./components/HelloWorldSample";
 
 export class preview extends Component {

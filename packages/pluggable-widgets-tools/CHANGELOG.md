@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We upgraded the Pluggable Widgets Tools to React 19 and React Native 0.78.2. After installation upgrade all dependencies by running `npm run build`.
+
+-   We updated the Mendix package to 11.6.
+
 ## [11.3.1] - 2026-02-04
 
 ### Breaking changes

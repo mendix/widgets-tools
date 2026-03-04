@@ -32,26 +32,14 @@
     "plugins": ["@typescript-eslint", "react", "jest"],
     "rules": {
         "linebreak-style": ["error", "unix"],
-        "no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "createElement",
-                "args": "none"
-            }
-        ],
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "createElement",
-                "args": "none"
-            }
-        ],
-        "@typescript-eslint/ban-types": "warn",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-name-casing": "off",
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/no-object-literal-type-assertion": "off",
+        "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "warn",
@@ -94,6 +82,7 @@
         "react/no-deprecated": "warn",
         "react/jsx-uses-vars": "error",
         "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
 
         "array-callback-return": "error",
         "curly": "error",

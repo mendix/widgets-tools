@@ -1,6 +1,6 @@
 {
   "name": "@mendix/generator-widget",
-  "version": "11.3.1",
+  "version": "11.6.0",
   "description": "Mendix Pluggable Widgets Generator",
   "engines": {
     "node": ">=16"
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^2.2.0",
-    "babel-eslint": "^10.1.0",
+    "@babel/eslint-parser": "^7.25.9",
     "deepmerge": "^4.2.2",
     "ejs": "^3.1.9",
     "eslint": "^7.20.0",

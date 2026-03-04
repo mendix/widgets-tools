@@ -1,4 +1,4 @@
-import { Component, ReactNode, createElement } from "react";
+import { Component, ReactNode } from "react";
 
 export interface HelloWorldSampleProps {
     sampleText?: string;
