@@ -16,6 +16,10 @@ export const fileInput = `<?xml version="1.0" encoding="utf-8"?>
                 <caption>File 3</caption>
                 <description />
             </property>
+            <property key="file4" type="file" allowUpload="true" required="false">
+                <caption>File 4</caption>
+                <description />
+            </property>
         </propertyGroup>
         <propertyGroup caption="Actions">
             <property key="description" type="attribute">
@@ -55,6 +59,10 @@ export const fileInputNative = `<?xml version="1.0" encoding="utf-8"?>
             </property>
              <property key="file3" type="file" allowUpload="true">
                 <caption>File 3</caption>
+                <description />
+            </property>
+            <property key="file4" type="file" allowUpload="true" required="false">
+                <caption>File 4</caption>
                 <description />
             </property>
         </propertyGroup>

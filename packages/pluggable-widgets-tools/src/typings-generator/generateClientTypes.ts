@@ -128,9 +128,9 @@ function toClientPropType(
             return "number";
         case "decimal":
             return "Big";
-        case "icon": 
+        case "icon":
             return isNative ? "DynamicValue<NativeIcon>" : "DynamicValue<WebIcon>";
-        case "image": 
+        case "image":
             return isNative ? "DynamicValue<NativeImage>" : prop.$.allowUpload === "true" ? "EditableImageValue<WebImage>" : "DynamicValue<WebImage>";
         case "file":
             return prop.$.allowUpload ? "EditableFileValue" : "DynamicValue<FileValue>";
