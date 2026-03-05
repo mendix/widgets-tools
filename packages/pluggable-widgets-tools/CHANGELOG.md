@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- We added support for editable image and file properties, introduced in Mendix 11.8.
+
+### Changed
+
+- We updated the Mendix package to 11.8.
+
 ## [11.6.0] - 2026-03-04
 
 ### Changed
