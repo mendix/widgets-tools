@@ -11,7 +11,8 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "prepack": "shx rm -rf dist && tsc",
+    "build:tg": "pnpm --filter=@mendix/widget-typings-generator run build",
+    "prepack": "pnpm build:tg && shx rm -rf dist && rollup -c rollup.config.mjs",
     "test": "jest"
   },
   "files": [
