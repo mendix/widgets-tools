@@ -268,7 +268,7 @@ function generateNativeTypesFor(xml: string) {
 function convertXmltoJson(xml: string): WidgetXml {
     let content: WidgetXml = {};
     if (xml) {
-        parseString(xml, {}, (err: Error, result: any) => {
+        parseString(xml, {}, (err: Error | null, result: any) => {
             if (err) {
                 throw err;
             }
