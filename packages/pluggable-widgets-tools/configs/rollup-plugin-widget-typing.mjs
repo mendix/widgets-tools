@@ -1,8 +1,7 @@
 import { promises as fs } from "fs";
 import { extname, join } from "path";
 import { listDir } from "./shared.mjs";
-
-const { transformPackage } = await import(new URL("../dist/typings-generator/index.js", import.meta.url));
+import { transformPackage } from "@mendix/widget-typings-generator";
 
 export function widgetTyping({ sourceDir }) {
     let firstRun = true;

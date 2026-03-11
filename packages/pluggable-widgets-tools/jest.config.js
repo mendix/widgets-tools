@@ -7,7 +7,6 @@ const webConfig = {
     rootDir: ".",
     testMatch: [
         "<rootDir>/src/web/**/*.spec.{ts,tsx}",
-        "<rootDir>/src/typings-generator/**/*.spec.{ts,tsx}",
         "<rootDir>/src/utils/**/*.spec.{ts,tsx}"
     ]
 };

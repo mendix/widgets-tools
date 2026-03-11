@@ -1,0 +1,59 @@
+{
+  "name": "@mendix/widget-typings-generator",
+  "version": "1.0.0",
+  "description": "TypeScript typings generator for Mendix Pluggable Widgets",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepack": "shx rm -rf dist && tsc",
+    "test": "jest",
+    "build": "tsc"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^16.18.126",
+    "@types/xml2js": "^0.4.5",
+    "jest": "^29.4.1",
+    "shx": "^0.3.3",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "big.js": "^6.0.0",
+    "mendix": ">=9.0.0"
+  },
+  "peerDependenciesMeta": {
+    "big.js": {
+      "optional": true
+    },
+    "mendix": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "mendix",
+    "widgets",
+    "typescript",
+    "typings",
+    "generator",
+    "pluggable-widgets"
+  ],
+  "license": "Apache-2.0",
+  "copyright": "© Mendix Technology BV 2026. All rights reserved.",
+  "homepage": "https://github.com/mendix/widgets-tools/tree/master/packages/widget-typings-generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mendix/widgets-tools/"
+  }
+}
