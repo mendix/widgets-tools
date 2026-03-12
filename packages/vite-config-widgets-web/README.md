@@ -1,47 +1,31 @@
-# vite-web-widgets (prototype)
+# @mendix/vite-config-widgets-web
 
-This workspace package contains shared configuration files for building Mendix pluggable
-web widgets with **Vite** (and optionally `rolldown`).
+This package provides Vite configuration for building Mendix pluggable web widgets.
 
-> ⚠️ This is an experimental prototype created on branch `build/update-to-vite`.
-> It does **not** currently integrate with `@mendix/pluggable-widgets-tools`, and it
-> is not used by any widget yet. The purpose is to have something concrete for
-> discussion and review before requesting broader approvals.
+
+## Installation
+
+```bash
+pnpm add -D @mendix/vite-config-widgets-web vite
+```
 
 ## Contents
 
-- `vite.config.ts` – thin orchestrator and public entrypoint.
+- `config.web.ts` – thin orchestrator and public entrypoint.
 - `types.ts` – shared types used by the config/build modules.
 - `config/` – config derivation and mode handling.
 - `build/` – editor artifact and MPK build steps.
 - `helpers/` – package metadata/path helpers.
+- `test/` – integration tests for end-to-end verification.
 - `benchmark.js` – helper script to compare build time and output size between the
   existing Rollup build and the new Vite build for a given widget.
 
-## Usage Modes
+## Usage
 
-Both usage patterns are supported and intentionally kept compatible:
-
-- Direct CLI usage (current widget scripts)
-- Programmatic usage via `createWidgetViteConfig()`
-
-### Direct CLI Usage
-
-Use this in widget scripts:
-
-```json
-"scripts": {
-  "build:vite": "vite build --mode dev --config ../../shared/vite-web-widgets/vite.config.ts",
-  "release:vite": "vite build --mode prod --config ../../shared/vite-web-widgets/vite.config.ts"
-}
-```
-
-### Programmatic Usage
-
-Use this if a widget/package wants a local wrapper config:
+Create a local `vite.config.ts` in your widget package:
 
 ```ts
-import createWidgetViteConfig from "@mendix/vite-web-widgets/vite.config";
+import { createWidgetViteConfig } from "@mendix/vite-config-widgets-web/config.web";
 
 export default createWidgetViteConfig();
 ```
@@ -49,7 +33,7 @@ export default createWidgetViteConfig();
 You can optionally override inferred values:
 
 ```ts
-import createWidgetViteConfig from "@mendix/vite-web-widgets/vite.config";
+import { createWidgetViteConfig } from "@mendix/vite-config-widgets-web/config.web";
 
 export default createWidgetViteConfig({
     widgetName: "MyWidget",
@@ -57,7 +41,7 @@ export default createWidgetViteConfig({
 });
 ```
 
-## Usage: Build Modes
+## Build Modes
 
 This config supports two build modes via the `--mode` flag:
 
@@ -73,7 +57,7 @@ Development builds prioritize debugging and quick iteration:
 
 ```json
 "scripts": {
-  "build:vite": "vite build --mode dev --config ../../shared/vite-web-widgets/vite.config.ts"
+  "build": "vite build --mode dev"
 }
 ```
 
@@ -89,7 +73,7 @@ Production builds prioritize size and performance:
 
 ```json
 "scripts": {
-  "release:vite": "vite build --mode prod --config ../../shared/vite-web-widgets/vite.config.ts"
+  "release": "vite build --mode prod"
 }
 ```
 
@@ -106,19 +90,53 @@ If no mode is specified, production mode is used by default.
 - `helpers/package-json.ts`: package.json loading and widget name resolution
 - `types.ts`: cross-module type definitions
 
-## Setup Instructions
+## Development & Testing
 
-To test this locally in a widget package, add the following scripts to `package.json`:
+### Build Output Structure
 
-```json
-"scripts": {
-  "build:vite": "vite build --mode dev --config ../../shared/vite-web-widgets/vite.config.ts",
-  "release:vite": "vite build --mode prod --config ../../shared/vite-web-widgets/vite.config.ts"
-}
+The build process creates artifacts in `dist/tmp/widgets/`:
+
+```
+dist/
+├── tmp/
+│   └── widgets/                    # Staging directory for MPK
+│       ├── {WidgetName}.xml        # Widget definition
+│       ├── package.xml             # Package metadata
+│       └── {packagePath}/          # Runtime files
+│           └── {runtimeDir}/
+│               ├── {WidgetName}.js  # CommonJS bundle
+│               └── {WidgetName}.mjs # ES Module bundle
+└── {version}/
+    └── {WidgetName}.mpk            # Final distributable package
 ```
 
-Adjust paths as needed and run `pnpm install` to pull the new dev dependencies.
+### Integration Tests
 
-Once the experiment proves successful, we can either upstream the helpers into
-`@mendix/pluggable-widgets-tools` or maintain the new package as the canonical
-Vite configuration.
+Integration tests verify the package works end-to-end by building a real widget in an isolated environment:
+
+```bash
+# Run integration tests
+pnpm test:integration
+
+# Clean test artifacts
+pnpm test:integration:clean
+```
+
+**How it works:**
+1. Creates a temporary directory (using Node.js `tmpdir()`)
+2. Packs the vite-config package as a tarball
+3. Copies test widget to temp directory
+4. Installs dependencies and the packed tarball
+5. Builds the test widget
+6. Verifies all artifacts (MPK, runtime files, metadata)
+7. Copies results to `test/results/` for inspection
+8. Cleans up temporary directory
+
+This ensures the package works correctly when installed from npm without interfering with the monorepo.
+
+### Package Scripts
+
+- `pnpm build` - Build the vite config package
+- `pnpm test:integration` - Run end-to-end integration tests
+- `pnpm test:integration:clean` - Remove test artifacts
+
