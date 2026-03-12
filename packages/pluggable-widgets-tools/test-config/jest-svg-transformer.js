@@ -12,10 +12,10 @@ module.exports = {
             .join('');
 
         return {
-          code: `
-const React = require('react');
+            code: `
+const jsxRuntime = require('react/jsx-runtime');
 function ${name}(props) {
-  return React.createElement(
+  return jsxRuntime.jsx(
     'svg',
     Object.assign({}, props, {'data-file-name': ${name}.name})
   );

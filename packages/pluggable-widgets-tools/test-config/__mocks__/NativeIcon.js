@@ -1,6 +1,6 @@
-const { createElement } = require("react");
+const { jsx } = require("react/jsx-runtime");
 const { View } = require("react-native");
 
 module.exports = {
-    Icon: () => createElement(View, { testId: "icon" })
+    Icon: () => jsx(View, { testId: "icon" })
 }

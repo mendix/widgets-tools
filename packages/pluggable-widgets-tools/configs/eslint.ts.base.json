@@ -8,7 +8,7 @@
     "settings": {
         "react": {
             "createClass": "createReactClass",
-            "pragma": "createElement",
+            "pragma": "React",
             "version": "detect"
         }
     },
