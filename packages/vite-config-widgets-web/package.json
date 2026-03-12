@@ -1,5 +1,5 @@
 {
-    "name": "@mendix/vite-web-widgets",
+    "name": "@mendix/vite-config-widgets-web",
     "version": "0.0.0",
     "description": "Shared Vite configurations for web widgets",
     "main": "./dist/config.web.mjs",
@@ -11,7 +11,8 @@
         "README.md"
     ],
     "scripts": {
-        "build": "node build.mjs"
+        "build": "node build.mjs",
+        "test:integration": "premove test/results && node test/run-integration-test.mjs"
     },
     "keywords": [
         "vite",
@@ -34,6 +35,7 @@
     },
     "devDependencies": {
         "esbuild": "^0.24.0",
+        "premove": "^4.0.0",
         "vite": "^7.3.1"
     }
 }

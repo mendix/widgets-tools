@@ -13,14 +13,10 @@ async function copyDir(src: string, dest: string): Promise<void> {
 
 export async function createMPK(options: ResolvedConfig): Promise<string> {
     const distPath = resolve(process.cwd(), "dist");
-    const tmpWidgetsPath = join(distPath, "tmp", "widgets");
-    const stagingDir = join(distPath, "widgets");
+    const stagingDir = join(distPath, "tmp", "widgets");
     const outputDir = join(process.cwd(), "dist", options.widgetVersion);
     const mpkPath = join(outputDir, options.mpkName);
 
-    if (existsSync(stagingDir)) {
-        rmSync(stagingDir, { recursive: true });
-    }
     mkdirSync(stagingDir, { recursive: true });
     mkdirSync(outputDir, { recursive: true });
 
@@ -34,21 +30,17 @@ export async function createMPK(options: ResolvedConfig): Promise<string> {
     }
 
     for (const requiredArtifact of options.requiredArtifacts ?? []) {
-        const requiredPath = join(tmpWidgetsPath, requiredArtifact);
+        const requiredPath = join(stagingDir, requiredArtifact);
         if (!existsSync(requiredPath)) {
             throw new Error(`Missing compiled artifact: ${requiredPath}`);
         }
     }
 
     for (const removePath of options.removeBeforeCopy ?? []) {
-        const absolutePath = join(tmpWidgetsPath, removePath);
+        const absolutePath = join(stagingDir, removePath);
         if (existsSync(absolutePath)) {
             rmSync(absolutePath);
         }
-    }
-
-    if (existsSync(tmpWidgetsPath)) {
-        await copyDir(tmpWidgetsPath, stagingDir);
     }
 
     await new Promise<void>((resolvePromise, reject) => {
