@@ -6,6 +6,6 @@ module.exports = require("babel-jest").createTransformer({
     plugins: [
         "@babel/plugin-transform-class-properties",
         "@babel/plugin-transform-private-methods",
-        ["@babel/plugin-transform-react-jsx", { pragma: "createElement" }]
+        ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }]
     ]
 });

@@ -12,7 +12,7 @@ module.exports = {
             .join('');
 
         return {
-          code: `
+            code: `
 const React = require('react');
 function ${name}(props) {
   return React.createElement(

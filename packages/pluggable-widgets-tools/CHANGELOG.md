@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed the bundling of Javascript widgets which broke in 11.6.0 after migrating to [React 17's JSX Transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#how-to-upgrade-to-the-new-jsx-transform). (Ticket 270777)
+
 ## [11.8.0] - 2026-03-06
 
 ### Added
