@@ -12,89 +12,96 @@ const packageRoot = join(__dirname, "..");
 const testWidgetSourceDir = join(__dirname, "test-checkbox");
 const resultsDir = join(__dirname, "results");
 
-/**
- * Execute a command and log output
- */
-function exec(command, cwd) {
-    console.log(`\n📦 Running: ${command}`);
+function log(message) {
+    console.log(`  ${message}`);
+}
+
+function logSuccess(message) {
+    console.log(`  ✓ ${message}`);
+}
+
+function logError(message) {
+    console.error(`  ❌ ${message}`);
+}
+
+function exec(command, cwd, description) {
+    if (description) {
+        log(`${description}...`);
+    }
+    log(`Running: ${command}`);
     try {
         execSync(command, {
             cwd,
             stdio: "inherit",
             env: { ...process.env, FORCE_COLOR: "1" }
         });
+        if (description) {
+            logSuccess(description);
+        }
     } catch (error) {
-        console.error(`❌ Command failed: ${command}`);
+        logError(`Command failed: ${command}`);
         process.exit(1);
     }
 }
 
-/**
- * Check if a file exists
- */
 function checkFile(path, description) {
     if (!existsSync(path)) {
-        console.error(`❌ Missing ${description}: ${path}`);
+        logError(`Missing ${description}`);
+        logError(`Expected: ${path}`);
         process.exit(1);
     }
     const stats = statSync(path);
-    console.log(`✓ ${description}: ${path} (${stats.size} bytes)`);
+    const size = stats.size < 1024 ? `${stats.size} bytes` : `${(stats.size / 1024).toFixed(1)} KB`;
+    logSuccess(`${description} (${size})`);
     return path;
 }
 
-/**
- * Verify that a file is a valid ZIP archive (MPK files are ZIP files)
- */
 function verifyZipFile(path) {
     const buffer = readFileSync(path);
-    // Check ZIP magic bytes: 0x50 0x4B (PK)
     if (buffer[0] === 0x50 && buffer[1] === 0x4B) {
-        console.log(`✓ MPK file is a valid ZIP archive`);
+        logSuccess("MPK is valid ZIP archive");
         return true;
     }
-    console.error(`❌ MPK file is not a valid ZIP archive (invalid magic bytes)`);
+    logError("MPK is not a valid ZIP archive");
     process.exit(1);
 }
 
-console.log("🧪 Integration Test for @mendix/vite-config-widgets-web\n");
-console.log("=" .repeat(60));
+console.log("\n🧪 Integration Test for @mendix/vite-config-widgets-web");
+console.log("=".repeat(60));
 
-// Phase 0: Setup - Create temp directory and prepare results directory
-console.log("\n📦 Phase 0: Setting up test environment...");
+// Phase 0: Setup
+console.log("\n📦 Phase 0: Setup test environment");
 const tempDir = join(tmpdir(), `vite-config-widgets-web-test-${Date.now()}`);
 const testWidgetDir = join(tempDir, "test-checkbox");
 
-console.log(`Creating temporary directory: ${tempDir}`);
+log(`Creating temp directory: ${tempDir.split("/").pop()}`);
 mkdirSync(tempDir, { recursive: true });
+logSuccess("Created temp directory");
 
-// Ensure results directory exists and is clean
 if (existsSync(resultsDir)) {
     rmSync(resultsDir, { recursive: true, force: true });
 }
 mkdirSync(resultsDir, { recursive: true });
-console.log(`✓ Results directory ready: ${resultsDir}`);
+logSuccess("Results directory ready");
 
-// Phase 1: Copy test widget to temp directory
-console.log("\n📦 Phase 1: Copying test widget to temp directory...");
+// Phase 1: Copy test widget
+console.log("\n📦 Phase 1: Copy test widget");
+log("Copying test-checkbox to temp directory...");
 cpSync(testWidgetSourceDir, testWidgetDir, {
     recursive: true,
-    filter: (src) => {
-        // Exclude node_modules and dist from copy
-        return !src.includes("node_modules") && !src.includes("dist");
-    }
+    filter: (src) => !src.includes("node_modules") && !src.includes("dist")
 });
-console.log(`✓ Copied test widget to: ${testWidgetDir}`);
+logSuccess("Copied test widget");
 
-// Phase 2: Pack vite-config package (prepack script builds it automatically)
-console.log("\n📦 Phase 2: Packing vite-config package...");
-exec("pnpm pack --pack-destination " + tempDir, packageRoot);
+// Phase 2: Pack vite-config package
+console.log("\n📦 Phase 2: Pack vite-config package");
+exec("pnpm pack --pack-destination " + tempDir, packageRoot, "Packing vite-config-widgets-web");
 
-// Find the tarball
 const tarballName = `mendix-vite-config-widgets-web-${JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf-8")).version}.tgz`;
 const tarballPath = join(tempDir, tarballName);
 checkFile(tarballPath, "Package tarball");
 
-// Update vite.config.ts to use the npm package
+log("Updating test widget to use packed tarball...");
 const viteConfigPath = join(testWidgetDir, "vite.config.ts");
 const viteConfig = readFileSync(viteConfigPath, "utf-8");
 const updatedViteConfig = viteConfig.replace(
@@ -102,75 +109,44 @@ const updatedViteConfig = viteConfig.replace(
     'from "@mendix/vite-config-widgets-web/config.web"'
 );
 writeFileSync(viteConfigPath, updatedViteConfig);
-console.log(`✓ Updated vite.config.ts to use npm package`);
 
-// Update package.json to install from tarball
 const testPackageJsonPath = join(testWidgetDir, "package.json");
 const testPackageJson = JSON.parse(readFileSync(testPackageJsonPath, "utf-8"));
 testPackageJson.devDependencies["@mendix/vite-config-widgets-web"] = `file:${tarballPath}`;
 writeFileSync(testPackageJsonPath, JSON.stringify(testPackageJson, null, 2));
-console.log(`✓ Updated test widget package.json to use tarball`);
+logSuccess("Updated vite.config.ts and package.json");
 
-// Phase 3: Install dependencies for test widget
-console.log("\n📦 Phase 3: Installing test widget dependencies...");
-exec("npm install", testWidgetDir);
+// Phase 3: Install dependencies
+console.log("\n📦 Phase 3: Install test widget dependencies");
+exec("npm install", testWidgetDir, "Installing dependencies");
 
-// Phase 4: Build the test widget
-console.log("\n📦 Phase 4: Building test widget...");
-exec("npm run build", testWidgetDir);
+// Phase 4: Build test widget
+console.log("\n📦 Phase 4: Build test widget");
+exec("npm run build", testWidgetDir, "Building widget with Vite");
 
 // Phase 5: Verify artifacts
-console.log("\n📦 Phase 5: Verifying build artifacts...");
-console.log("-" .repeat(60));
-
+console.log("\n📦 Phase 5: Verify build artifacts");
 const distDir = join(testWidgetDir, "dist");
-const mpkPath = checkFile(
-    join(distDir, "1.0.0/TestCheckbox.mpk"),
-    "MPK file"
-);
-
-checkFile(
-    join(distDir, "tmp/widgets/mendix/testcheckbox/testcheckbox/TestCheckbox.js"),
-    "Runtime JS file"
-);
-
-checkFile(
-    join(distDir, "tmp/widgets/mendix/testcheckbox/testcheckbox/TestCheckbox.mjs"),
-    "Runtime MJS file"
-);
-
-checkFile(
-    join(distDir, "tmp/widgets/TestCheckbox.xml"),
-    "Widget XML"
-);
-
-checkFile(
-    join(distDir, "tmp/widgets/package.xml"),
-    "Package XML"
-);
-
-// Check for generated typings
-checkFile(
-    join(testWidgetDir, "typings/TestCheckboxProps.d.ts"),
-    "Generated TypeScript typings"
-);
-
-// Verify MPK is a valid ZIP
+const mpkPath = checkFile(join(distDir, "1.0.0/TestCheckbox.mpk"), "MPK file");
+checkFile(join(distDir, "tmp/widgets/mendix/testcheckbox/testcheckbox/TestCheckbox.js"), "Runtime JS");
+checkFile(join(distDir, "tmp/widgets/mendix/testcheckbox/testcheckbox/TestCheckbox.mjs"), "Runtime MJS");
+checkFile(join(distDir, "tmp/widgets/TestCheckbox.xml"), "Widget XML");
+checkFile(join(distDir, "tmp/widgets/package.xml"), "Package XML");
+checkFile(join(testWidgetDir, "typings/TestCheckboxProps.d.ts"), "TypeScript typings");
 verifyZipFile(mpkPath);
 
-// Phase 6: Copy results back to repository
-console.log("\n📦 Phase 6: Copying results to test/results/...");
+// Phase 6: Copy results
+console.log("\n📦 Phase 6: Copy results");
+log("Copying artifacts to test/results...");
 cpSync(distDir, resultsDir, { recursive: true });
-console.log(`✓ Copied build artifacts to: ${resultsDir}`);
+logSuccess("Copied build artifacts");
 
-// Cleanup temp directory
-console.log("\n📦 Cleaning up temporary directory...");
+log("Cleaning up temp directory...");
 rmSync(tempDir, { recursive: true, force: true });
-console.log(`✓ Removed temporary directory: ${tempDir}`);
+logSuccess("Removed temp directory");
 
 console.log("\n" + "=".repeat(60));
 console.log("✅ Integration test PASSED");
-console.log("=" .repeat(60));
-console.log("\nAll build artifacts created successfully!");
-console.log(`\nResults location: ${resultsDir}`);
-console.log(`MPK location: ${join(resultsDir, "1.0.0/TestCheckbox.mpk")}`);
+console.log("=".repeat(60));
+console.log(`\nResults: ${resultsDir}`);
+console.log(`MPK:     ${join(resultsDir, "1.0.0/TestCheckbox.mpk")}`);
