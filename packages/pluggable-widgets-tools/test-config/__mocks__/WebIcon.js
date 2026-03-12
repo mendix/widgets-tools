@@ -1,5 +1,5 @@
-import { jsx } from "react/jsx-runtime";
+import { createElement } from "react";
 
 module.exports = {
-    Icon: () => jsx("img", { src: "mocked/web/icon" })
+    Icon: () => createElement("img", { src: "mocked/web/icon" })
 };
