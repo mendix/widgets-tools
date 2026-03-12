@@ -450,6 +450,9 @@ importers:
 
   packages/vite-config-widgets-web:
     dependencies:
+      '@mendix/widget-typings-generator':
+        specifier: workspace:*
+        version: link:../widget-typings-generator
       archiver:
         specifier: ^7.0.1
         version: 7.0.1

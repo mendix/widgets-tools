@@ -12,6 +12,8 @@
     ],
     "scripts": {
         "build": "node build.mjs",
+        "build:typings": "pnpm --filter=@mendix/widget-typings-generator run build",
+        "prepack": "premove dist && pnpm build:typings && node build.mjs && node prepack.mjs",
         "test:integration": "premove test/results && node test/run-integration-test.mjs"
     },
     "keywords": [
@@ -28,6 +30,7 @@
     },
     "license": "Apache-2.0",
     "dependencies": {
+        "@mendix/widget-typings-generator": "workspace:*",
         "archiver": "^7.0.1"
     },
     "peerDependencies": {
