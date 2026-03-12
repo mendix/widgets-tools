@@ -38,6 +38,7 @@ export function resolveConfig(options: WidgetViteConfigOptions, isDev: boolean =
         widgetName,
         widgetVersion: widgetPackageJson.version,
         mpkName: widgetPackageJson.mxpackage?.mpkName ?? `${widgetName}.mpk`,
+        sourceDir: resolve(process.cwd(), "src"),
         runtimeEntry: `src/${widgetName}.tsx`,
         runtimeOutDir: inferRuntimeOutDir(widgetPackageJson.packagePath, runtimeDirectoryName),
         runtimeOutputs: [

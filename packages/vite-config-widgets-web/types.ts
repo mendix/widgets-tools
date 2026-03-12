@@ -34,6 +34,7 @@ export type ResolvedConfig = {
     widgetName: string;
     widgetVersion: string;
     mpkName: string;
+    sourceDir: string;
     runtimeEntry: string;
     runtimeOutDir: string;
     runtimeOutputs: RuntimeOutput[];

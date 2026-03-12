@@ -3,6 +3,9 @@ import type { WidgetViteConfigOptions } from "../types";
 import { buildEditorArtifacts } from "../build/editor-artifacts";
 import { createMPK, deployMPKToMxProject } from "../build/mpk";
 import { getResolveAlias, isBuildDev, resolveConfig } from "./resolve";
+import { promises as fs } from "fs";
+import { join, extname } from "path";
+import { readdirSync, statSync } from "fs";
 
 export function createConfig(options: WidgetViteConfigOptions, env: ConfigEnv): UserConfig {
     const { mode } = env;
@@ -37,6 +40,20 @@ export function createConfig(options: WidgetViteConfigOptions, env: ConfigEnv): 
             }
         },
         plugins: [
+            {
+                name: "vite-plugin-widget-typings",
+                apply: "build",
+                async buildStart() {
+                    const packageXmlPath = join(resolvedConfig.sourceDir, "package.xml");
+                    try {
+                        const { transformPackage } = await import("../dist/widget-typings-generator.js");
+                        const packageXmlContent = await fs.readFile(packageXmlPath, "utf8");
+                        await transformPackage(packageXmlContent, resolvedConfig.sourceDir);
+                    } catch (error) {
+                        console.warn("Failed to generate widget typings:", error);
+                    }
+                }
+            },
             {
                 name: "vite-plugin-mpk-builder",
                 apply: "build",
