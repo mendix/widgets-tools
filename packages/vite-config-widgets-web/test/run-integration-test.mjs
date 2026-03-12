@@ -74,13 +74,8 @@ if (existsSync(resultsDir)) {
 mkdirSync(resultsDir, { recursive: true });
 console.log(`✓ Results directory ready: ${resultsDir}`);
 
-// Phase 1: Build the vite-config package
-console.log("\n📦 Phase 1: Building vite-config package...");
-exec("pnpm build", packageRoot);
-const builtConfigPath = checkFile(join(packageRoot, "dist/config.web.mjs"), "Built config file");
-
-// Phase 2: Copy test widget to temp directory
-console.log("\n📦 Phase 2: Copying test widget to temp directory...");
+// Phase 1: Copy test widget to temp directory
+console.log("\n📦 Phase 1: Copying test widget to temp directory...");
 cpSync(testWidgetSourceDir, testWidgetDir, {
     recursive: true,
     filter: (src) => {
@@ -90,8 +85,8 @@ cpSync(testWidgetSourceDir, testWidgetDir, {
 });
 console.log(`✓ Copied test widget to: ${testWidgetDir}`);
 
-// Pack the vite-config package and install from tarball
-console.log("\n📦 Phase 3: Packing vite-config package...");
+// Phase 2: Pack vite-config package (prepack script builds it automatically)
+console.log("\n📦 Phase 2: Packing vite-config package...");
 exec("pnpm pack --pack-destination " + tempDir, packageRoot);
 
 // Find the tarball
@@ -116,16 +111,16 @@ testPackageJson.devDependencies["@mendix/vite-config-widgets-web"] = `file:${tar
 writeFileSync(testPackageJsonPath, JSON.stringify(testPackageJson, null, 2));
 console.log(`✓ Updated test widget package.json to use tarball`);
 
-// Phase 4: Install dependencies for test widget
-console.log("\n📦 Phase 4: Installing test widget dependencies...");
+// Phase 3: Install dependencies for test widget
+console.log("\n📦 Phase 3: Installing test widget dependencies...");
 exec("npm install", testWidgetDir);
 
-// Phase 5: Build the test widget
-console.log("\n📦 Phase 5: Building test widget...");
+// Phase 4: Build the test widget
+console.log("\n📦 Phase 4: Building test widget...");
 exec("npm run build", testWidgetDir);
 
-// Phase 6: Verify artifacts
-console.log("\n📦 Phase 6: Verifying build artifacts...");
+// Phase 5: Verify artifacts
+console.log("\n📦 Phase 5: Verifying build artifacts...");
 console.log("-" .repeat(60));
 
 const distDir = join(testWidgetDir, "dist");
@@ -163,8 +158,8 @@ checkFile(
 // Verify MPK is a valid ZIP
 verifyZipFile(mpkPath);
 
-// Phase 7: Copy results back to repository
-console.log("\n📦 Phase 7: Copying results to test/results/...");
+// Phase 6: Copy results back to repository
+console.log("\n📦 Phase 6: Copying results to test/results/...");
 cpSync(distDir, resultsDir, { recursive: true });
 console.log(`✓ Copied build artifacts to: ${resultsDir}`);
 
