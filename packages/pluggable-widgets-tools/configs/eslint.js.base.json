@@ -7,14 +7,13 @@
     },
     "settings": {
         "react": {
-            "createClass": "createReactClass",
-            "pragma": "React",
             "version": "detect"
         }
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
         "prettier",
         "plugin:prettier/recommended",
         "plugin:react-hooks/recommended"
@@ -25,9 +24,6 @@
         "babelOptions": {
             "presets": ["@babel/preset-react"]
         },
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
@@ -37,8 +33,6 @@
         "react/prop-types": "off",
         "react/no-deprecated": "warn",
         "react/jsx-uses-vars": "error",
-        "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off",
 
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
