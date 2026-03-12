@@ -50,7 +50,10 @@ export function createConfig(options: WidgetViteConfigOptions, env: ConfigEnv): 
                         const packageXmlContent = await fs.readFile(packageXmlPath, "utf8");
                         await transformPackage(packageXmlContent, resolvedConfig.sourceDir);
                     } catch (error) {
-                        console.warn("Failed to generate widget typings:", error);
+                        // Skip if package.xml doesn't exist (not a widget project)
+                        if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+                            console.warn("Widget typings generation failed:", error);
+                        }
                     }
                 }
             },

@@ -154,6 +154,12 @@ checkFile(
     "Package XML"
 );
 
+// Check for generated typings
+checkFile(
+    join(testWidgetDir, "typings/TestCheckboxProps.d.ts"),
+    "Generated TypeScript typings"
+);
+
 // Verify MPK is a valid ZIP
 verifyZipFile(mpkPath);
 

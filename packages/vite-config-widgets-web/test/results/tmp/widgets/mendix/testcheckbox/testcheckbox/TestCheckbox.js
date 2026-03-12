@@ -1,1 +1,0 @@
-define(["require","exports","react"],(function(l,t,e){"use strict";function c(n){return e.createElement("div",{className:"test-checkbox-container"},e.createElement("label",null,e.createElement("input",{type:"checkbox",checked:n.checked,onChange:n.onChange}),e.createElement("span",null,n.label)))}t.TestCheckbox=c,Object.defineProperty(t,Symbol.toStringTag,{value:"Module"})}));
