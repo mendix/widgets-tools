@@ -7,5 +7,4 @@ export function createWidgetViteConfig(options: WidgetViteConfigOptions = {}) {
 }
 
 // Default export supports direct CLI usage:
-// `vite build --config ../../shared/vite-web-widgets/vite.config.ts`
 export default defineConfig((env: ConfigEnv) => createConfig({}, env));

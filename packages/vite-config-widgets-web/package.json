@@ -1,16 +1,39 @@
 {
     "name": "@mendix/vite-web-widgets",
     "version": "0.0.0",
-    "description": "Shared Vite configurations for web widgets (prototype)",
-    "private": true,
-    "main": "vite.config.ts",
+    "description": "Shared Vite configurations for web widgets",
+    "main": "./dist/config.web.mjs",
     "exports": {
-        "./vite.config": "./vite.config.ts"
+        "./config.web": "./dist/config.web.mjs"
     },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "node build.mjs"
+    },
+    "keywords": [
+        "vite",
+        "mendix",
+        "widgets",
+        "config",
+        "web"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mendix/widgets-tools.git",
+        "directory": "packages/vite-config-widgets-web"
+    },
+    "license": "Apache-2.0",
     "dependencies": {
         "archiver": "^7.0.1"
     },
+    "peerDependencies": {
+        "vite": "^7.0.0"
+    },
     "devDependencies": {
+        "esbuild": "^0.24.0",
         "vite": "^7.3.1"
     }
 }
