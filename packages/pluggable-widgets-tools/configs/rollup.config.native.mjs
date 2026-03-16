@@ -204,7 +204,7 @@ export default async args => {
                     },
                     {
                         exclude: /node_modules/,
-                        plugins: [["@babel/plugin-transform-react-jsx", { pragma: "createElement" }]]
+                        plugins: [["@babel/plugin-transform-react-jsx", { runtime: "automatic" }]]
                     }
                 ]
             }),
