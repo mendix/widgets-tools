@@ -9,6 +9,7 @@ node_modules
 *.launch
 mxproject
 coverage
+test/results
 
 # Packed packages
 mendix-*.tgz

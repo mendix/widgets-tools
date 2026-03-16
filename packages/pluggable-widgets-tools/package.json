@@ -11,7 +11,8 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
-    "prepack": "shx rm -rf dist && tsc",
+    "build:typings": "pnpm --filter=@mendix/widget-typings-generator run build",
+    "prepack": "shx rm -rf dist && pnpm build:typings && tsc && rollup -c prepack.rollup.mjs",
     "test": "jest"
   },
   "files": [
@@ -25,6 +26,7 @@
     "utils"
   ],
   "dependencies": {
+    "@mendix/widget-typings-generator": "workspace:*",
     "@babel/core": "^7.26.0",
     "@babel/plugin-transform-class-properties": "^7.25.9",
     "@babel/plugin-transform-private-methods": "^7.25.9",

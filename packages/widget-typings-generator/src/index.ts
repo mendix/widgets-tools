@@ -34,8 +34,9 @@ export async function transformPackage(content: string, basePath: string) {
             const sourceXml = (await parseStringPromise(source)) as WidgetXml;
             generatedContent = generateForWidget(sourceXml, toWidgetName(sourcePath));
         } catch (err) {
+            const message = err instanceof Error ? err.message : String(err);
             throw new Error(
-                `Incorrect widget xml file ${sourcePath}, please check Mendix Documentation: ${err.message}`
+                `Incorrect widget xml file ${sourcePath}, please check Mendix Documentation: ${message}`
             );
         }
 

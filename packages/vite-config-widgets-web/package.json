@@ -1,0 +1,44 @@
+{
+    "name": "@mendix/vite-config-widgets-web",
+    "version": "0.0.0",
+    "description": "Shared Vite configurations for web widgets",
+    "main": "./dist/config.web.mjs",
+    "exports": {
+        "./config.web": "./dist/config.web.mjs"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "node build.mjs",
+        "build:typings": "pnpm --filter=@mendix/widget-typings-generator run build",
+        "prepack": "premove dist && pnpm build:typings && node build.mjs && node prepack.mjs",
+        "test:integration": "premove test/results && node test/run-integration-test.mjs"
+    },
+    "keywords": [
+        "vite",
+        "mendix",
+        "widgets",
+        "config",
+        "web"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mendix/widgets-tools.git",
+        "directory": "packages/vite-config-widgets-web"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@mendix/widget-typings-generator": "workspace:*",
+        "archiver": "^7.0.1"
+    },
+    "peerDependencies": {
+        "vite": "^7.0.0"
+    },
+    "devDependencies": {
+        "esbuild": "^0.24.0",
+        "premove": "^4.0.0",
+        "vite": "^7.3.1"
+    }
+}
