@@ -39,7 +39,7 @@ async function main() {
     console.log("Preparing...");
 
     const pluggableWidgetsToolsPath = "../pluggable-widgets-tools";
-    const { stdout: packOutput } = await execAsync("npm pack", join(__dirname, pluggableWidgetsToolsPath));
+    const { stdout: packOutput } = await execAsync("pnpm pack", join(__dirname, pluggableWidgetsToolsPath));
     const toolsPackagePath = join(__dirname, pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
 
     const workDirs = [];
