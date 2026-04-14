@@ -3,8 +3,8 @@ export const nonLinkedListAttributeWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
+import { EditableListValue, EditableValue } from "mendix";
 import { CSSProperties } from "react";
-import { EditableValue, EditableListValue } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;

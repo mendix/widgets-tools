@@ -3,8 +3,8 @@ export const datasourceWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
+import { ActionValue, EditableValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListValue, ListWidgetValue } from "mendix";
 import { ComponentType, ReactNode } from "react";
-import { ActionValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue } from "mendix";
 import { Big } from "big.js";
 
 export interface DatasourcePropertiesType {

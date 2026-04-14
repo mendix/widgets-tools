@@ -3,8 +3,8 @@ export const associationMetaDataWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { CSSProperties } from "react";
 import { AssociationMetaData, ListValue } from "mendix";
+import { CSSProperties } from "react";
 
 export interface MyWidgetContainerProps {
     name: string;

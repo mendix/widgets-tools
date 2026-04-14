@@ -3,7 +3,7 @@ export const fileWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { ActionValue, DynamicValue, EditableValue, EditableFileValue, FileValue } from "mendix";
+import { ActionValue, DynamicValue, EditableFileValue, EditableValue, FileValue } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;
