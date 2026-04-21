@@ -4,11 +4,10 @@ import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import fg from "fast-glob";
 import shelljs from "shelljs";
-import zipAFolder from "zip-a-folder";
+import { zip } from "zip-a-folder";
 import { LICENSE_GLOB } from "../common/glob.mjs";
 
 const { cp } = shelljs;
-const { zip } = zipAFolder;
 
 export async function copyLicenseFile(sourcePath, outDir) {
     const absolutePath = join(sourcePath, LICENSE_GLOB);
