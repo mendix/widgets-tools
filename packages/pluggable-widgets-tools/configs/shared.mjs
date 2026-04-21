@@ -6,7 +6,7 @@ import { config } from "dotenv";
 import colors from "ansi-colors";
 import { throwOnIllegalChars, throwOnNoMatch } from "../dist/utils/validation.js";
 
-config({ path: join(process.cwd(), ".env") });
+config({ path: join(process.cwd(), ".env"), quiet: true });
 
 export async function listDir(path) {
     const entries = await fs.readdir(path, { withFileTypes: true });
