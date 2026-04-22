@@ -3,8 +3,8 @@ export const listAttributeWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
+import { ListAttributeListValue, ListAttributeValue, ListValue } from "mendix";
 import { CSSProperties } from "react";
-import { ListValue, ListAttributeValue, ListAttributeListValue } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;

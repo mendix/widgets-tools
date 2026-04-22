@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "11.8.1",
+  "version": "11.8.2",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": ">=20"

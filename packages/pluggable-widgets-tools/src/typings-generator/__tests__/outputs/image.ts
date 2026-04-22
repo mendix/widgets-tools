@@ -3,7 +3,7 @@ export const imageWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { ActionValue, DynamicValue, EditableValue, EditableImageValue, WebImage } from "mendix";
+import { ActionValue, DynamicValue, EditableImageValue, EditableValue, WebImage } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
+
 ## [11.8.1] - 2026-03-16
 
 ### Fixed

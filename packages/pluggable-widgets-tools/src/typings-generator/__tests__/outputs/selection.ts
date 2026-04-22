@@ -3,8 +3,8 @@ export const selectionWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
+import { ListValue, SelectionMultiValue, SelectionSingleValue } from "mendix";
 import { CSSProperties } from "react";
-import { ListValue, SelectionSingleValue, SelectionMultiValue } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;

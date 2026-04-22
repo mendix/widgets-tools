@@ -3,8 +3,8 @@ export const containmentWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { ComponentType, CSSProperties, ReactNode } from "react";
 import { ActionValue, EditableValue } from "mendix";
+import { ComponentType, CSSProperties, ReactNode } from "react";
 
 export interface MyWidgetContainerProps {
     name: string;
