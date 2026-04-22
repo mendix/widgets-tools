@@ -100,6 +100,10 @@ export function hasOptionalDataSource(prop: Property, resolveProp: (key: string)
     return prop.$.dataSource && resolveProp(prop.$.dataSource)?.$.required === "false";
 }
 
+function isLinkedToListDataSource(prop: Property, resolveProp: (key: string) => Property | undefined): boolean {
+    return prop.$.dataSource != null && resolveProp(prop.$.dataSource)?.$.isList === "true";
+}
+
 function toActionVariablesOutputType(actionVariables?: ActionVariableTypes[]) {
     const types = actionVariables?.flatMap(av => av.actionVariable)
         .map(avt => `${avt.$.key}: ${toOption(toAttributeClientType(avt.$.type))}`)
@@ -121,9 +125,9 @@ function toClientPropType(
             return "string";
         case "action":
             const variableTypes = toActionVariablesOutputType(prop.actionVariables);
-            return (prop.$.dataSource ? "ListActionValue" : "ActionValue") + variableTypes;
+            return (isLinkedToListDataSource(prop, resolveProp) ? "ListActionValue" : "ActionValue") + variableTypes;
         case "textTemplate":
-            return prop.$.dataSource ? "ListExpressionValue<string>" : "DynamicValue<string>";
+            return isLinkedToListDataSource(prop, resolveProp) ? "ListExpressionValue<string>" : "DynamicValue<string>";
         case "integer":
             return "number";
         case "decimal":
@@ -135,7 +139,7 @@ function toClientPropType(
         case "file":
             return prop.$.allowUpload ? "EditableFileValue" : "DynamicValue<FileValue>";
         case "datasource":
-            return "ListValue";
+            return prop.$.isList === "true" ? "ListValue" : "DynamicValue<ObjectItem>";
         case "attribute": {
             if (!prop.attributeTypes?.length) {
                 throw new Error("[XML] Attribute property requires attributeTypes element");
@@ -144,22 +148,22 @@ function toClientPropType(
                 .flatMap(ats => ats.attributeType)
                 .map(at => toAttributeClientType(at.$.name));
             const unionType = toUniqueUnionType(types);
-            const linkedToDataSource = !!prop.$.dataSource;
+            const linkedToListDS = isLinkedToListDataSource(prop, resolveProp);
 
             if (prop.$.isMetaData === "true") {
-                if (!linkedToDataSource) {
+                if (!prop.$.dataSource) {
                     throw new Error(`[XML] Attribute property can only have isMetaData="true" when linked to a datasource`);
                 }
                 return `AttributeMetaData<${unionType}>`;
             }
 
             if (!prop.associationTypes?.length) {
-                return toAttributeOutputType("Reference", linkedToDataSource, unionType);
+                return toAttributeOutputType("Reference", linkedToListDS, unionType);
             }
             else {
                 const reftypes = prop.associationTypes
                     .flatMap(ats => ats.associationType)
-                    .map(at => toAttributeOutputType(at.$.name, linkedToDataSource, unionType));
+                    .map(at => toAttributeOutputType(at.$.name, linkedToListDS, unionType));
                 return toUniqueUnionType(reftypes);
             }
         }
@@ -168,9 +172,9 @@ function toClientPropType(
                 throw new Error("[XML] Association property requires associationTypes element");
             }
 
-            const linkedToDataSource = !!prop.$.dataSource;
+            const linkedToListDS = isLinkedToListDataSource(prop, resolveProp);
             if (prop.$.isMetaData === "true") {
-                if (!linkedToDataSource) {
+                if (!prop.$.dataSource) {
                     throw new Error(`[XML] Association property can only have isMetaData="true" when linked to a datasource`);
                 }
                 return "AssociationMetaData";
@@ -178,7 +182,7 @@ function toClientPropType(
 
             const types = prop.associationTypes
                 .flatMap(ats => ats.associationType)
-                .map(at => toAssociationOutputType(at.$.name, linkedToDataSource));
+                .map(at => toAssociationOutputType(at.$.name, linkedToListDS));
             return toUniqueUnionType(types);
         }
         case "expression":
@@ -186,7 +190,7 @@ function toClientPropType(
                 throw new Error("[XML] Expression property requires returnType element");
             }
             const type = toExpressionClientType(prop.returnType[0], resolveProp);
-            return prop.$.dataSource ? `ListExpressionValue<${type}>` : `DynamicValue<${type}>`;
+            return isLinkedToListDataSource(prop, resolveProp) ? `ListExpressionValue<${type}>` : `DynamicValue<${type}>`;
         case "enumeration":
             const typeName = capitalizeFirstLetter(prop.$.key) + "Enum";
             generatedTypes.push(generateEnum(typeName, prop));
@@ -208,7 +212,7 @@ ${generateClientTypeBody(childProperties, isNative, generatedTypes, resolveChild
             );
             return prop.$.isList === "true" ? `${childType}[]` : childType;
         case "widgets":
-            return prop.$.dataSource ? "ListWidgetValue" : "ReactNode";
+            return isLinkedToListDataSource(prop, resolveProp) ? "ListWidgetValue" : "ReactNode";
         case "selection":
             if (!prop.selectionTypes?.length) {
                 throw new Error("[XML] Selection property requires selectionTypes element");
