@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   We added support for single object datasource properties, introduced in Mendix 11.11.
+
 ### Changed
 
 -   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
