@@ -5,12 +5,14 @@
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
     <name><%- nameCamelCase %></name>
     <description><%- description %></description>
+    <prompt>A simple widget for displaying text</prompt>
     <icon/>
     <properties>
         <propertyGroup caption="General">
             <property key="sampleText" type="string" required="false">
                 <caption>Default value</caption>
                 <description>Sample text input</description>
+                <prompt>Enter the text to display in the widget</prompt>
             </property>
         </propertyGroup>
     </properties>
