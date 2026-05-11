@@ -1,10 +1,12 @@
 const { join } = require("path");
-const { createInterface } = require("readline");
 const { readJson, writeJson } = require("fs-extra");
 const { execSync } = require("child_process");
-const { red, green, yellow } = require("ansi-colors");
+const { red, green, yellow, whiteBright, bold } = require("ansi-colors");
 const { copyFileSync, existsSync, mkdirSync, promises } = require("fs");
 const { parseStringPromise } = require("xml2js");
+const { rm } = require("fs/promises");
+const { auditPluggableWidgetsTools } = require("../dist/commands/audit")
+const { confirm } = require("../dist/cli/confirm")
 let requirePatch = false;
 
 const CheckType = {
@@ -61,16 +63,6 @@ const resolutionsOverrides = [
 
 function extractVersions(version) {
     return version.replace(/^\D+/, "").split(".").map(Number);
-}
-
-async function question(question) {
-    const rl = createInterface({ input: process.stdin, output: process.stdout });
-    return new Promise(resolve =>
-        rl.question(yellow(question), answer => {
-            rl.close();
-            resolve(!answer ? "y" : answer.toLowerCase());
-        })
-    );
 }
 
 function getOutdatedDependencies(packageDependencies, listOfNewDependencies = dependencies) {
@@ -177,9 +169,14 @@ async function getExtraDependencies(packageJson, key) {
 }
 
 async function checkMigration() {
+    const paths = {
+        packageJson: join(process.cwd(), "package.json"),
+        packageLock: join(process.cwd(), "package-lock.json"),
+        node_modules: join(process.cwd(), "node_modules")
+    }
+
     console.log("Checking if dependencies should be migrated...");
-    const packageJsonPath = join(process.cwd(), "package.json");
-    const packageJson = await readJson(packageJsonPath);
+    const packageJson = await readJson(paths.packageJson);
     const args = process.argv;
     if (!args.includes("--skip-migration") && process.env.CI !== "true") {
         const outdatedDependencies = getOutdatedDependencies(packageJson.dependencies || {});
@@ -192,11 +189,13 @@ async function checkMigration() {
             outdatedOverrides.length > 0 ||
             outdatedResolutions.length > 0
         ) {
-            const answer = await question(
-                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools, do you want to upgrade it automatically? " +
-                "Note that this operation will delete your node_modules folder and package-lock.json files and re-create them. [Y/n]: "
-            );
-            if (answer === "y") {
+            console.log(yellow(
+                "Your widget contains outdated dependencies that will not work with this version of Pluggable Widgets Tools.\n" +
+                (existsSync(paths.packageLock)
+                    ? "Note: To ensure a clean upgrade, a force-install is performed. Removing the lockfile and node_modules before installation."
+                    : "Note: To ensure a clean upgrade, a force-install is recommended. Removing the lockfile and node_modules before installation.")
+            ));
+            if (await confirm("Update dependencies?")) {
                 try {
                     const newPackageJson = packageJson;
 
@@ -221,12 +220,27 @@ async function checkMigration() {
                         }
                     }
                     // Writes the new package keeping the current format
-                    await writeJson(packageJsonPath, newPackageJson, { spaces: 2 });
+                    await writeJson(paths.packageJson, newPackageJson, { spaces: 2 });
+
+                    // Auto install is only implemented for npm right now
+                    if (!existsSync(paths.packageLock)) {
+                        console.log(
+                            "Dependency versions have been updated in the package.json of the widget.\n" +
+                            bold(whiteBright("Force install dependencies with your package manager to complete the update."))
+                        );
+                        return
+                    }
+
                     console.log("Deleting old dependencies...");
-                    execSync("shx rm -rf ./{node_modules,package-lock.json}", { cwd: process.cwd(), stdio: "inherit" });
-                    console.log("Done.");
-                    execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
-                    execSync(`npx eslint --no-eslintrc --rule '@typescript-eslint/no-unused-vars: ["error", { enableAutofixRemoval: { imports: true } }]' --ext ts,tsx,js,jsx --parser @typescript-eslint/parser --plugin '@typescript-eslint' --fix ./src`, { cwd: process.cwd(), stdio: "inherit" })
+                    await rm(paths.node_modules, { recursive: true, force: true })
+                    await rm(paths.packageLock)
+
+                    console.log("Installing dependencies...");
+                    execSync(`npm install`, { cwd: process.cwd(), stdio: 'inherit' });
+                    execSync(`npx eslint --no-config-lookup --rule '@typescript-eslint/no-unused-vars: ["error", { enableAutofixRemoval: { imports: true } }]' --ext ts,tsx,js,jsx --parser @typescript-eslint/parser --plugin '@typescript-eslint' --fix ./src`, { cwd: process.cwd(), stdio: "inherit" })
+                    await auditPluggableWidgetsTools()
+
+                    console.log(green("Done auto-updating dependencies"))
                 } catch (e) {
                     console.log(red("An error occurred while auto updating your dependencies"));
                     console.error(e);
