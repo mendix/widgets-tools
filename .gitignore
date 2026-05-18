@@ -12,3 +12,6 @@ coverage
 
 # Packed packages
 mendix-*.tgz
+
+# Git worktrees
+.worktrees/
