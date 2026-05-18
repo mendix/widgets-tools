@@ -21,16 +21,16 @@
     "yeoman-generator": "^5.4.2"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.25.9",
+    "@babel/eslint-parser": "8.0.0-rc.3",
     "@prettier/plugin-xml": "^2.2.0",
     "deepmerge": "^4.2.2",
     "ejs": "^3.1.9",
-    "eslint": "^7.20.0",
+    "eslint": "^10.2.1",
     "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-jest": "^29.15.2",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.31.10",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "jest": "^29.5.0",
     "prettier": "^2.5.1"
   },
