@@ -34,7 +34,6 @@ module.exports = {
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
     coverageDirectory: join(projectDir, "dist/coverage"),
-    testEnvironment: "jsdom"
 };
 
 function hasDependency(name) {
