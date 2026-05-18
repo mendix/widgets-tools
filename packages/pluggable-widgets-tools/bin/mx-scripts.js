@@ -39,6 +39,8 @@ checkNodeVersion();
                 PATH: [process.env.PATH].concat(nodeModulesBins).join(delimiter),
                 // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
                 Path: [process.env.Path].concat(nodeModulesBins).join(delimiter),
+                // ESLint 9 compatibility: use legacy config format until flat config migration is complete
+                ESLINT_USE_FLAT_CONFIG: "false",
             },
             shell: true,
             stdio: "inherit"
