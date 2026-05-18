@@ -4,18 +4,23 @@ const projectDir = process.cwd();
 
 module.exports = {
     clearMocks: true,
-    testRunner: "jest-jasmine2",
+    testRunner: "jest-circus/runner",
+    testTimeout: 10000,
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transform: {
-        "^.+\\.tsx?$": [
-            "ts-jest",
+        "^.+\\.(t|j)sx?$": [
+            "@swc/jest",
             {
-                tsconfig: { module: "commonjs", target: "ES2019" },
+                jsc: {
+                    transform: { react: { runtime: "automatic" } },
+                    parser: { syntax: "typescript", tsx: true, decorators: true },
+                    target: "es2019"
+                },
+                module: { type: "commonjs" }
             }
         ],
-        "^.+\\.jsx?$": join(__dirname, "transform.js"),
         "^.+\\.svg$": join(__dirname, "jest-svg-transformer")
     },
     moduleNameMapper: {
