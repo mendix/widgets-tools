@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "bin": "./bin.js",
-  "main": "app/index.js",
+  "main": "generators/app/index.js",
   "scripts": {
     "test": "jest --config ./jest.config.js",
     "lint": "eslint --config .eslintrc.js --ext .jsx,.js,.ts,.tsx generators/"
