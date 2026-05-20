@@ -13,12 +13,14 @@ A toolset to build, test, format, run, release and lint your [Pluggable Widgets]
 
 ## How to install
 
-Install via NPM using `npm install @mendix/pluggable-widgets-tools` (use [node.js](https://nodejs.org/) version >= 12). When installing via NPM v7.x.x, use `npm install @mendix/pluggable-widgets-tools --legacy-peer-deps`.
+Install via NPM using `npm install @mendix/pluggable-widgets-tools` (use [node.js](https://nodejs.org/) version >= 20).
 Even better is creating your widget using [Pluggable Widgets Generator](https://www.npmjs.com/package/@mendix/generator-widget) which scaffolds the correct project setup.
 
 ## How to use
 
 In your `package.json` scripts, use the following command with the desired task: `pluggable-widgets-tools task`
+
+Or execute directly with `npx pluggable-widgets-tools task`.
 
 ### Available tasks
 
