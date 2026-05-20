@@ -28,7 +28,7 @@
     "@mendix/pluggable-widgets-tools": "^11.6.0"
   },
   "dependencies": {
-    "classnames": "^2.2.6"
+    "classnames": "^2.5.1"
   },
   "resolutions": {
     "react": "^19.0.0",

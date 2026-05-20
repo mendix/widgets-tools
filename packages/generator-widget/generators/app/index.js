@@ -233,8 +233,8 @@ class MxGenerator extends Generator {
             }
 
             this._copyTemplate(
-                `${this.widget.templateSourcePath}tests/e2e/WidgetName.spec.${this.widget.fileExtension}.ejs`,
-                `cypress/e2e/${this.widget.name}.spec.${this.widget.fileExtension}`
+                `${this.widget.templateSourcePath}tests/e2e/WidgetName.spec.cy.${this.widget.fileExtension}.ejs`,
+                `cypress/e2e/${this.widget.name}.spec.cy.${this.widget.fileExtension}`
             );
         }
     }
