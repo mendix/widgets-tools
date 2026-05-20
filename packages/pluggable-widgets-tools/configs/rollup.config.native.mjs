@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { existsSync } from "fs";
-import { join, relative } from "path";
+import { join } from "path";
 import { getBabelInputPlugin, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import image from "@rollup/plugin-image";
@@ -105,20 +103,20 @@ export default async args => {
                     widgetName,
                     ...(production && i === 0
                         ? {
-                            licenseOptions: {
-                                thirdParty: {
-                                    output: [
-                                        {
-                                            file: join(outDir, "dependencies.txt")
-                                        },
-                                        {
-                                            file: join(outDir, "dependencies.json"),
-                                            template: licenseCustomTemplate
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+                              licenseOptions: {
+                                  thirdParty: {
+                                      output: [
+                                          {
+                                              file: join(outDir, "dependencies.txt")
+                                          },
+                                          {
+                                              file: join(outDir, "dependencies.json"),
+                                              template: licenseCustomTemplate
+                                          }
+                                      ]
+                                  }
+                              }
+                          }
                         : null)
                 }),
                 ...getCommonPlugins({
@@ -165,10 +163,11 @@ export default async args => {
 
     const customConfigPathJS = join(sourcePath, "rollup.config.js");
     const customConfigPathESM = join(sourcePath, "rollup.config.mjs");
-    const existingConfigPath =
-        existsSync(customConfigPathJS) ? customConfigPathJS
-            : existsSync(customConfigPathESM) ? customConfigPathESM
-                : null;
+    const existingConfigPath = existsSync(customConfigPathJS)
+        ? customConfigPathJS
+        : existsSync(customConfigPathESM)
+          ? customConfigPathESM
+          : null;
     if (existingConfigPath != null) {
         const customConfig = await loadConfigFile(existingConfigPath, { ...args, configDefaultConfig: result });
         customConfig.warnings.flush();
@@ -182,12 +181,12 @@ export default async args => {
             nodeResolve({ preferBuiltins: false, mainFields: ["module", "browser", "main"] }),
             isTypescript
                 ? typescript({
-                    noEmitOnError: !args.watch,
-                    sourceMap: config.sourceMaps,
-                    inlineSources: config.sourceMaps,
-                    target: "es2022", // we transpile the result with babel anyway, see below
-                    exclude: ["**/__tests__/**/*"]
-                })
+                      noEmitOnError: !args.watch,
+                      sourceMap: config.sourceMaps,
+                      inlineSources: config.sourceMaps,
+                      target: "es2022", // we transpile the result with babel anyway, see below
+                      exclude: ["**/__tests__/**/*"]
+                  })
                 : null,
             // Babel can transpile source JS and resulting JS, hence are input/output plugins. The good
             // practice is to do the most of conversions on resulting code, since then we ensure that
@@ -224,11 +223,11 @@ export default async args => {
             }),
             config.transpile
                 ? getBabelOutputPlugin({
-                    sourceMaps: config.sourceMaps,
-                    babelrc: false,
-                    compact: false,
-                    ...(config.babelConfig || {})
-                })
+                      sourceMaps: config.sourceMaps,
+                      babelrc: false,
+                      compact: false,
+                      ...(config.babelConfig || {})
+                  })
                 : null,
             image(),
             production ? terser({ mangle: false }) : null,

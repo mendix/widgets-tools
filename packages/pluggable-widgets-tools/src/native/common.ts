@@ -24,16 +24,16 @@ function flattenObjects<T extends object>(objects: T[]): T {
     return objects.reduce((merged, object) => ({ ...merged, ...object }), {} as T);
 }
 
-export function extractStyles<TObj extends {}, TKeys extends Array<keyof TObj>>(
+export function extractStyles<TObj extends object, TKeys extends Array<keyof TObj>>(
     source: TObj | undefined,
     extractionKeys: TKeys
-): [Pick<TObj, typeof extractionKeys[number]>, Omit<TObj, typeof extractionKeys[number]>] {
+): [Pick<TObj, (typeof extractionKeys)[number]>, Omit<TObj, (typeof extractionKeys)[number]>] {
     if (!source) {
-        return [{}, {}] as any;
+        return [{}, {}] as ReturnType<typeof extractStyles<TObj, TKeys>>;
     }
 
     return Object.entries(source).reduce<[Record<string, unknown>, Record<string, unknown>]>(
-        ([extracted, rest]: [any, any], [key, value]: [string, any]) => {
+        ([extracted, rest], [key, value]) => {
             if (extractionKeys.includes(key as keyof TObj)) {
                 extracted[key] = value;
             } else {
@@ -42,5 +42,5 @@ export function extractStyles<TObj extends {}, TKeys extends Array<keyof TObj>>(
             return [extracted, rest];
         },
         [{}, {}]
-    ) as any;
+    ) as ReturnType<typeof extractStyles<TObj, TKeys>>;
 }

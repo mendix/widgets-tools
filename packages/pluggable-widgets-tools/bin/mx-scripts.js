@@ -13,9 +13,8 @@ checkNodeVersion();
     try {
         await checkMigration();
     } catch (e) {
-        console.log(red("An error occurred while checking migration dependencies"));
+        console.log(red("An error occurred while checking migration dependencies: ", e));
     }
-
 
     const [, currentScriptPath, cmd, ...args] = process.argv;
     const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
@@ -54,7 +53,7 @@ checkNodeVersion();
                 // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
                 Path: [process.env.Path].concat(nodeModulesBins).join(delimiter),
                 // ESLint 9 compatibility: use legacy config format until flat config migration is complete
-                ESLINT_USE_FLAT_CONFIG: "false",
+                ESLINT_USE_FLAT_CONFIG: "false"
             },
             shell: true,
             stdio: "inherit"
@@ -158,19 +157,19 @@ function checkNodeVersion() {
         if (!nodeRange.test(nodeVersion)) {
             console.error(
                 red(`To build this widget a minimum node version ${nodeRange} is required.\n`) +
-                bold(whiteBright("Please upgrade your node version!"))
+                    bold(whiteBright("Please upgrade your node version!"))
             );
             process.exit(1);
         }
         if (npmVersion < 8) {
             console.error(
                 red("To build this widget a minimum npm version 8.0.0 is required.\n") +
-                bold(whiteBright("Please upgrade your npm version!"))
+                    bold(whiteBright("Please upgrade your npm version!"))
             );
             process.exit(1);
         }
     } catch (e) {
-        throw new Error("Cannot find node or npm to determine the version:" + e);
+        throw new Error("Cannot find node or npm to determine the version:", { cause: e });
     }
 }
 

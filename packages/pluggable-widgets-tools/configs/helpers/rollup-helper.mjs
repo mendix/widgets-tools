@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import fg from "fast-glob";

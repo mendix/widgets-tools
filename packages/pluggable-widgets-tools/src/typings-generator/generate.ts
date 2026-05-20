@@ -71,5 +71,3 @@ export function generateForWidget(widgetXml: WidgetXml, widgetName: string) {
 ${imports.length ? imports.join("\n") + "\n\n" : ""}${generatedTypesCode}
 `;
 }
-
-

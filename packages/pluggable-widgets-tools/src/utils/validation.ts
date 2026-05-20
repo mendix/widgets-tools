@@ -1,9 +1,8 @@
-
 export class WidgetValidationError extends Error {
-    name = "Widget Validation Error"
+    name = "Widget Validation Error";
 
     constructor(message: string) {
-        super(message)
+        super(message);
     }
 }
 
@@ -15,19 +14,21 @@ export class WidgetValidationError extends Error {
  * @throws WidgetValidationError If the input contains characters not allowed by legalCharacters
  */
 export function throwOnIllegalChars(input: string, legalCharacters: string, message: string): void {
-    const pattern = new RegExp(`([^${legalCharacters}])`, "g")
+    const pattern = new RegExp(`([^${legalCharacters}])`, "g");
     const illegalChars = input.match(pattern);
 
     if (illegalChars === null) {
-        return
+        return;
     }
 
     const formatted = illegalChars
-        .reduce((unique, c) => unique.includes(c) ? unique : [...unique, c], [] as string[])
+        .reduce((unique, c) => (unique.includes(c) ? unique : [...unique, c]), [] as string[])
         .map(c => `"${c}"`)
         .join(", ");
 
-    throw new WidgetValidationError(`${message} contains illegal characters ${formatted}. Allowed characters are [${legalCharacters}].`)
+    throw new WidgetValidationError(
+        `${message} contains illegal characters ${formatted}. Allowed characters are [${legalCharacters}].`
+    );
 }
 
 /**
@@ -39,9 +40,8 @@ export function throwOnIllegalChars(input: string, legalCharacters: string, mess
  */
 export function throwOnNoMatch(input: string, pattern: RegExp, message: string) {
     if (pattern.test(input)) {
-        return
+        return;
     }
 
-    throw new WidgetValidationError(`${message} does not match the pattern ${pattern}.`)
+    throw new WidgetValidationError(`${message} does not match the pattern ${pattern}.`);
 }
-

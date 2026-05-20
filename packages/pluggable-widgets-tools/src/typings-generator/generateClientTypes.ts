@@ -70,12 +70,15 @@ function generateClientTypeBody(
             }
             return true;
         })
-        .map(prop => `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
-            prop,
-            isNative,
-            generatedTypes,
-            resolveProp
-        )};`)
+        .map(
+            prop =>
+                `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
+                    prop,
+                    isNative,
+                    generatedTypes,
+                    resolveProp
+                )};`
+        )
         .join("\n");
 }
 
@@ -105,7 +108,8 @@ function isLinkedToListDataSource(prop: Property, resolveProp: (key: string) => 
 }
 
 function toActionVariablesOutputType(actionVariables?: ActionVariableTypes[]) {
-    const types = actionVariables?.flatMap(av => av.actionVariable)
+    const types = actionVariables
+        ?.flatMap(av => av.actionVariable)
         .map(avt => `${avt.$.key}: ${toOption(toAttributeClientType(avt.$.type))}`)
         .join("; ");
 
@@ -153,15 +157,16 @@ function toClientPropType(
 
             if (prop.$.isMetaData === "true") {
                 if (!prop.$.dataSource) {
-                    throw new Error(`[XML] Attribute property can only have isMetaData="true" when linked to a datasource`);
+                    throw new Error(
+                        `[XML] Attribute property can only have isMetaData="true" when linked to a datasource`
+                    );
                 }
                 return `AttributeMetaData<${unionType}>`;
             }
 
             if (!prop.associationTypes?.length) {
                 return toAttributeOutputType("Reference", linkedToListDS, unionType);
-            }
-            else {
+            } else {
                 const reftypes = prop.associationTypes
                     .flatMap(ats => ats.associationType)
                     .map(at => toAttributeOutputType(at.$.name, linkedToListDS, unionType));
@@ -176,7 +181,9 @@ function toClientPropType(
             const linkedToListDS = isLinkedToListDataSource(prop, resolveProp);
             if (prop.$.isMetaData === "true") {
                 if (!prop.$.dataSource) {
-                    throw new Error(`[XML] Association property can only have isMetaData="true" when linked to a datasource`);
+                    throw new Error(
+                        `[XML] Association property can only have isMetaData="true" when linked to a datasource`
+                    );
                 }
                 return "AssociationMetaData";
             }
@@ -191,7 +198,9 @@ function toClientPropType(
                 throw new Error("[XML] Expression property requires returnType element");
             }
             const type = toExpressionClientType(prop.returnType[0], resolveProp);
-            return isLinkedToListDataSource(prop, resolveProp) ? `ListExpressionValue<${type}>` : `DynamicValue<${type}>`;
+            return isLinkedToListDataSource(prop, resolveProp)
+                ? `ListExpressionValue<${type}>`
+                : `DynamicValue<${type}>`;
         case "enumeration":
             const typeName = capitalizeFirstLetter(prop.$.key) + "Enum";
             generatedTypes.push(generateEnum(typeName, prop));
@@ -323,9 +332,13 @@ export function toAssociationOutputType(xmlType: string, linkedToDataSource: boo
 export function toAttributeOutputType(xmlType: string, linkedToDataSource: boolean, unionAttributeType: string) {
     switch (xmlType) {
         case "Reference":
-            return linkedToDataSource ?  `ListAttributeValue<${unionAttributeType}>` : `EditableValue<${unionAttributeType}>`;
+            return linkedToDataSource
+                ? `ListAttributeValue<${unionAttributeType}>`
+                : `EditableValue<${unionAttributeType}>`;
         case "ReferenceSet":
-            return linkedToDataSource ?  `ListAttributeListValue<${unionAttributeType}>` : `EditableListValue<${unionAttributeType}>`;
+            return linkedToDataSource
+                ? `ListAttributeListValue<${unionAttributeType}>`
+                : `EditableListValue<${unionAttributeType}>`;
         default:
             return "any";
     }
