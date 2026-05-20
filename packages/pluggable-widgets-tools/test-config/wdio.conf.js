@@ -1,3 +1,4 @@
+/* global browser:readonly */
 const { join } = require("path");
 const { existsSync, mkdirSync } = require("fs");
 const debug = process.env.DEBUG;

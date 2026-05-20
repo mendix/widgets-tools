@@ -8,6 +8,7 @@ export function parseInlineStyle(style = ""): { [key: string]: string } {
             }
             return styleObject;
         }, {});
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
         return {};
     }

@@ -28,7 +28,6 @@ export interface PackageInfo {
     changelog: string;
 }
 
-
 export async function getPackageFileContent(dirPath: string): Promise<PackageJsonFileContent> {
     const pkgPath = join(dirPath, `package.json`);
     try {

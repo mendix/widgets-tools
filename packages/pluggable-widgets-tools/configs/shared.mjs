@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { existsSync, readdirSync, promises as fs, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { config } from "dotenv";
 import colors from "ansi-colors";
 import { throwOnIllegalChars, throwOnNoMatch } from "../dist/utils/validation.js";
 
-config({ path: join(process.cwd(), ".env") });
+config({ path: join(process.cwd(), ".env"), quiet: true });
 
 export async function listDir(path) {
     const entries = await fs.readdir(path, { withFileTypes: true });
@@ -18,7 +16,7 @@ export async function listDir(path) {
 
 export const sourcePath = process.cwd();
 
-const widgetPackageJson = JSON.parse(readFileSync(join(sourcePath, "package.json")))
+const widgetPackageJson = JSON.parse(readFileSync(join(sourcePath, "package.json")));
 export const widgetName = widgetPackageJson.widgetName;
 export const widgetPackage = widgetPackageJson.packagePath;
 export const widgetVersion = widgetPackageJson.version;
@@ -26,9 +24,9 @@ if (!widgetName || !widgetPackageJson) {
     throw new Error("Widget does not define widgetName in its package.json");
 }
 
-throwOnIllegalChars(widgetName, "a-zA-Z", "The `widgetName` property in package.json")
-throwOnIllegalChars(widgetPackage, "a-zA-Z0-9_.-", "The `packagePath` property in package.json")
-throwOnNoMatch(widgetPackage, /^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/, "The `packagePath` property in package.json")
+throwOnIllegalChars(widgetName, "a-zA-Z", "The `widgetName` property in package.json");
+throwOnIllegalChars(widgetPackage, "a-zA-Z0-9_.-", "The `packagePath` property in package.json");
+throwOnNoMatch(widgetPackage, /^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/, "The `packagePath` property in package.json");
 
 const widgetSrcFiles = readdirSync(join(sourcePath, "src")).map(file => join(sourcePath, "src", file));
 export const widgetEntry = widgetSrcFiles.filter(file =>
@@ -53,7 +51,7 @@ export const projectPath = [
     join(sourcePath, "tests/testProject")
 ].filter(path => path && existsSync(path))[0];
 
-export const onwarn = (args) => (warning, warn) => {
+export const onwarn = args => (warning, warn) => {
     // Module level directives is ignored by Rollup since it causes error when bundled.
     // And to not pollute the terminal, the warning code "MODULE_LEVEL_DIRECTIVE" and "SOURCEMAP_ERROR"
     // should be ignored and handled separetely from the safe warning list.
@@ -68,17 +66,14 @@ export const onwarn = (args) => (warning, warn) => {
 
     const error =
         (warning.plugin ? `(${warning.plugin} plugin) ` : "") +
-        (warning.loc
-            ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) `
-            : "") +
+        (warning.loc ? `${relative(sourcePath, warning.loc.file)} (${warning.loc.line}:${warning.loc.column}) ` : "") +
         `Error: ${warning.message}` +
         (warning.frame ? warning.frame : "");
 
     console.error(colors.red(error));
     process.exit(1);
-}
+};
 
 function escape(str) {
     return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
 }
-

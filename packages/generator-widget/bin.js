@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-var { join } = require("path");
-const chalk = require("chalk");
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import chalk from "chalk";
+import { createEnv } from "yeoman-environment";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 console.log(chalk.bold.blueBright("Initializing the widget generator..."));
-const yeoman = require('yeoman-environment');
-const env = yeoman.createEnv();
+const env = createEnv();
 env.register(join(__dirname, "./generators/app/index.js"), "@mendix/widget");
 
 const args = process.argv.slice(2);
-env.run(['@mendix/widget', ...args].join(" "))
+env.run(["@mendix/widget", ...args].join(" "));

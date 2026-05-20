@@ -42,7 +42,10 @@ function formatDate(date: Date): string {
 export class ChangelogFileWrapper {
     changelog: ChangelogFile;
 
-    private constructor(changelog: ChangelogFile, public changelogPath: string) {
+    private constructor(
+        changelog: ChangelogFile,
+        public changelogPath: string
+    ) {
         this.changelog = Object.freeze(changelog);
     }
 

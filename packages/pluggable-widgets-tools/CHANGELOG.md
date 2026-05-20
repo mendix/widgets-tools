@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 -   We added support for the `allowUpload` attribute on image properties in native widgets, generating `EditableImageValue<NativeImage>` when enabled, introduced in Mendix 11.11.
+-   We added the `audit` command. It will scan the dependencies of pluggable-widgets-tools for vulnerable packages and suggest overrides. Currently only npm is supported.
 
 ### Changed
 
 -   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
+-   We updated outdated and vulnerable dependencies. This required major upgrades of several dependencies, including eslint@9, jest@30, and rollup@4.
 
 ## [11.8.1] - 2026-03-16
 

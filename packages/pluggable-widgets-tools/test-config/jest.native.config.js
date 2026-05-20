@@ -13,7 +13,7 @@ module.exports = {
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [
         join(__dirname, "test-index-native.js"),
-        ...(hasDependency("react-native-gesture-handler") ? ["react-native-gesture-handler/jestSetup.js"] : []),
+        ...(hasDependency("react-native-gesture-handler") ? ["react-native-gesture-handler/jestSetup.js"] : [])
     ],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
@@ -21,7 +21,7 @@ module.exports = {
         "^.+\\.tsx?$": [
             "ts-jest",
             {
-                tsconfig: { module: "commonjs", target: "ES2019" },
+                tsconfig: { module: "commonjs", target: "ES2019" }
             }
         ],
         "^.+\\.jsx?$": join(__dirname, "transform-native.js")
@@ -33,14 +33,14 @@ module.exports = {
         "react-hot-loader/root": join(__dirname, "__mocks__/hot")
     },
     moduleDirectories: ["node_modules", join(projectDir, "node_modules")],
-    coverageDirectory: join(projectDir, "dist/coverage"),
-    testEnvironment: "jsdom"
+    coverageDirectory: join(projectDir, "dist/coverage")
 };
 
 function hasDependency(name) {
     try {
         require.resolve(name);
         return true;
+        // eslint-disable-next-line no-unused-vars
     } catch (e) {
         return false;
     }

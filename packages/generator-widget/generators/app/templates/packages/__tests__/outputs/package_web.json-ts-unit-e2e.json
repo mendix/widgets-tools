@@ -28,14 +28,14 @@
     "release": "pluggable-widgets-tools release:web"
   },
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^11.6.0",
+    "@mendix/pluggable-widgets-tools": "^11.11.0",
     "@types/big.js": "^6.0.2",
     "@types/jasmine": "^3.6.9",
-    "@types/jest": "^29.0.0",
-    "cypress": "^10.10.0"
+    "@types/jest": "^30.0.0",
+    "cypress": "^15.15.0"
   },
   "dependencies": {
-    "classnames": "^2.2.6"
+    "classnames": "^2.5.1"
   },
   "resolutions": {
     "react": "^19.0.0",

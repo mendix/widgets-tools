@@ -1,8 +1,11 @@
-const base = require("./packages/pluggable-widgets-tools/configs/prettier.base.json");
+import { readFileSync } from "fs";
 
-module.exports = {
+const basePath = new URL("./packages/pluggable-widgets-tools/configs/prettier.base.json", import.meta.url).pathname;
+const base = JSON.parse(readFileSync(basePath));
+
+export default {
     ...base,
-    plugins: [require.resolve("@prettier/plugin-xml")],
+    plugins: ["@prettier/plugin-xml"],
     overrides: [
         {
             files: ["CHANGELOG.md"],

@@ -48,11 +48,7 @@ export function checkForEnzymeUsage(srcDir: string = "src"): void {
 
     if (enzymeFiles.length > 0) {
         console.log(yellow("\nWARNING: Enzyme usage detected in your tests"));
-        console.log(
-            yellow(
-                "Enzyme is no longer supported. Please migrate your tests to React Testing Library."
-            )
-        );
+        console.log(yellow("Enzyme is no longer supported. Please migrate your tests to React Testing Library."));
         console.log(yellow("\nFiles with potential Enzyme usage:"));
         enzymeFiles.forEach(file => console.log(yellow(` ${file}`)));
         console.log(

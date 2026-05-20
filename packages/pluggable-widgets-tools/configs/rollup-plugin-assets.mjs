@@ -3,7 +3,7 @@ import path from "path";
 import util from "util";
 import fs from "fs";
 
-import makeDir from "make-dir";
+import { makeDirectory } from "make-dir";
 import mime from "mime";
 import { createFilter } from "@rollup/pluginutils";
 
@@ -82,7 +82,7 @@ export default function url(options = {}) {
             const base = options.destDir || outputOptions.dir || path.dirname(outputOptions.file);
 
             // await fsMkdirPromise(base, { recursive: true });
-            await makeDir(base);
+            await makeDirectory(base);
 
             await Promise.all(
                 Object.keys(copies).map(async name => {
@@ -91,7 +91,7 @@ export default function url(options = {}) {
                     // a directory structure
                     const outputDirectory = path.join(base, path.dirname(output));
                     // await fsMkdirPromise(outputDirectory, { recursive: true });
-                    await makeDir(outputDirectory);
+                    await makeDirectory(outputDirectory);
                     return copy(name, path.join(base, output));
                 })
             );

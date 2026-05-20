@@ -1,9 +1,14 @@
-const chalk = require("chalk");
-const { join } = require("path");
+import chalk from "chalk";
+import { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const pkg = require(join(__dirname, "../../../package.json"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-module.exports = {
+const pkg = JSON.parse(readFileSync(join(__dirname, "../../../package.json"), "utf8"));
+
+export default {
     BANNER: `
 
     ${chalk.bgBlueBright(chalk.bold.white("  __  ____   __ "))}           _     _            _    
