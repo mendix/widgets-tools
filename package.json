@@ -3,8 +3,11 @@
   "engines": {
     "node": ">=20"
   },
+  "private": "true",
+  "type": "module",
   "scripts": {
-    "dev:prepare": "corepack enable && corepack prepare"
+    "dev:prepare": "corepack enable && corepack prepare",
+    "lint": "eslint"
   },
   "license": "Apache-2.0",
   "copyright": "© Mendix Technology BV 2022. All rights reserved.",
@@ -12,5 +15,18 @@
     "type": "git",
     "url": "https://github.com/mendix/widgets-tools.git"
   },
-  "packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800"
+  "packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@prettier/plugin-xml": "^3.4.2",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jest": "^29.15.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "typescript-eslint": "^8.59.3"
+  }
 }

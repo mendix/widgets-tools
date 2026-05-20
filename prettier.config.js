@@ -1,8 +1,6 @@
-import { readFileSync } from "fs"
-import { join } from "path"
+import { readFileSync } from "fs";
 
-const current = new URL(import.meta.url)
-const basePath = join(current.pathname, "../packages/pluggable-widgets-tools/configs/prettier.base.json");
+const basePath = new URL("./packages/pluggable-widgets-tools/configs/prettier.base.json", import.meta.url).pathname;
 const base = JSON.parse(readFileSync(basePath));
 
 export default {

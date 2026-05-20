@@ -39,5 +39,4 @@ jobs:
         run: pnpm -r test
 
       - name: "Linting packages"
-        working-directory: ./packages/generator-widget
-        run: pnpm -r lint
+        run: pnpm lint
