@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the version of cypress when e2e tests are generated.
+-   We renamed the initial e2e tests so they match cypress' default specPattern.
+
 ## [11.6.0] - 2026-03-04
 
 ### Changed
