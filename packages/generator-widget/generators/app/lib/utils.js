@@ -1,5 +1,5 @@
-const { join } = require("path");
-const { access, readdir } = require("fs").promises;
+import { join } from "path";
+import { access, readdir } from "fs/promises";
 
 function getWidgetDetails(answers) {
     return {
@@ -51,4 +51,4 @@ async function findMprDir(widgetProjectDir) {
     return mprDir;
 }
 
-module.exports = { getWidgetDetails, dirExists, isDirEmpty, findMprDir };
+export { getWidgetDetails, dirExists, isDirEmpty, findMprDir };
