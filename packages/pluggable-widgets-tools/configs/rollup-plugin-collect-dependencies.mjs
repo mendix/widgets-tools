@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import fg from "fast-glob";
 import fsExtra from "fs-extra";
 import { existsSync, readFileSync, writeFileSync } from "fs";

@@ -16,8 +16,8 @@ export declare class SyntaxError {
     column: number;
     offset: number;
     location: LocationRange;
-    expected: any[];
-    found: any;
+    expected: unknown[];
+    found: unknown;
     name: string;
     message: string;
 }

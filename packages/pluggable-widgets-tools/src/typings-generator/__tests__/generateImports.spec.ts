@@ -1,7 +1,6 @@
 import { ImportableModule, generateImports, ImportStatement } from "../generateImports";
 
 describe("generateImports", () => {
-
     describe("with no modules", () => {
         it("returns no import statements for empty code", () => {
             const result = generateImports([], "");
@@ -20,18 +19,15 @@ describe("generateImports", () => {
         const animalsModule = new ImportableModule("animals", ["cat", "dog", "capibara"]);
 
         describe("with no matching members in code", () => {
-
             it("returns no import statements", () => {
                 const code = "x y z";
                 const result = generateImports([foobarModule, numbersModule, animalsModule], code);
 
                 expect(result).toEqual([]);
             });
-
         });
 
         describe("with matching members in code", () => {
-
             it("returns import statements for each module with matching members", () => {
                 const code = " foo  cat ";
                 const result = generateImports([foobarModule, animalsModule], code);
@@ -62,19 +58,15 @@ describe("generateImports", () => {
                 });
 
                 it("sorts grouped imports alphabetically", () => {
-                    expect(result[0].from).toBe("foobar")
-                    expect(result[1].from).toBe("numbers")
+                    expect(result[0].from).toBe("foobar");
+                    expect(result[1].from).toBe("numbers");
                 });
-            })
-
+            });
         });
-
     });
-
 });
 
 describe("ImportableModule", () => {
-
     describe("generateImportStatement()", () => {
         const module = new ImportableModule("test-module", ["TypeA", "TypeB", "helper"]);
 
@@ -92,17 +84,17 @@ describe("ImportableModule", () => {
         });
 
         it.each([" TypeA ", "(TypeA)", "{TypeA}", "<TypeA>", "'TypeA'", '"TypeA"', " TypeA.foo", " TypeA:"])(
-            "matches member TypeA in code `%s`", (code) => {
+            "matches member TypeA in code `%s`",
+            code => {
                 const statement = module.generateImportStatement(code);
                 expect(statement.members).toContain("TypeA");
-            });
+            }
+        );
     });
 });
 
 describe("ImportStatement", () => {
-
     describe("type property", () => {
-
         it("returns 'none' for statement with no members", () => {
             const statement = new ImportStatement("test-module", []);
             expect(statement.type).toBe("none");
@@ -120,7 +112,6 @@ describe("ImportStatement", () => {
     });
 
     describe("toString() formats string properly", () => {
-
         it("for statement with 1 member", () => {
             const statement = new ImportStatement("test-module", ["TypeA"]);
             expect(statement.toString()).toBe('import { TypeA } from "test-module";');

@@ -43,10 +43,13 @@ import { attributeMetaDataNativeInput, attributeMetaDataWebInput } from "./input
 import { attributeMetaDataNativeOutput, attributeMetaDataWebOutput } from "./outputs/metadata-attribute";
 import { associationMetaDataNativeInput, associationMetaDataWebInput } from "./inputs/metadata-association";
 import { associationMetaDataNativeOutput, associationMetaDataWebOutput } from "./outputs/metadata-association";
-import {listActionWithVariablesInput, listActionWithVariablesInputNative} from "./inputs/list-action-with-variables";
-import {listActionWithVariablesOutput, listActionWithVariablesOutputNative} from "./outputs/list-action-with-variables";
-import {imageWebInput, imageNativeInput} from "./inputs/image";
-import {imageWebOutput, imageNativeOutput} from "./outputs/image";
+import { listActionWithVariablesInput, listActionWithVariablesInputNative } from "./inputs/list-action-with-variables";
+import {
+    listActionWithVariablesOutput,
+    listActionWithVariablesOutputNative
+} from "./outputs/list-action-with-variables";
+import { imageWebInput, imageNativeInput } from "./inputs/image";
+import { imageWebOutput, imageNativeOutput } from "./outputs/image";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -238,13 +241,13 @@ describe("Generating tests", () => {
         const newContent = generateNativeTypesFor(associationMetaDataNativeInput);
         expect(newContent).toBe(associationMetaDataNativeOutput);
     });
-    
+
     it("Generates a parsed typing from XML for web using images", () => {
         const newContent = generateFullTypesFor(imageWebInput);
         expect(newContent).toBe(imageWebOutput);
     });
 
-     it("Generates a parsed typing from XML for native using images", () => {
+    it("Generates a parsed typing from XML for native using images", () => {
         const newContent = generateNativeTypesFor(imageNativeInput);
         expect(newContent).toBe(imageNativeOutput);
     });
@@ -268,7 +271,7 @@ function generateNativeTypesFor(xml: string) {
 function convertXmltoJson(xml: string): WidgetXml {
     let content: WidgetXml = {};
     if (xml) {
-        parseString(xml, {}, (err: Error, result: any) => {
+        parseString(xml, {}, (err: Error, result: unknown) => {
             if (err) {
                 throw err;
             }

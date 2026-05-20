@@ -12,6 +12,4 @@ const env = createEnv();
 env.register(join(__dirname, "./generators/app/index.js"), "@mendix/widget");
 
 const args = process.argv.slice(2);
-env.run(['@mendix/widget', ...args].join(" "))
-
-
+env.run(["@mendix/widget", ...args].join(" "));

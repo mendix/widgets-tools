@@ -11,7 +11,7 @@ import chalk from "chalk";
 import helpers from "yeoman-test";
 
 const { copy, existsSync, readJson, writeJson } = fsExtra;
-const { ls, mkdir, rm, tempdir } = shelljs
+const { ls, mkdir, rm, tempdir } = shelljs;
 
 const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
@@ -30,16 +30,16 @@ const CONFIGS = [
 ];
 
 const COLORS = [
-    'green',
-    'yellow',
-    'blue',
-    'magenta',
-    'cyan',
-    'greenBright',
-    'yellowBright',
-    'blueBright',
-    'magentaBright',
-    'cyanBright',
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "greenBright",
+    "yellowBright",
+    "blueBright",
+    "magentaBright",
+    "cyanBright"
 ];
 
 if (LIMIT_TESTS) {
@@ -56,9 +56,9 @@ main().catch(e => {
 async function main() {
     console.log("Preparing...");
 
-    const pluggableWidgetsToolsPath = join(DIR_COMMAND_TESTS, "../pluggable-widgets-tools")
-    const pluggableWidgetsToolsVersion = (await readJson(join(pluggableWidgetsToolsPath, "package.json"))).version
-    console.log("Preparing: Packaging @mendix/pluggable-widgets-tools version %s", pluggableWidgetsToolsVersion)
+    const pluggableWidgetsToolsPath = join(DIR_COMMAND_TESTS, "../pluggable-widgets-tools");
+    const pluggableWidgetsToolsVersion = (await readJson(join(pluggableWidgetsToolsPath, "package.json"))).version;
+    console.log("Preparing: Packaging @mendix/pluggable-widgets-tools version %s", pluggableWidgetsToolsVersion);
     const { stdout: packOutput } = await execAsync("npm pack", pluggableWidgetsToolsPath, m => console.log(m));
     const toolsPackagePath = join(pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
 
@@ -68,7 +68,7 @@ async function main() {
         await Promise.all(
             CONFIGS.map(async (config, index) => {
                 const logger = getWidgetLogger(index, ...config);
-                logger("Scheduled, waiting for lock")
+                logger("Scheduled, waiting for lock");
                 const [, release] = await workDirSemaphore.acquire();
                 let workDir;
                 try {
@@ -83,7 +83,7 @@ async function main() {
                     await runTest(workDir, logger, ...config);
                     return undefined;
                 } catch (e) {
-                    logger(chalk.bold.red("Stopped with error"))
+                    logger(chalk.bold.red("Stopped with error"));
                     return [config, e];
                 } finally {
                     workDirs.push(workDir);
@@ -93,7 +93,7 @@ async function main() {
         )
     ).filter(f => f);
 
-    console.log("Cleaning up temporary files")
+    console.log("Cleaning up temporary files");
     try {
         rm("-rf", toolsPackagePath, ...workDirs);
     } catch (error) {
@@ -109,7 +109,7 @@ async function main() {
 
     async function runTest(workDir, logger, platform, boilerplate, lang, version) {
         const isNative = platform === "native";
-        const widgetName = getWidgetName(platform, boilerplate, lang, version)
+        const widgetName = getWidgetName(platform, boilerplate, lang, version);
         let widgetPackageJson;
 
         logger(`Preparing widget...`);
@@ -275,8 +275,8 @@ async function main() {
                     ? "@mendix/pluggable-widgets-tools"
                     : null
                 : boilerplate === "full"
-                    ? "classnames"
-                    : null;
+                  ? "classnames"
+                  : null;
 
             if (
                 packageName &&
@@ -323,15 +323,15 @@ async function main() {
             } finally {
                 try {
                     await promisify(kill)(startProcess.pid, "SIGKILL");
-                } catch (_) {
-                    console.warn(`[${widgetName}] Error while killing start process`);
+                } catch (e) {
+                    console.warn(`[${widgetName}] Error while killing start process: ${e}`);
                 }
                 await new Promise(resolve => setTimeout(resolve, 5000)); // give time for processes to die
             }
         }
 
         async function testNativeDependencyManagement() {
-            const NATIVE_MAPS_VERSION = "0.31.1"
+            const NATIVE_MAPS_VERSION = "0.31.1";
             await execAsync(`npm install react-native-maps@${NATIVE_MAPS_VERSION}`, workDir, logger);
             const entryPointPath = join(workDir, "src", `Generated.${lang}x`);
             const jsonPath = join(workDir, `/dist/tmp/widgets/${widgetPackageJson.widgetName}.json`);
@@ -368,14 +368,13 @@ async function main() {
     }
 }
 
-
 function getWidgetName(platform, boilerplate, lang, version) {
     return `[generated_${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}]`;
 }
 
 function getWidgetLogger(index, platform, boilerplate, lang, version) {
-    const color = chalk[COLORS[index % COLORS.length]]
-    return (...msgs) => console.log(color(getWidgetName(platform, boilerplate, lang, version)), ...msgs)
+    const color = chalk[COLORS[index % COLORS.length]];
+    return (...msgs) => console.log(color(getWidgetName(platform, boilerplate, lang, version)), ...msgs);
 }
 
 /**
@@ -388,7 +387,7 @@ function getWidgetLogger(index, platform, boilerplate, lang, version) {
  * ```
  */
 function resolveModule(packageName) {
-    return fileURLToPath(import.meta.resolve(packageName))
+    return fileURLToPath(import.meta.resolve(packageName));
 }
 
 async function execAsync(command, workDir, logger) {
@@ -407,6 +406,7 @@ async function execAsync(command, workDir, logger) {
 async function execFailedAsync(command, workDir) {
     try {
         await promisify(exec)(command, { cwd: workDir });
+        // eslint-disable-next-line no-unused-vars
     } catch (_) {
         return;
     }
@@ -422,7 +422,7 @@ function fixPackageJson(json) {
         "@types/react-test-renderer": "~18.0.0"
     };
     const overrides = {
-        "react": "^19.0.0",
+        react: "^19.0.0",
         "react-dom": "^19.0.0",
         "react-native": "0.78.2"
     };

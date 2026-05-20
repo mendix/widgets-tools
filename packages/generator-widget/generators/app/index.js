@@ -245,15 +245,8 @@ class MxGenerator extends Generator {
     }
 
     _copyTemplate(source, destination, replaceVariable = this.widget) {
-        this.fs.copyTpl(
-            this.templatePath(source),
-            this.destinationPath(destination),
-            replaceVariable,
-            {},
-            {}
-        );
+        this.fs.copyTpl(this.templatePath(source), this.destinationPath(destination), replaceVariable, {}, {});
     }
 }
-
 
 export default MxGenerator;

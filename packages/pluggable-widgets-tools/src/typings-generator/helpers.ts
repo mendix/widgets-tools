@@ -23,17 +23,17 @@ export function commasAnd(arr: string[]) {
 }
 
 /**
-* Factory method for creating an `Array.reduce()` callback for partitioning the array into groups.
-* @example
-* ```js
-* [1, 4, 3, 13].reduce(groupBy(x => x % 2 ? "odd" : "even")).even // [ 4 ]
-* ```
-* @param groupSelector Callback that maps array members to their group
-* @returns Callback for Array.reduce()
-*/
+ * Factory method for creating an `Array.reduce()` callback for partitioning the array into groups.
+ * @example
+ * ```js
+ * [1, 4, 3, 13].reduce(groupBy(x => x % 2 ? "odd" : "even")).even // [ 4 ]
+ * ```
+ * @param groupSelector Callback that maps array members to their group
+ * @returns Callback for Array.reduce()
+ */
 export function groupBy<T, Groups extends string>(groupSelector: (item: T) => Groups) {
     return function reducer(reduction: { [Group in Groups]?: T[] }, item: T): { [Group in Groups]?: T[] } {
         const group = groupSelector(item);
-        return { ...reduction, [group]: [...(reduction[group] ?? []), item] }
-    }
+        return { ...reduction, [group]: [...(reduction[group] ?? []), item] };
+    };
 }
