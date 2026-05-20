@@ -9,8 +9,7 @@
   "bin": "./bin.js",
   "main": "generators/app/index.js",
   "scripts": {
-    "test": "jest --config ./jest.config.js",
-    "lint": "eslint --config .eslintrc.js --ext .jsx,.js,.ts,.tsx generators/"
+    "test": "jest --config ./jest.config.js"
   },
   "files": [
     "generators"
@@ -23,12 +22,7 @@
     "yeoman-generator": "^8.2.2"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "ejs": "^5.0.2",
-    "eslint": "^10.3.0",
-    "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.3",
-    "globals": "^17.6.0",
     "jest": "^30.3.0"
   },
   "keywords": [
