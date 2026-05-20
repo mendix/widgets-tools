@@ -10,6 +10,15 @@ importers:
 
   packages/command-tests:
     devDependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.4.0)
+      '@mendix/generator-widget':
+        specifier: workspace:*
+        version: link:../generator-widget
+      '@mendix/pluggable-widgets-tools':
+        specifier: workspace:*
+        version: link:../pluggable-widgets-tools
       '@prettier/plugin-xml':
         specifier: ^2.2.0
         version: 2.2.0
@@ -31,6 +40,9 @@ importers:
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
+      chalk:
+        specifier: ^5.6.2
+        version: 5.6.2
       eslint:
         specifier: ^10.2.1
         version: 10.4.0
@@ -43,6 +55,9 @@ importers:
       fs-extra:
         specifier: ^11.3.4
         version: 11.3.5
+      globals:
+        specifier: ^17.6.0
+        version: 17.6.0
       identity-obj-proxy:
         specifier: ^3.0.0
         version: 3.0.0
