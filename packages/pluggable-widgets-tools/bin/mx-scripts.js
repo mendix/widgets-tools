@@ -4,8 +4,9 @@ const { existsSync } = require("fs");
 const { delimiter, dirname, join, parse } = require("path");
 const { checkMigration } = require("../utils/migration");
 const { checkForEnzymeUsage } = require("../dist/utils/enzyme-detector");
-const { red, bold, whiteBright } = require("ansi-colors");
+const { red, blue, bold, whiteBright } = require("ansi-colors");
 const semver = require("semver");
+const { auditPluggableWidgetsTools } = require("../dist/commands/audit");
 
 checkNodeVersion();
 (async () => {
@@ -14,6 +15,7 @@ checkNodeVersion();
     } catch (e) {
         console.log(red("An error occurred while checking migration dependencies"));
     }
+
 
     const [, currentScriptPath, cmd, ...args] = process.argv;
     const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
@@ -28,11 +30,22 @@ checkNodeVersion();
         checkForEnzymeUsage();
     }
 
-    const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
-    console.log(`Running MX Widgets Tools script ${cmd}...`);
+    const realCommand = getRealCommand(cmd, toolsRoot);
+    console.log(`\nRunning MX Widgets Tools script ${blue(cmd)}...\n`);
+
+    if (typeof realCommand === "function") {
+        try {
+            await realCommand();
+            process.exit(0);
+        } catch (e) {
+            console.log(red("An error occurred while running %s: %s"), cmd, e);
+            process.exit(1);
+        }
+    }
 
     const nodeModulesBins = findNodeModulesBin();
-    for (const subCommand of realCommand.split(/&&/g)) {
+    const commandWithArgs = realCommand + " " + args.join(" ");
+    for (const subCommand of commandWithArgs.split(/&&/g)) {
         const result = spawnSync(subCommand.trim(), [], {
             cwd: process.cwd(),
             env: {
@@ -99,6 +112,10 @@ function getRealCommand(cmd, toolsRoot) {
             return `jest --projects "${join(toolsRoot, "test-config/jest.config.js")}"`;
         case "test:unit:native":
             return `jest --projects "${join(toolsRoot, "test-config/jest.native.config.js")}"`;
+        case "audit":
+            return auditPluggableWidgetsTools;
+        case "audit:fix":
+            return () => auditPluggableWidgetsTools(true);
         case "test:e2e":
         case "test:e2e:ts":
         case "test:e2e:web:cypress":

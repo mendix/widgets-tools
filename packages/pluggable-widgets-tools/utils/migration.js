@@ -3,7 +3,7 @@ const { createInterface } = require("readline");
 const { readJson, writeJson } = require("fs-extra");
 const { execSync } = require("child_process");
 const { red, green, yellow } = require("ansi-colors");
-const { copyFileSync, existsSync, mkdirSync, readFile, promises } = require("fs");
+const { copyFileSync, existsSync, mkdirSync, promises } = require("fs");
 const { parseStringPromise } = require("xml2js");
 let requirePatch = false;
 
