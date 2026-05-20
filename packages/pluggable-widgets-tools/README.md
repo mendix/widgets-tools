@@ -35,6 +35,8 @@ Or execute directly with `npx pluggable-widgets-tools task`.
 -   `format` Format your code using Prettier
 -   `test:unit:web` Run unit tests for your Web widget. Accepts option `--u` to update snapshots, `--no-cache` to remove existing caches, `--ci` assumes use of a CI environment, `--coverage` to support coverage test.
 -   `test:unit:native` Run unit tests for your Native widget. Accepts option `--u` to update snapshots, `--no-cache` to remove existing caches, `--ci` assumes use of a CI environment, `--coverage` to support coverage test.
+-   `audit` Check the pluggable-widgets-tools for vulnerabilities.
+-   `audit:fix` Add overrides for dependencies of pluggable-widgets-tools with vulnerabilities.
 
 #### Example
 
