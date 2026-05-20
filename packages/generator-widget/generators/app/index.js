@@ -68,8 +68,9 @@ class MxGenerator extends Generator {
             this.log(text.END_NPM_NEED_INSTALL_MSG);
         } else {
             this.log(text.END_RUN_BUILD_MSG);
-            await this.spawn("npm", ["run", "lint:fix"]);
-            await this.spawn("npm", ["run", "build"]);
+            await this.spawn("npx", ["pluggable-widgets-tools", "audit:fix"], { stdio: "inherit" });
+            await this.spawn("npm", ["run", "lint:fix"], { stdio: "inherit" });
+            await this.spawn("npm", ["run", "build"], { stdio: "inherit" });
         }
 
         // Remove .yo-rc.json
