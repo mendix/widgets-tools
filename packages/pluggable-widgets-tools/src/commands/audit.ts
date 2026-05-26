@@ -97,7 +97,7 @@ interface UpdateablePackage {
  * Using the ^ version range avoids this, as the version is specific enough for npm.
  */
 async function findSafeVersion({ name, range }: NpmAudit.Dependency): Promise<UpdateablePackage> {
-    const versions = await promisify(exec)(`npm show ${name} versions --json`).then(
+    const versions = await promisify(exec)(`npm show '${name}' versions --json`).then(
         ({ stdout }) => JSON.parse(stdout) as string[]
     );
 
