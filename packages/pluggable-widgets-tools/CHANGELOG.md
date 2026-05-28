@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 -   We added support for the `allowUpload` attribute on image properties in native widgets, generating `EditableImageValue<NativeImage>` when enabled, introduced in Mendix 11.11.
+-   We added support for single object datasource properties, introduced in Mendix 11.11.
 
 ### Changed
 
