@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
+-   We silenced the Sass legacy JS API deprecation warning that appeared during widget bundling.
 
 ## [11.8.1] - 2026-03-16
 

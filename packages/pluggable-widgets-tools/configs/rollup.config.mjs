@@ -158,7 +158,11 @@ export default async args => {
                     minimize: production,
                     plugins: [postcssImport(), postcssUrl({ url: "inline" })],
                     sourceMap: !production ? "inline" : false,
-                    use: ["sass"]
+                    use: {
+                        sass: {
+                            silenceDeprecations: ['legacy-js-api']
+                        }
+                    }
                 }),
                 ...getCommonPlugins({
                     sourceMaps: !production,
@@ -354,7 +358,11 @@ export function postCssPlugin(outputFormat, production, postcssPlugins = []) {
             ...postcssPlugins
         ],
         sourceMap: !production ? "inline" : false,
-        use: ["sass"],
+        use: {
+            sass: {
+                silenceDeprecations: ['legacy-js-api']
+            }
+        },
         to: join(outDir, `${outWidgetFile}.css`)
     });
 }
