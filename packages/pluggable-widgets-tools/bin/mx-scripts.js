@@ -4,14 +4,16 @@ const { existsSync } = require("fs");
 const { delimiter, dirname, join, parse } = require("path");
 const { checkMigration } = require("../utils/migration");
 const { checkForEnzymeUsage } = require("../dist/utils/enzyme-detector");
-const { red } = require("ansi-colors");
+const { red, blue, bold, whiteBright } = require("ansi-colors");
+const semver = require("semver");
+const { auditPluggableWidgetsTools } = require("../dist/commands/audit");
 
 checkNodeVersion();
 (async () => {
     try {
         await checkMigration();
     } catch (e) {
-        console.log(red("An error occurred while checking migration dependencies"));
+        console.log(red("An error occurred while checking migration dependencies: ", e));
     }
 
     const [, currentScriptPath, cmd, ...args] = process.argv;
@@ -22,16 +24,27 @@ checkNodeVersion();
     if (args.indexOf("--subprojectPath") > -1) {
         args.splice(args.indexOf("--subprojectPath"), 2);
     }
-    
+
     if (cmd && cmd.startsWith("test:unit")) {
         checkForEnzymeUsage();
     }
-    
-    const realCommand = getRealCommand(cmd, toolsRoot) + " " + args.join(" ");
-    console.log(`Running MX Widgets Tools script ${cmd}...`);
+
+    const realCommand = getRealCommand(cmd, toolsRoot);
+    console.log(`\nRunning MX Widgets Tools script ${blue(cmd)}...\n`);
+
+    if (typeof realCommand === "function") {
+        try {
+            await realCommand();
+            process.exit(0);
+        } catch (e) {
+            console.log(red("An error occurred while running %s: %s"), cmd, e);
+            process.exit(1);
+        }
+    }
 
     const nodeModulesBins = findNodeModulesBin();
-    for (const subCommand of realCommand.split(/&&/g)) {
+    const commandWithArgs = realCommand + " " + args.join(" ");
+    for (const subCommand of commandWithArgs.split(/&&/g)) {
         const result = spawnSync(subCommand.trim(), [], {
             cwd: process.cwd(),
             env: {
@@ -39,6 +52,8 @@ checkNodeVersion();
                 PATH: [process.env.PATH].concat(nodeModulesBins).join(delimiter),
                 // Hack for Windows using NTFS Filesystem, we cannot add platform specific check otherwise GitBash or other linux based terminal on windows will also fail.
                 Path: [process.env.Path].concat(nodeModulesBins).join(delimiter),
+                // ESLint 9 compatibility: use legacy config format until flat config migration is complete
+                ESLINT_USE_FLAT_CONFIG: "false"
             },
             shell: true,
             stdio: "inherit"
@@ -96,6 +111,10 @@ function getRealCommand(cmd, toolsRoot) {
             return `jest --projects "${join(toolsRoot, "test-config/jest.config.js")}"`;
         case "test:unit:native":
             return `jest --projects "${join(toolsRoot, "test-config/jest.native.config.js")}"`;
+        case "audit":
+            return auditPluggableWidgetsTools;
+        case "audit:fix":
+            return () => auditPluggableWidgetsTools(true);
         case "test:e2e":
         case "test:e2e:ts":
         case "test:e2e:web:cypress":
@@ -128,24 +147,29 @@ function findNodeModulesBin() {
 }
 
 function checkNodeVersion() {
+    const packageJson = require(join(__dirname, "../package.json"));
+    const nodeRange = new semver.Range(packageJson.engines.node);
+
     console.log("Checking node and npm version...");
     try {
-        const nodeVersion = extractMajorVersion(execSync("node --version").toString().trim());
+        const nodeVersion = execSync("node --version").toString().trim();
         const npmVersion = extractMajorVersion(execSync("npm --version").toString().trim());
-        if (nodeVersion < 16) {
+        if (!nodeRange.test(nodeVersion)) {
             console.error(
-                "To build this widget a minimum node version 16.0.0 is required. Please upgrade your node version!"
+                red(`To build this widget a minimum node version ${nodeRange} is required.\n`) +
+                    bold(whiteBright("Please upgrade your node version!"))
             );
             process.exit(1);
         }
         if (npmVersion < 8) {
             console.error(
-                "To build this widget a minimum npm version 8.0.0 is required. Please upgrade your npm version!"
+                red("To build this widget a minimum npm version 8.0.0 is required.\n") +
+                    bold(whiteBright("Please upgrade your npm version!"))
             );
             process.exit(1);
         }
     } catch (e) {
-        throw new Error("Cannot find node or npm to determine the version");
+        throw new Error("Cannot find node or npm to determine the version:", { cause: e });
     }
 }
 

@@ -1,8 +1,5 @@
 module.exports = require("babel-jest").createTransformer({
-    presets: [
-        ["@babel/preset-env", { "modules": "auto" }],
-        "@babel/preset-react"
-    ],
+    presets: [["@babel/preset-env", { modules: "auto" }], "@babel/preset-react"],
     plugins: [
         "@babel/plugin-transform-class-properties",
         "@babel/plugin-transform-private-methods",

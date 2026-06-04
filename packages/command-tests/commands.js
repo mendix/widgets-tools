@@ -1,17 +1,22 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Mutex, Semaphore } from "async-mutex";
+import { exec } from "child_process";
+import { readFileSync, writeFileSync } from "fs";
+import fsExtra from "fs-extra";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import shelljs from "shelljs";
+import kill from "tree-kill";
+import { promisify } from "util";
+import chalk from "chalk";
+import helpers from "yeoman-test";
 
-const { Mutex, Semaphore } = require("async-mutex");
-const { exec } = require("child_process");
-const { readFileSync, writeFileSync } = require("fs");
-const { copy, existsSync, readJson, writeJson } = require("fs-extra");
-const { join } = require("path");
-const { ls, mkdir, rm, tempdir } = require("shelljs");
-const kill = require("tree-kill");
-const { promisify } = require("util");
-const YeomanTest = require("yeoman-test");
+const { copy, existsSync, readJson, writeJson } = fsExtra;
+const { ls, mkdir, rm, tempdir } = shelljs;
 
 const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
+
+const DIR_COMMAND_TESTS = dirname(fileURLToPath(import.meta.url));
 
 const CONFIGS = [
     ["web", "full", "js", "latest"],
@@ -22,6 +27,19 @@ const CONFIGS = [
     ["web", "empty", "ts", "latest"],
     ["native", "empty", "js", "latest"],
     ["native", "empty", "ts", "latest"]
+];
+
+const COLORS = [
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "greenBright",
+    "yellowBright",
+    "blueBright",
+    "magentaBright",
+    "cyanBright"
 ];
 
 if (LIMIT_TESTS) {
@@ -38,15 +56,19 @@ main().catch(e => {
 async function main() {
     console.log("Preparing...");
 
-    const pluggableWidgetsToolsPath = "../pluggable-widgets-tools";
-    const { stdout: packOutput } = await execAsync("npm pack", join(__dirname, pluggableWidgetsToolsPath));
-    const toolsPackagePath = join(__dirname, pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
+    const pluggableWidgetsToolsPath = join(DIR_COMMAND_TESTS, "../pluggable-widgets-tools");
+    const pluggableWidgetsToolsVersion = (await readJson(join(pluggableWidgetsToolsPath, "package.json"))).version;
+    console.log("Preparing: Packaging @mendix/pluggable-widgets-tools version %s", pluggableWidgetsToolsVersion);
+    const { stdout: packOutput } = await execAsync("npm pack", pluggableWidgetsToolsPath, m => console.log(m));
+    const toolsPackagePath = join(pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
 
     const workDirs = [];
     const workDirSemaphore = new Semaphore(PARALLELISM);
     const failures = (
         await Promise.all(
             CONFIGS.map(async (config, index) => {
+                const logger = getWidgetLogger(index, ...config);
+                logger("Scheduled, waiting for lock");
                 const [, release] = await workDirSemaphore.acquire();
                 let workDir;
                 try {
@@ -58,9 +80,10 @@ async function main() {
                         );
                         mkdir("-p", workDir);
                     }
-                    await runTest(workDir, ...config);
+                    await runTest(workDir, logger, ...config);
                     return undefined;
                 } catch (e) {
+                    logger(chalk.bold.red("Stopped with error"));
                     return [config, e];
                 } finally {
                     workDirs.push(workDir);
@@ -70,72 +93,76 @@ async function main() {
         )
     ).filter(f => f);
 
-    console.log("All done!");
+    console.log("Cleaning up temporary files");
     try {
         rm("-rf", toolsPackagePath, ...workDirs);
     } catch (error) {
-        console.warn(`Error while removing files: ${error.message}`);
+        console.warn(chalk.yellow(`Unable to remove temporary files: ${error.message}`));
     }
 
+    console.log("All done! Failed: %d Successful: %d", failures.length, CONFIGS.length - failures.length);
+
     if (failures.length) {
-        failures.forEach(f => console.error(`Test for configuration ${f[0]} failed: ${f[1]}`));
+        failures.forEach(f => console.error(chalk.red(`Test for configuration ${f[0]} failed: ${f[1]}`)));
         process.exit(2);
     }
 
-    async function runTest(workDir, platform, boilerplate, lang, version) {
+    async function runTest(workDir, logger, platform, boilerplate, lang, version) {
         const isNative = platform === "native";
-        const widgetName = `generated_${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}`;
+        const widgetName = getWidgetName(platform, boilerplate, lang, version);
         let widgetPackageJson;
 
-        console.log(`[${widgetName}] Preparing widget...`);
+        logger(`Preparing widget...`);
         await prepareWidget();
-        console.log(`[${widgetName}] Ready to test!`);
+        logger(`Ready to test!`);
 
-        console.log(`[${widgetName}] Testing linting...`);
+        logger(`Testing linting...`);
         await testLint();
 
         // Temporarily disabled due to bizarre typing issues in the CI that cannot be reproduced in any local environment
-        // console.log(`[${widgetName}] Testing unit tests....`);
+        // logger(`Testing unit tests....`);
         // await testTest();
 
         if (LIMIT_TESTS) {
-            console.log(`[${widgetName}] Quick tested!`);
+            logger(`Quick tested!`);
             return;
         }
 
-        console.log(`[${widgetName}] Testing 'build' command...`);
+        logger(`Testing 'build' command...`);
         await testBuild();
 
         // Temporarily disabled due to bizarre typing issues in the CI that cannot be reproduced in any local environment
-        // console.log(`[${widgetName}] Testing 'test:unit' command...`);
+        // logger(`Testing 'test:unit' command...`);
         // await testTestUnit();
 
-        console.log(`[${widgetName}] Testing 'release' command...`);
+        logger(`Testing 'release' command...`);
         await testRelease();
 
-        console.log(`[${widgetName}] Checking dependencies files...`);
+        logger(`Checking dependencies files...`);
         await checkDependenciesFiles(isNative, boilerplate, version);
 
-        console.log(`[${widgetName}] Testing npm start...`);
+        logger(`Testing npm start...`);
         await testStart();
 
         // Check native dependency management
         if (isNative) {
-            console.log(`[${widgetName}] Testing native dependency management...`);
+            logger(`Testing native dependency management...`);
             await testNativeDependencyManagement();
         }
 
-        console.log(`[${widgetName}] Tested!`);
+        logger(`Tested!`);
 
         async function prepareWidget() {
             const filesToRemove = ls(workDir)
                 .filter(file => file !== "node_modules")
                 .map(file => join(workDir, file));
+
             if (filesToRemove.length) {
                 rm("-r", ...filesToRemove);
             }
 
             if (version === "latest") {
+                logger("Preparing widget: Generating");
                 const promptAnswers = {
                     name: "Generated",
                     description: "My widget description",
@@ -151,58 +178,51 @@ async function main() {
                     hasUnitTests: true,
                     hasE2eTests: false
                 };
-                let generatedWidget;
                 const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
                 try {
-                    const generatorWidgetModule = require.resolve("../generator-widget/generators/app");
-                    generatedWidget = (
-                        await YeomanTest.run(generatorWidgetModule)
-                            .inTmpDir()
-                            .withPrompts(promptAnswers)
-                            .withArguments("Generated")
-                            .toPromise()
-                    ).cwd;
+                    const generatedWidget = await helpers
+                        .run(resolveModule("@mendix/generator-widget"))
+                        .withAnswers(promptAnswers)
+                        .withArguments("Generated")
+                        .toPromise();
+                    await copy(join(generatedWidget.cwd, "generated"), workDir);
                 } finally {
                     release();
                 }
-                await copy(join(generatedWidget, "generated"), workDir);
             } else {
-                await copy(join(__dirname, "projects", widgetName), workDir);
+                await copy(join(DIR_COMMAND_TESTS, "projects", widgetName), workDir);
             }
 
+            logger("Preparing widget: Installing");
             widgetPackageJson = await readJson(join(workDir, "package.json"));
             widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = toolsPackagePath;
 
             // Adds compatibility to new React 18 and React native 0.72
             fixPackageJson(widgetPackageJson);
 
-            // Check native dependency management
-            if (isNative) {
-                widgetPackageJson.dependencies["react-native-maps"] = "0.27.0";
-            }
-
             await writeJson(join(workDir, "package.json"), widgetPackageJson);
 
-            await execAsync("npm install --loglevel=error", workDir);
+            await execAsync("npm install --loglevel=error", workDir, logger);
         }
 
         async function testLint() {
             await execFailedAsync("npm run lint", workDir);
-            await execAsync("npm run lint:fix", workDir);
-            await execAsync("npm run lint", workDir);
+            await execAsync("npm run lint:fix", workDir, logger);
+            await execAsync("npm run lint", workDir, logger);
         }
 
+        // eslint-disable-next-line no-unused-vars
         async function testTest() {
             if (platform === "native") {
                 await execFailedAsync("npm test -- --forceExit", workDir);
-                await execAsync("npm test -- -u --forceExit", workDir);
+                await execAsync("npm test -- -u --forceExit", workDir, logger);
             } else {
-                await execAsync("npm test -- --forceExit", workDir);
+                await execAsync("npm test -- --forceExit", workDir, logger);
             }
         }
 
         async function testBuild() {
-            await execAsync("npm run build", workDir);
+            await execAsync("npm run build", workDir, logger);
             if (
                 !existsSync(
                     join(
@@ -215,8 +235,9 @@ async function main() {
             }
         }
 
+        // eslint-disable-next-line no-unused-vars
         async function testTestUnit() {
-            await execAsync("npm run test:unit -- --forceExit", workDir);
+            await execAsync("npm run test:unit -- --forceExit", workDir, logger);
             if (!existsSync(join(workDir, `/dist/coverage/clover.xml`))) {
                 throw new Error("Expected coverage file to be generated, but it wasn't.");
             }
@@ -224,7 +245,7 @@ async function main() {
 
         async function testRelease() {
             rm("-rf", join(workDir, "dist"));
-            await execAsync("npm run release", workDir);
+            await execAsync("npm run release", workDir, logger);
 
             if (
                 !existsSync(
@@ -254,8 +275,8 @@ async function main() {
                     ? "@mendix/pluggable-widgets-tools"
                     : null
                 : boilerplate === "full"
-                    ? "classnames"
-                    : null;
+                  ? "classnames"
+                  : null;
 
             if (
                 packageName &&
@@ -292,7 +313,7 @@ async function main() {
                             inProgress = false;
                             setTimeout(() => {
                                 if (!inProgress) {
-                                    console.log(`[${widgetName}] Start succeeded!`);
+                                    logger(`Start succeeded!`);
                                     resolve();
                                 }
                             }, 100);
@@ -302,14 +323,16 @@ async function main() {
             } finally {
                 try {
                     await promisify(kill)(startProcess.pid, "SIGKILL");
-                } catch (_) {
-                    console.warn(`[${widgetName}] Error while killing start process`);
+                } catch (e) {
+                    console.warn(`[${widgetName}] Error while killing start process: ${e}`);
                 }
                 await new Promise(resolve => setTimeout(resolve, 5000)); // give time for processes to die
             }
         }
 
         async function testNativeDependencyManagement() {
+            const NATIVE_MAPS_VERSION = "0.31.1";
+            await execAsync(`npm install react-native-maps@${NATIVE_MAPS_VERSION}`, workDir, logger);
             const entryPointPath = join(workDir, "src", `Generated.${lang}x`);
             const jsonPath = join(workDir, `/dist/tmp/widgets/${widgetPackageJson.widgetName}.json`);
             const fileData = readFileSync(entryPointPath);
@@ -321,14 +344,14 @@ async function main() {
                     Buffer.from(fileData)
                 ])
             );
-            await execAsync("npm run build", workDir);
+            await execAsync("npm run build", workDir, logger);
             if (!existsSync(jsonPath)) {
                 throw new Error("Expected dependency json file to be generated, but it wasn't.");
             }
             const dependencyJson = await readJson(jsonPath);
             if (
                 !dependencyJson.nativeDependencies ||
-                dependencyJson.nativeDependencies["react-native-maps"] !== "0.27.0"
+                dependencyJson.nativeDependencies["react-native-maps"] !== NATIVE_MAPS_VERSION
             ) {
                 throw new Error("Expected dependency json file to contain dependencies, but it wasn't.");
             }
@@ -340,12 +363,34 @@ async function main() {
             ) {
                 throw new Error("Expected transitive node_modules to be copied, but it wasn't.");
             }
-            console.log(`[${widgetName}] Native dependency management succeeded!`);
+            logger(`Native dependency management succeeded!`);
         }
     }
 }
 
-async function execAsync(command, workDir) {
+function getWidgetName(platform, boilerplate, lang, version) {
+    return `[generated_${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}]`;
+}
+
+function getWidgetLogger(index, platform, boilerplate, lang, version) {
+    const color = chalk[COLORS[index % COLORS.length]];
+    return (...msgs) => console.log(color(getWidgetName(platform, boilerplate, lang, version)), ...msgs);
+}
+
+/**
+ * Resolves the given module and returns the full path.
+ * This corresponds to the "main" or "import" property of a package.json.
+ *
+ * @example
+ * ```js
+ * resolve("@mendix/generator-widget") // "/path/to/generator-widget/generators/app/index.js"
+ * ```
+ */
+function resolveModule(packageName) {
+    return fileURLToPath(import.meta.resolve(packageName));
+}
+
+async function execAsync(command, workDir, logger) {
     const resultPromise = promisify(exec)(command, { cwd: workDir });
     while (true) {
         const waitPromise = new Promise(resolve => setTimeout(resolve, 60 * 1000));
@@ -354,14 +399,15 @@ async function execAsync(command, workDir) {
         if (haveCompleted) {
             return resultPromise;
         }
-        console.log("Waiting...");
+        logger("Waiting...");
     }
 }
 
 async function execFailedAsync(command, workDir) {
     try {
         await promisify(exec)(command, { cwd: workDir });
-    } catch (e) {
+        // eslint-disable-next-line no-unused-vars
+    } catch (_) {
         return;
     }
     throw new Error(`Expected '${command}' to fail, but it didn't!`);
@@ -376,7 +422,7 @@ function fixPackageJson(json) {
         "@types/react-test-renderer": "~18.0.0"
     };
     const overrides = {
-        "react": "^19.0.0",
+        react: "^19.0.0",
         "react-dom": "^19.0.0",
         "react-native": "0.78.2"
     };

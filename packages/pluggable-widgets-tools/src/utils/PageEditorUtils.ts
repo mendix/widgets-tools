@@ -1,7 +1,5 @@
 import { Properties, Property, PropertyGroup } from "./typings";
 
-declare type Option<T> = T | undefined;
-
 export function hidePropertyIn<T, TKey extends keyof T>(propertyGroups: PropertyGroup[], _value: T, key: TKey): void;
 export function hidePropertyIn<T, TKey extends keyof T>(
     propertyGroups: PropertyGroup[],

@@ -1,14 +1,10 @@
-const Generator = require("yeoman-generator");
-const { join } = require("path");
-
-const { promptWidgetProperties, promptTestsInfo } = require("./lib/prompttexts.js");
-const { getWidgetDetails, dirExists, isDirEmpty, findMprDir } = require("./lib/utils.js");
-const text = require("./lib/text.js");
+import Generator from "yeoman-generator";
+import { join } from "path";
+import { promptWidgetProperties, promptTestsInfo } from "./lib/prompttexts.js";
+import { getWidgetDetails, dirExists, isDirEmpty, findMprDir } from "./lib/utils.js";
+import text from "./lib/text.js";
 
 const widgetSrcFolder = "src/components/";
-
-// Extends the prototype as install actions was removed from yeoman-generator
-Generator.prototype = Object.assign(Generator.prototype, require("yeoman-generator/lib/actions/install"));
 
 class MxGenerator extends Generator {
     constructor(args, opts) {
@@ -51,6 +47,8 @@ class MxGenerator extends Generator {
     writing() {
         if (this.dir) {
             this.destinationRoot(this.dir);
+            // Propagate the destination root change to the environment so it watches the correct package.json
+            this.env.cwd = this.destinationPath();
         }
 
         this._writePackage();
@@ -62,11 +60,6 @@ class MxGenerator extends Generator {
         this._writeEndToEndTests();
     }
 
-    install() {
-        this.log(text.INSTALL_FINISH_MSG);
-        this.npmInstall(undefined, { legacyPeerDeps: false });
-    }
-
     async end() {
         if (
             !(await dirExists(this.destinationPath("node_modules"))) ||
@@ -75,8 +68,9 @@ class MxGenerator extends Generator {
             this.log(text.END_NPM_NEED_INSTALL_MSG);
         } else {
             this.log(text.END_RUN_BUILD_MSG);
-            this.spawnCommandSync("npm", ["run", "lint:fix"]); // eslint-disable-line no-sync
-            this.spawnCommandSync("npm", ["run", "build"]); // eslint-disable-line no-sync
+            await this.spawn("npx", ["pluggable-widgets-tools", "audit:fix"], { stdio: "inherit" });
+            await this.spawn("npm", ["run", "lint:fix"], { stdio: "inherit" });
+            await this.spawn("npm", ["run", "build"], { stdio: "inherit" });
         }
 
         // Remove .yo-rc.json
@@ -177,7 +171,7 @@ class MxGenerator extends Generator {
             projectIgnorePath: this.widget.projectPath.replace(/\.\//g, "")
         });
         this._copyFile(`commons/eslintrc.${this.widget.isLanguageTS ? "ts" : "js"}.js`, ".eslintrc.js");
-        this._copyFile("commons/prettier.config.js", "prettier.config.js");
+        this._copyTemplate("commons/prettier.config.ejs", "prettier.config.js");
         this._copyTemplate("commons/.prettierignore", ".prettierignore", {
             projectIgnorePath: this.widget.projectPath.replace(/\.\//g, "")
         });
@@ -240,25 +234,19 @@ class MxGenerator extends Generator {
             }
 
             this._copyTemplate(
-                `${this.widget.templateSourcePath}tests/e2e/WidgetName.spec.${this.widget.fileExtension}.ejs`,
-                `cypress/e2e/${this.widget.name}.spec.${this.widget.fileExtension}`
+                `${this.widget.templateSourcePath}tests/e2e/WidgetName.spec.cy.${this.widget.fileExtension}.ejs`,
+                `cypress/e2e/${this.widget.name}.spec.cy.${this.widget.fileExtension}`
             );
         }
     }
 
     _copyFile(source, destination) {
-        this.fs.copy(this.templatePath(source), this.destinationPath(destination), { globOptions: { noext: true } });
+        this.fs.copy(this.templatePath(source), this.destinationPath(destination));
     }
 
     _copyTemplate(source, destination, replaceVariable = this.widget) {
-        this.fs.copyTpl(
-            this.templatePath(source),
-            this.destinationPath(destination),
-            replaceVariable,
-            {},
-            { globOptions: { noext: true } }
-        );
+        this.fs.copyTpl(this.templatePath(source), this.destinationPath(destination), replaceVariable, {}, {});
     }
 }
 
-module.exports = MxGenerator;
+export default MxGenerator;

@@ -1,4 +1,4 @@
-const { valid, satisfies } = require("semver");
+import { valid, satisfies } from "semver";
 
 function promptWidgetProperties(mxProjectDir, widgetName) {
     return [
@@ -170,7 +170,4 @@ function promptTestsInfo(props) {
     return [];
 }
 
-module.exports = {
-    promptWidgetProperties,
-    promptTestsInfo
-};
+export { promptWidgetProperties, promptTestsInfo };
