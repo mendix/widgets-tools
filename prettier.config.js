@@ -1,6 +1,9 @@
 import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
 
-const basePath = new URL("./packages/pluggable-widgets-tools/configs/prettier.base.json", import.meta.url).pathname;
+const basePath = fileURLToPath(
+    new URL("./packages/pluggable-widgets-tools/configs/prettier.base.json", import.meta.url)
+);
 const base = JSON.parse(readFileSync(basePath));
 
 export default {
