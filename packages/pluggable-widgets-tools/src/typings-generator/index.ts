@@ -1,11 +1,9 @@
-import { promises } from "fs";
+import { mkdir, readFile, stat, writeFile } from "fs/promises";
 import { join } from "path";
 import { parseStringPromise } from "xml2js";
 import { PackageXml } from "./PackageXml";
 import { WidgetXml } from "./WidgetXml";
 import { generateForWidget } from "./generate";
-
-const { mkdir, readFile, stat, writeFile } = promises;
 
 export async function transformPackage(content: string, basePath: string) {
     const contentXml = (await parseStringPromise(content)) as PackageXml;

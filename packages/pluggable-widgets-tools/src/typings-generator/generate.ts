@@ -1,8 +1,10 @@
+import { readFileSync } from "fs";
 import { generateClientTypes } from "./generateClientTypes";
 import { generateImports, ImportableModule } from "./generateImports";
 import { generatePreviewTypes } from "./generatePreviewTypes";
 import { extractProperties, extractSystemProperties } from "./helpers";
 import { WidgetXml } from "./WidgetXml";
+import { join } from "path";
 
 const importableModules = [
     new ImportableModule("mendix", [
@@ -45,6 +47,10 @@ export function generateForWidget(widgetXml: WidgetXml, widgetName: string) {
     if (widgetXml.widget.$.pluginWidget !== "true") {
         throw new Error("[XML] Attribute pluginWidget=true not found. Please review your XML");
     }
+    const widgetId = widgetIdFromPackageJSON();
+    if (widgetXml.widget.$.id !== widgetId) {
+        throw new Error(`[XML] The id of the widget expected to be "${widgetId}", but found ${widgetXml.widget.$.id}`)
+    }
 
     const isNative = widgetXml.widget.$.supportedPlatform === "Native";
 
@@ -71,3 +77,16 @@ export function generateForWidget(widgetXml: WidgetXml, widgetName: string) {
 ${imports.length ? imports.join("\n") + "\n\n" : ""}${generatedTypesCode}
 `;
 }
+
+function widgetIdFromPackageJSON() {
+    const packageFile = join(process.cwd(), "package.json");
+    const packageText = readFileSync(packageFile, { encoding: "utf-8" });
+    const packageJson = JSON.parse(packageText);
+
+    const { packagePath, name: packageName, widgetName } = packageJson;
+
+    const widgetId = [packagePath, packageName, widgetName].join('.');
+
+    return widgetId
+}
+
