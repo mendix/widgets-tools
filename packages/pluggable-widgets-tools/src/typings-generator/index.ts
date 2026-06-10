@@ -1,11 +1,17 @@
-import { promises } from "fs";
+import { readFileSync, promises } from "fs";
 import { join } from "path";
 import { parseStringPromise } from "xml2js";
 import { PackageXml } from "./PackageXml";
 import { WidgetXml } from "./WidgetXml";
 import { generateForWidget } from "./generate";
+import { format } from "prettier";
 
 const { mkdir, readFile, stat, writeFile } = promises;
+
+const prettierConfig = {
+    parser: "babel-ts",
+    ...JSON.parse(readFileSync(join(__dirname, "../../configs/prettier.base.json"), "utf-8"))
+};
 
 export async function transformPackage(content: string, basePath: string) {
     const contentXml = (await parseStringPromise(content)) as PackageXml;
@@ -29,7 +35,7 @@ export async function transformPackage(content: string, basePath: string) {
         const sourcePath = widgetFileXml.$.path;
         const source = await readFile(join(basePath, sourcePath), "utf-8");
 
-        let generatedContent;
+        let generatedContent: string;
         try {
             const sourceXml = (await parseStringPromise(source)) as WidgetXml;
             generatedContent = generateForWidget(sourceXml, toWidgetName(sourcePath));
@@ -39,8 +45,9 @@ export async function transformPackage(content: string, basePath: string) {
             );
         }
 
+        const formattedContent = await format(generatedContent, prettierConfig);
         const resultPath = sourcePath.replace(/(\.xml)?$/, "Props.d.ts");
-        await writeFile(join(resultBasePath, resultPath), generatedContent);
+        await writeFile(join(resultBasePath, resultPath), formattedContent);
     }
 }
 
