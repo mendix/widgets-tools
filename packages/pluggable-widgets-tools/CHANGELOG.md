@@ -19,7 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
--   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`. The default test timeout is now 10 000 ms (previously 5 000 ms).
+-   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`.
 
 ### Breaking Changes
 

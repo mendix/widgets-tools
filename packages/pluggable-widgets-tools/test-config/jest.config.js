@@ -5,7 +5,6 @@ const projectDir = process.cwd();
 module.exports = {
     clearMocks: true,
     testRunner: "jest-circus/runner",
-    testTimeout: 10000,
     rootDir: join(projectDir, "src"),
     setupFilesAfterEnv: [join(__dirname, "test-index.js")],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
