@@ -262,8 +262,8 @@ async function main() {
                     ? "@mendix/pluggable-widgets-tools"
                     : null
                 : boilerplate === "full"
-                    ? "classnames"
-                    : null;
+                  ? "classnames"
+                  : null;
 
             if (
                 packageName &&
