@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`.
+
+### Breaking Changes
+
+-   The `jest-jasmine2` runner has been removed. Tests using Jasmine-specific globals (`jasmine.createSpy()`, `jasmine.objectContaining()`, etc.) will throw `ReferenceError: jasmine is not defined`. Replace with Jest equivalents: `jest.fn()`, `expect.objectContaining()`.
+-   Consumers who extended the base config with `globals['ts-jest']` options must migrate those settings to the `@swc/jest` transform config.
+
 ## [11.11.0] - 2026-06-04
 
 ### Added
