@@ -19,6 +19,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 -   The `jest-jasmine2` runner has been removed. Tests using Jasmine-specific globals (`jasmine.createSpy()`, `jasmine.objectContaining()`, etc.) will throw `ReferenceError: jasmine is not defined`. Replace with Jest equivalents: `jest.fn()`, `expect.objectContaining()`.
 -   Consumers who extended the base config with `globals['ts-jest']` options must migrate those settings to the `@swc/jest` transform config.
 
+### Fixed
+
+-   We updated the type generator to format types according to prettier. Inconsistencies would block the `release` command.
+
+
 ## [11.11.0] - 2026-06-04
 
 ### Added
