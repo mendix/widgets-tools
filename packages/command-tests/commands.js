@@ -120,8 +120,8 @@ async function main() {
         await testLint();
 
         // Temporarily disabled due to bizarre typing issues in the CI that cannot be reproduced in any local environment
-        // logger(`Testing unit tests....`);
-        // await testTest();
+        logger(`Testing unit tests....`);
+        await testTest();
 
         if (LIMIT_TESTS) {
             logger(`Quick tested!`);
@@ -130,10 +130,6 @@ async function main() {
 
         logger(`Testing 'build' command...`);
         await testBuild();
-
-        // Temporarily disabled due to bizarre typing issues in the CI that cannot be reproduced in any local environment
-        // logger(`Testing 'test:unit' command...`);
-        // await testTestUnit();
 
         logger(`Testing 'release' command...`);
         await testRelease();
@@ -211,7 +207,6 @@ async function main() {
             await execAsync("npm run lint", workDir, logger);
         }
 
-        // eslint-disable-next-line no-unused-vars
         async function testTest() {
             if (platform === "native") {
                 await execFailedAsync("npm test -- --forceExit", workDir);
@@ -232,14 +227,6 @@ async function main() {
                 )
             ) {
                 throw new Error("Expected mpk file to be generated, but it wasn't.");
-            }
-        }
-
-        // eslint-disable-next-line no-unused-vars
-        async function testTestUnit() {
-            await execAsync("npm run test:unit -- --forceExit", workDir, logger);
-            if (!existsSync(join(workDir, `/dist/coverage/clover.xml`))) {
-                throw new Error("Expected coverage file to be generated, but it wasn't.");
             }
         }
 
