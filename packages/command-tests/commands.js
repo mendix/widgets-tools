@@ -228,6 +228,7 @@ async function main() {
             ) {
                 throw new Error("Expected mpk file to be generated, but it wasn't.");
             }
+            checkWidgetBundleFiles();
         }
 
         async function testRelease() {
@@ -243,6 +244,18 @@ async function main() {
                 )
             ) {
                 throw new Error("Expected mpk file to be generated, but it wasn't.");
+            }
+            checkWidgetBundleFiles();
+        }
+
+        function checkWidgetBundleFiles() {
+            // XML files copied into the staging dir before zipping; missing here means a broken mpk.
+            const stagingDir = join(workDir, "dist", "tmp", "widgets");
+            const missing = ["package.xml", `${widgetPackageJson.widgetName}.xml`].filter(
+                f => !existsSync(join(stagingDir, f))
+            );
+            if (missing.length) {
+                throw new Error(`Expected widget bundle files in mpk, but missing: ${missing.join(", ")}.`);
             }
         }
 
