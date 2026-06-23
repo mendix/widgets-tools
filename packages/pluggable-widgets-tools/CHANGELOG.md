@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed an issue on Windows where the generated `.mpk` was missing the widget's `.xml` files and icon/tile PNGs.
+
 ### Changed
 
 -   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`.

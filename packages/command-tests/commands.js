@@ -218,31 +218,31 @@ async function main() {
 
         async function testBuild() {
             await execAsync("npm run build", workDir, logger);
-            if (
-                !existsSync(
-                    join(
-                        workDir,
-                        `/dist/${widgetPackageJson.version}/${widgetPackageJson.packagePath}.${widgetPackageJson.widgetName}.mpk`
-                    )
-                )
-            ) {
-                throw new Error("Expected mpk file to be generated, but it wasn't.");
-            }
+            checkWidgetBundleFiles();
         }
 
         async function testRelease() {
             rm("-rf", join(workDir, "dist"));
             await execAsync("npm run release", workDir, logger);
+            checkWidgetBundleFiles();
+        }
 
-            if (
-                !existsSync(
-                    join(
-                        workDir,
-                        `/dist/${widgetPackageJson.version}/${widgetPackageJson.packagePath}.${widgetPackageJson.widgetName}.mpk`
-                    )
-                )
-            ) {
-                throw new Error("Expected mpk file to be generated, but it wasn't.");
+        function checkWidgetBundleFiles() {
+            const stagingDir = join(workDir, "dist", "tmp", "widgets");
+            const mpkFile = join(
+                workDir,
+                "dist",
+                widgetPackageJson.version,
+                `${widgetPackageJson.packagePath}.${widgetPackageJson.widgetName}.mpk`
+            );
+            const requiredFiles = [
+                mpkFile,
+                join(stagingDir, "package.xml"),
+                join(stagingDir, `${widgetPackageJson.widgetName}.xml`)
+            ];
+            const missing = requiredFiles.filter(f => !existsSync(f));
+            if (missing.length) {
+                throw new Error(`Expected widget bundle files in mpk, but missing: ${missing.join(", ")}.`);
             }
         }
 

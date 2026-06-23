@@ -320,9 +320,9 @@ export default async args => {
             clear({ targets: [outDir, mpkDir] }),
             command([
                 () => {
-                    cp(join(sourcePath, "src/**/*.xml"), outDir);
+                    cp("src/**/*.xml", outDir);
                     if (existsSync(`src/${widgetName}.icon.png`) || existsSync(`src/${widgetName}.tile.png`)) {
-                        cp(join(sourcePath, `src/${widgetName}.@(tile|icon)?(.dark).png`), outDir);
+                        cp(`src/${widgetName}.@(tile|icon)?(.dark).png`, outDir);
                     }
                 }
             ]),
