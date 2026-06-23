@@ -20,30 +20,21 @@ import postcss from "rollup-plugin-postcss";
 import terser from "@rollup/plugin-terser";
 import shelljs from "shelljs";
 import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
-import {
-    editorConfigEntry,
-    isTypescript,
-    previewEntry,
-    projectPath,
-    sourcePath,
-    widgetEntry,
-    widgetName,
-    widgetPackage,
-    widgetVersion,
-    onwarn
-} from "./shared.mjs";
+import { editorConfigEntry, isTypescript, previewEntry, projectPath, widgetEntry, onwarn } from "./shared.mjs";
 import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
 import url from "./rollup-plugin-assets.mjs";
+import { widgetName, widgetOrganization, widgetVersion } from "../dist/widget/package.js";
+import { widgetRoot } from "../dist/widget/paths.js";
 
 const { loadConfigFile } = rollupLoadConfigFile;
 const { cp } = shelljs;
 
-const outDir = join(sourcePath, "/dist/tmp/widgets/");
-const outWidgetDir = join(widgetPackage.replace(/\./g, "/"), widgetName.toLowerCase());
+const outDir = join(widgetRoot, "/dist/tmp/widgets/");
+const outWidgetDir = join(widgetOrganization.replace(/\./g, "/"), widgetName.toLowerCase());
 const outWidgetFile = join(outWidgetDir, `${widgetName}`);
 const absoluteOutPackageDir = join(outDir, outWidgetDir);
-const mpkDir = join(sourcePath, "dist", widgetVersion);
-const mpkFile = join(mpkDir, process.env.MPKOUTPUT ? process.env.MPKOUTPUT : `${widgetPackage}.${widgetName}.mpk`);
+const mpkDir = join(widgetRoot, "dist", widgetVersion);
+const mpkFile = join(mpkDir, process.env.MPKOUTPUT ? process.env.MPKOUTPUT : `${widgetOrganization}.${widgetName}.mpk`);
 const assetsDirName = "assets";
 const absoluteOutAssetsDir = join(absoluteOutPackageDir, assetsDirName);
 const outAssetsDir = join(outWidgetDir, assetsDirName);
@@ -208,8 +199,8 @@ export default async args => {
         });
     }
 
-    const customConfigPathJS = join(sourcePath, "rollup.config.js");
-    const customConfigPathESM = join(sourcePath, "rollup.config.mjs");
+    const customConfigPathJS = join(widgetRoot, "rollup.config.js");
+    const customConfigPathESM = join(widgetRoot, "rollup.config.mjs");
     const existingConfigPath = existsSync(customConfigPathJS)
         ? customConfigPathJS
         : existsSync(customConfigPathESM)
@@ -300,7 +291,7 @@ export default async args => {
             // configs affected by a change => we cannot know in advance which one will be "the last".
             // So we run the same logic for all configs, letting the last one win.
             command([
-                async () => config.licenses && copyLicenseFile(sourcePath, outDir),
+                async () => config.licenses && copyLicenseFile(widgetRoot, outDir),
                 async () =>
                     createMpkFile({
                         mpkDir,
@@ -316,7 +307,7 @@ export default async args => {
 
     function getClientComponentPlugins() {
         return [
-            isTypescript ? widgetTyping({ sourceDir: join(sourcePath, "src") }) : null,
+            isTypescript ? widgetTyping({ sourceDir: join(widgetRoot, "src") }) : null,
             clear({ targets: [outDir, mpkDir] }),
             command([
                 () => {

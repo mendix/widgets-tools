@@ -1,12 +1,14 @@
 const { join } = require("path");
-const { readJson, writeJson } = require("fs-extra");
+const { writeJson } = require("fs-extra");
 const { execSync } = require("child_process");
 const { red, green, yellow, whiteBright, bold } = require("ansi-colors");
 const { copyFileSync, existsSync, mkdirSync, promises } = require("fs");
 const { parseStringPromise } = require("xml2js");
 const { rm } = require("fs/promises");
-const { auditPluggableWidgetsTools } = require("../dist/commands/audit");
-const { confirm } = require("../dist/cli/confirm");
+const { auditPluggableWidgetsTools } = require("../dist/commands/audit.js");
+const { confirm } = require("../dist/cli/confirm.js");
+const { toolsRoot, widgetRoot } = require("../dist/widget/paths.js");
+const widgetPackage = require("../dist/widget/package.js");
 let requirePatch = false;
 
 const CheckType = {
@@ -93,11 +95,11 @@ function replaceOldDependencies(listOfOutdatedDependencies, packageJson, key) {
                 packageJson[key][dep.name] = dep.newVersion;
 
                 if (dep.patch) {
-                    const dir = join(process.cwd(), "patches");
+                    const dir = join(widgetRoot, "patches");
                     if (!existsSync(dir)) {
                         mkdirSync(dir);
                     }
-                    copyFileSync(join(__dirname, "../patches", dep.patch), join(process.cwd(), "patches", dep.patch));
+                    copyFileSync(join(toolsRoot, "./patches", dep.patch), join(widgetRoot, "patches", dep.patch));
                     requirePatch = true;
                 }
                 console.log(green(`${dep.name}: ${red(dep.oldVersion)} -> ${dep.newVersion}`));
@@ -119,8 +121,7 @@ async function addExtraDependencies(packageJson, key) {
 }
 
 async function getExtraDependencies(packageJson, key) {
-    const sourceDir = process.cwd();
-    const rawPackageXML = await promises.readFile(join(sourceDir, "src/package.xml"), "utf-8");
+    const rawPackageXML = await promises.readFile(join(widgetRoot, "src/package.xml"), "utf-8");
     if (!rawPackageXML) {
         throw new Error("package.xml file was not found, please check your src folder");
     }
@@ -142,7 +143,7 @@ async function getExtraDependencies(packageJson, key) {
     const parsedWidgetDefinitionXMLs = [];
     for (const widgetDefinitionXMLPath of widgetDefinitionXMLPaths) {
         const rawWidgetDefinitionXML = await promises.readFile(
-            join(sourceDir, "src/", widgetDefinitionXMLPath.$.path),
+            join(widgetRoot, "src/", widgetDefinitionXMLPath.$.path),
             "utf-8"
         );
         if (!rawWidgetDefinitionXML) {
@@ -181,13 +182,13 @@ async function getExtraDependencies(packageJson, key) {
 
 async function checkMigration() {
     const paths = {
-        packageJson: join(process.cwd(), "package.json"),
-        packageLock: join(process.cwd(), "package-lock.json"),
-        node_modules: join(process.cwd(), "node_modules")
+        packageJson: widgetPackage.path,
+        packageLock: join(widgetRoot, "package-lock.json"),
+        node_modules: join(widgetRoot, "node_modules")
     };
 
     console.log("Checking if dependencies should be migrated...");
-    const packageJson = await readJson(paths.packageJson);
+    const packageJson = widgetPackage.json;
     const args = process.argv;
     if (!args.includes("--skip-migration") && process.env.CI !== "true") {
         const outdatedDependencies = getOutdatedDependencies(packageJson.dependencies || {});
@@ -253,10 +254,10 @@ async function checkMigration() {
                     await rm(paths.packageLock);
 
                     console.log("Installing dependencies...");
-                    execSync(`npm install`, { cwd: process.cwd(), stdio: "inherit" });
+                    execSync(`npm install`, { cwd: widgetRoot, stdio: "inherit" });
                     execSync(
                         `npx eslint --no-config-lookup --rule '@typescript-eslint/no-unused-vars: ["error", { enableAutofixRemoval: { imports: true } }]' --ext ts,tsx,js,jsx --parser @typescript-eslint/parser --plugin '@typescript-eslint' --fix ./src`,
-                        { cwd: process.cwd(), stdio: "inherit" }
+                        { cwd: widgetRoot, stdio: "inherit" }
                     );
                     await auditPluggableWidgetsTools();
 

@@ -1,9 +1,11 @@
-import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { join } from "path";
-import { resolveConfig, format, Options } from "prettier";
-import { cwd } from "process";
+import { format, Options } from "prettier";
+import { toolsRoot, widgetRoot } from "../widget/paths";
 
-const prettierConfigBasePath = join(__dirname, "../../configs/prettier.base.json");
+const baseConfigPath = join(toolsRoot, "./configs/prettier.base.json");
+const widgetConfigPath = join(widgetRoot, "./prettier.config.js");
+export const prettierConfigPath = existsSync(widgetConfigPath) ? widgetConfigPath : baseConfigPath;
 
 let prettierTypescriptConfig: Options | undefined;
 
@@ -13,11 +15,7 @@ let prettierTypescriptConfig: Options | undefined;
  */
 export async function formatTypeScript(source: string): Promise<string> {
     if (prettierTypescriptConfig === undefined) {
-        const fakeFilename = join(cwd(), "./src/widget.ts");
-        // If the widget does not have a prettier config, fall back to packaged base config
-        const prettierConfig =
-            (await resolveConfig(fakeFilename)) ?? JSON.parse(await readFile(prettierConfigBasePath, "utf-8"));
-
+        const prettierConfig = await import(prettierConfigPath);
         prettierTypescriptConfig = {
             ...prettierConfig,
             parser: "babel-ts"
