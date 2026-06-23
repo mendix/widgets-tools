@@ -5,7 +5,7 @@ import { exec } from "node:child_process";
 import { maxSatisfying, minSatisfying } from "semver";
 import { confirm } from "../cli/confirm";
 import { readFile, writeFile } from "node:fs";
-import { join } from "node:path";
+import { path as packageJsonPath } from "../widget/package";
 
 const pluggableWidgetsTools = "@mendix/pluggable-widgets-tools" as NpmAudit.PackageName;
 
@@ -58,7 +58,6 @@ export async function auditPluggableWidgetsTools(fix: boolean = false) {
         (fix || (await confirm("Add overrides to package.json for vulnerable packages?")))
     ) {
         console.log("Adding overrides");
-        const packageJsonPath = join(process.cwd(), "package.json");
         const widgetPackage = await promisify(readFile)(packageJsonPath, "utf8").then(raw => JSON.parse(raw));
 
         const overrides = updateable

@@ -4,6 +4,7 @@ import { parseStringPromise } from "xml2js";
 import { PackageXml } from "./PackageXml";
 import { WidgetXml } from "./WidgetXml";
 import { generateForWidget } from "./generate";
+import { formatTypeScript } from "../utils/formatting";
 
 const { mkdir, readFile, stat, writeFile } = promises;
 
@@ -29,7 +30,7 @@ export async function transformPackage(content: string, basePath: string) {
         const sourcePath = widgetFileXml.$.path;
         const source = await readFile(join(basePath, sourcePath), "utf-8");
 
-        let generatedContent;
+        let generatedContent: string;
         try {
             const sourceXml = (await parseStringPromise(source)) as WidgetXml;
             generatedContent = generateForWidget(sourceXml, toWidgetName(sourcePath));
@@ -39,8 +40,9 @@ export async function transformPackage(content: string, basePath: string) {
             );
         }
 
+        const formattedContent = await formatTypeScript(generatedContent);
         const resultPath = sourcePath.replace(/(\.xml)?$/, "Props.d.ts");
-        await writeFile(join(resultBasePath, resultPath), generatedContent);
+        await writeFile(join(resultBasePath, resultPath), formattedContent);
     }
 }
 

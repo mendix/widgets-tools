@@ -1,10 +1,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 import { yellow } from "ansi-colors";
+import { widgetRoot } from "../widget/paths";
 
 export function checkForEnzymeUsage(srcDir: string = "src"): void {
-    const projectRoot = process.cwd();
-    const srcPath = join(projectRoot, srcDir);
+    const srcPath = join(widgetRoot, srcDir);
 
     if (!existsSync(srcPath)) {
         return;
@@ -36,7 +36,7 @@ export function checkForEnzymeUsage(srcDir: string = "src"): void {
                         content
                     )
                 ) {
-                    enzymeFiles.push(fullPath.replace(projectRoot, "."));
+                    enzymeFiles.push(fullPath.replace(widgetRoot, "."));
                 }
             }
         } catch (error) {

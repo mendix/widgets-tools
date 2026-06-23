@@ -2,6 +2,7 @@ import assert from "node:assert";
 import { exec } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { widgetRoot } from "../widget/paths";
 
 export type Report = {
     auditReportVersion: 2;
@@ -70,7 +71,7 @@ export function collectVulnerabilities(report: Report, dependency: Dependency): 
 }
 
 export async function run(): Promise<Report> {
-    const packageLock = join(process.cwd(), "package-lock.json");
+    const packageLock = join(widgetRoot, "package-lock.json");
     assert(
         existsSync(packageLock),
         "Expected to find an npm lockfile. To run npm audit, dependencies must be installed with npm."

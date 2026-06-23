@@ -1,10 +1,10 @@
-import { existsSync, readdirSync, promises as fs, readFileSync } from "node:fs";
+import { existsSync, readdirSync, promises as fs } from "node:fs";
 import { join, relative } from "node:path";
 import { config } from "dotenv";
 import colors from "ansi-colors";
-import { throwOnIllegalChars, throwOnNoMatch } from "../dist/utils/validation.js";
+import { dir as sourcePath, widgetName, json } from "../dist/widget/package.js";
 
-config({ path: join(process.cwd(), ".env"), quiet: true });
+config({ path: join(sourcePath, ".env"), quiet: true });
 
 export async function listDir(path) {
     const entries = await fs.readdir(path, { withFileTypes: true });
@@ -13,20 +13,6 @@ export async function listDir(path) {
         .map(e => join(path, e.name))
         .concat(...(await Promise.all(entries.filter(e => e.isDirectory()).map(e => listDir(join(path, e.name))))));
 }
-
-export const sourcePath = process.cwd();
-
-const widgetPackageJson = JSON.parse(readFileSync(join(sourcePath, "package.json")));
-export const widgetName = widgetPackageJson.widgetName;
-export const widgetPackage = widgetPackageJson.packagePath;
-export const widgetVersion = widgetPackageJson.version;
-if (!widgetName || !widgetPackageJson) {
-    throw new Error("Widget does not define widgetName in its package.json");
-}
-
-throwOnIllegalChars(widgetName, "a-zA-Z", "The `widgetName` property in package.json");
-throwOnIllegalChars(widgetPackage, "a-zA-Z0-9_.-", "The `packagePath` property in package.json");
-throwOnNoMatch(widgetPackage, /^([a-zA-Z0-9_-]+.)*[a-zA-Z0-9_-]+$/, "The `packagePath` property in package.json");
 
 const widgetSrcFiles = readdirSync(join(sourcePath, "src")).map(file => join(sourcePath, "src", file));
 export const widgetEntry = widgetSrcFiles.filter(file =>
@@ -47,7 +33,7 @@ export const isTypescript = [widgetEntry, editorConfigEntry, previewEntry].some(
 
 export const projectPath = [
     process.env.MX_PROJECT_PATH,
-    widgetPackageJson.config.projectPath,
+    json.config.projectPath,
     join(sourcePath, "tests/testProject")
 ].filter(path => path && existsSync(path))[0];
 

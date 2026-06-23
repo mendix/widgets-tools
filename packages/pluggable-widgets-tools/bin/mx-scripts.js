@@ -1,12 +1,14 @@
 #! /usr/bin/env node
 const { execSync, spawnSync } = require("child_process");
 const { existsSync } = require("fs");
-const { delimiter, dirname, join, parse } = require("path");
+const { delimiter, join, parse } = require("path");
 const { checkMigration } = require("../utils/migration");
 const { checkForEnzymeUsage } = require("../dist/utils/enzyme-detector");
 const { red, blue, bold, whiteBright } = require("ansi-colors");
 const semver = require("semver");
-const { auditPluggableWidgetsTools } = require("../dist/commands/audit");
+const { auditPluggableWidgetsTools } = require("../dist/commands/audit.js");
+const { prettierConfigPath } = require("../dist/utils/formatting.js");
+const { toolsRoot, widgetRoot } = require("../dist/widget/paths.js");
 
 checkNodeVersion();
 (async () => {
@@ -16,10 +18,7 @@ checkNodeVersion();
         console.log(red("An error occurred while checking migration dependencies: ", e));
     }
 
-    const [, currentScriptPath, cmd, ...args] = process.argv;
-    const toolsRoot = currentScriptPath.endsWith("pluggable-widgets-tools")
-        ? join(dirname(currentScriptPath), "../@mendix/pluggable-widgets-tools")
-        : join(dirname(currentScriptPath), "..");
+    const [, , cmd, ...args] = process.argv;
 
     if (args.indexOf("--subprojectPath") > -1) {
         args.splice(args.indexOf("--subprojectPath"), 2);
@@ -46,7 +45,7 @@ checkNodeVersion();
     const commandWithArgs = realCommand + " " + args.join(" ");
     for (const subCommand of commandWithArgs.split(/&&/g)) {
         const result = spawnSync(subCommand.trim(), [], {
-            cwd: process.cwd(),
+            cwd: widgetRoot,
             env: {
                 ...process.env,
                 PATH: [process.env.PATH].concat(nodeModulesBins).join(delimiter),
@@ -64,10 +63,8 @@ checkNodeVersion();
     }
 })();
 
-function getRealCommand(cmd, toolsRoot) {
+function getRealCommand(cmd) {
     const eslintCommand = "eslint --config .eslintrc.js --ext .jsx,.js,.ts,.tsx src";
-    const prettierConfigRootPath = join(__dirname, "../../../prettier.config.js");
-    const prettierConfigPath = existsSync(prettierConfigRootPath) ? prettierConfigRootPath : "prettier.config.js";
     const prettierCommand = `prettier --config "${prettierConfigPath}" "{src,typings,tests}/**/*.{js,jsx,ts,tsx,scss}"`;
     const rollupCommandWeb = `rollup --config "${join(toolsRoot, "configs/rollup.config.mjs")}"`;
     const rollupCommandNative = `rollup --config "${join(toolsRoot, "configs/rollup.config.native.mjs")}"`;
@@ -147,7 +144,7 @@ function findNodeModulesBin() {
 }
 
 function checkNodeVersion() {
-    const packageJson = require(join(__dirname, "../package.json"));
+    const packageJson = require(join(toolsRoot, "./package.json"));
     const nodeRange = new semver.Range(packageJson.engines.node);
 
     console.log("Checking node and npm version...");

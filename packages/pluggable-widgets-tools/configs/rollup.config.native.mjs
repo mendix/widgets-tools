@@ -16,26 +16,18 @@ import terser from "@rollup/plugin-terser";
 import shelljs from "shelljs";
 import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
 import { collectDependencies } from "./rollup-plugin-collect-dependencies.mjs";
-import {
-    editorConfigEntry,
-    isTypescript,
-    projectPath,
-    sourcePath,
-    widgetEntry,
-    widgetName,
-    widgetPackage,
-    widgetVersion,
-    onwarn
-} from "./shared.mjs";
+import { editorConfigEntry, isTypescript, projectPath, widgetEntry, onwarn } from "./shared.mjs";
 import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
+import { widgetName, widgetOrganization, widgetVersion } from "../dist/widget/package.js";
+import { widgetRoot } from "../dist/widget/paths.js";
 
 const { cp } = shelljs;
 const { blue } = colors;
 
-const outDir = join(sourcePath, "/dist/tmp/widgets/");
-const outWidgetFile = join(widgetPackage.replace(/\./g, "/"), widgetName.toLowerCase(), `${widgetName}`);
-const mpkDir = join(sourcePath, "dist", widgetVersion);
-const mpkFile = join(mpkDir, process.env.MPKOUTPUT ? process.env.MPKOUTPUT : `${widgetPackage}.${widgetName}.mpk`);
+const outDir = join(widgetRoot, "/dist/tmp/widgets/");
+const outWidgetFile = join(widgetOrganization.replace(/\./g, "/"), widgetName.toLowerCase(), `${widgetName}`);
+const mpkDir = join(widgetRoot, "dist", widgetVersion);
+const mpkFile = join(mpkDir, process.env.MPKOUTPUT ? process.env.MPKOUTPUT : `${widgetOrganization}.${widgetName}.mpk`);
 
 const extensions = [".js", ".jsx", ".tsx", ".ts"];
 
@@ -161,8 +153,8 @@ export default async args => {
         });
     }
 
-    const customConfigPathJS = join(sourcePath, "rollup.config.js");
-    const customConfigPathESM = join(sourcePath, "rollup.config.mjs");
+    const customConfigPathJS = join(widgetRoot, "rollup.config.js");
+    const customConfigPathESM = join(widgetRoot, "rollup.config.mjs");
     const existingConfigPath = existsSync(customConfigPathJS)
         ? customConfigPathJS
         : existsSync(customConfigPathESM)
@@ -237,7 +229,7 @@ export default async args => {
             // configs affected by a change => we cannot know in advance which one will be "the last".
             // So we run the same logic for all configs, letting the last one win.
             command([
-                async () => config.licenses && copyLicenseFile(sourcePath, outDir),
+                async () => config.licenses && copyLicenseFile(widgetRoot, outDir),
                 async () =>
                     createMpkFile({
                         mpkDir,
@@ -253,7 +245,7 @@ export default async args => {
 
     function getClientComponentPlugins() {
         return [
-            isTypescript ? widgetTyping({ sourceDir: join(sourcePath, "src") }) : null,
+            isTypescript ? widgetTyping({ sourceDir: join(widgetRoot, "src") }) : null,
             clear({ targets: [outDir, mpkDir] }),
             command([
                 () => {
