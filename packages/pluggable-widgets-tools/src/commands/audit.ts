@@ -49,7 +49,8 @@ export async function auditPluggableWidgetsTools(fix: boolean = false) {
         const update = p.safeRange
             ? green(`${symbols.pointerSmall} ${p.safeRange}`)
             : red(`${symbols.cross} No update available`);
-        console.log(`    ${whiteBright(bold(p.name))}   ${p.vulnerableRange}  ${update}`);
+        const status = p.error ? red(p.error.message) : update;
+        console.log(`    ${whiteBright(bold(p.name))}   ${p.vulnerableRange}  ${status}`);
     });
 
     // Add overrides for updateable dependencies
@@ -86,6 +87,7 @@ interface UpdateablePackage {
     name: NpmAudit.PackageName;
     vulnerableRange: string;
     safeRange?: string;
+    error?: Error;
 }
 
 /**
@@ -96,18 +98,23 @@ interface UpdateablePackage {
  * Using the ^ version range avoids this, as the version is specific enough for npm.
  */
 async function findSafeVersion({ name, range }: NpmAudit.Dependency): Promise<UpdateablePackage> {
+    const updateablePackage = { name, vulnerableRange: range };
     const escapedName = encodeURI(name); // npm package names must be usable as part of a URL
-    const versions = await promisify(exec)(`npm show ${escapedName} versions --json`).then(
-        ({ stdout }) => JSON.parse(stdout) as string[]
-    );
+    const versions = await promisify(exec)(`npm show ${escapedName} versions --json`)
+        .then(({ stdout }) => JSON.parse(stdout) as string[])
+        .catch(_ => new Error("Unable to fetch available versions"));
+
+    if (versions instanceof Error) {
+        return { ...updateablePackage, error: versions };
+    }
 
     const maxVulnerable = maxSatisfying(versions, range);
     const gtMaxVulnerable = ">" + maxVulnerable;
     const minNonVulnerable = minSatisfying(versions, gtMaxVulnerable);
 
     if (!minNonVulnerable) {
-        return { name, vulnerableRange: range };
+        return updateablePackage;
     }
 
-    return { name, vulnerableRange: range, safeRange: "^" + minNonVulnerable };
+    return { ...updateablePackage, safeRange: "^" + minNonVulnerable };
 }
