@@ -20,7 +20,7 @@ export async function auditPluggableWidgetsTools(fix: boolean = false) {
     }
 
     // Collect updateable, vulnerable packages installed by pwt
-    const vulnerabilities = NpmAudit.collectVulnerabilities(report, report.vulnerabilities[pluggableWidgetsTools]);
+    const vulnerabilities = NpmAudit.collectVulnerabilities(report, pluggableWidgetsTools);
     const vulnerableDependencies = vulnerabilities
         .map(v => v.name)
         .reduce((unique, p) => (unique.includes(p) ? unique : [...unique, p]), [] as NpmAudit.PackageName[]);
