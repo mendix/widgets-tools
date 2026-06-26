@@ -1,8 +1,9 @@
 import assert from "node:assert";
-import { exec } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { widgetRoot } from "../widget/paths";
+import { ensure, partition } from "../common";
+import { exec } from "node:child_process";
 
 export type Report = {
     auditReportVersion: 2;
@@ -59,15 +60,28 @@ export type Vulnerability = {
     range: string;
 };
 
-export function collectVulnerabilities(report: Report, dependency: Dependency): Vulnerability[] {
-    const vulnerabilities = dependency.via.filter(v => typeof v !== "string");
-    if (vulnerabilities.length > 0) {
-        return vulnerabilities;
+export function collectVulnerabilities(report: Report, rootDependency: PackageName): Vulnerability[] {
+    const dependencies: PackageName[] = [rootDependency];
+    const dependenciesSeen: PackageName[] = [];
+    const allVulnerabilities: Vulnerability[] = [];
+
+    while (dependencies.length > 0) {
+        const dependencyName = ensure(dependencies.shift());
+        dependenciesSeen.push(dependencyName);
+
+        const [transients, vulnerabilities] = partition(
+            report.vulnerabilities[dependencyName].via,
+            v => typeof v === "string"
+        );
+
+        if (vulnerabilities.length > 0) {
+            allVulnerabilities.push(...vulnerabilities);
+            continue;
+        }
+        dependencies.push(...transients.filter(d => !dependenciesSeen.includes(d)));
     }
 
-    return dependency.via
-        .filter(v => typeof v === "string")
-        .flatMap(v => collectVulnerabilities(report, report.vulnerabilities[v]));
+    return allVulnerabilities;
 }
 
 export async function run(): Promise<Report> {
