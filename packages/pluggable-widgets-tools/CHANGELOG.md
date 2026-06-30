@@ -6,13 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.12.0] - 2026-06-30
+
 ### Changed
 
 -   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`.
 
-  -   **Breaking:** The `jest-jasmine2` runner has been removed. Tests using Jasmine-specific globals (`jasmine.createSpy()`, `jasmine.objectContaining()`, etc.) will throw `ReferenceError: jasmine is not defined`. Replace with Jest equivalents: `jest.fn()`, `expect.objectContaining()`.
+-   **Breaking:** The `jest-jasmine2` runner has been removed. Tests using Jasmine-specific globals (`jasmine.createSpy()`, `jasmine.objectContaining()`, etc.) will throw `ReferenceError: jasmine is not defined`. Replace with Jest equivalents: `jest.fn()`, `expect.objectContaining()`.
 
-  -   **Breaking:** Consumers who extended the base config with `globals['ts-jest']` options must migrate those settings to the `@swc/jest` transform config.
+-   **Breaking:** Consumers who extended the base config with `globals['ts-jest']` options must migrate those settings to the `@swc/jest` transform config.
 
 ### Fixed
 
@@ -21,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 -   We fixed an error thrown by the `audit` command on windows. It would fail when looking up available versions for vulnerable packages.
 
 -   We updated the type generator to format types according to prettier. Inconsistencies would block the `release` command.
-
 
 ## [11.11.0] - 2026-06-04
 
