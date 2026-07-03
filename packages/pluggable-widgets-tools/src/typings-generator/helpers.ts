@@ -37,3 +37,12 @@ export function groupBy<T, Groups extends string>(groupSelector: (item: T) => Gr
         return { ...reduction, [group]: [...(reduction[group] ?? []), item] };
     };
 }
+
+export function templateInterface(name: string, ...properties: string[]): string {
+    return `export interface ${name} {
+    ${properties
+        .filter(x => x !== "")
+        .map(p => p.replace(/\n/g, "\n    "))
+        .join("\n    ")}
+}`;
+}

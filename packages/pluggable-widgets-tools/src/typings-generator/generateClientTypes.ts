@@ -1,5 +1,5 @@
 import { ActionVariableTypes, Property, ReturnType, SystemProperty } from "./WidgetXml";
-import { capitalizeFirstLetter, commasAnd, extractProperties } from "./helpers";
+import { capitalizeFirstLetter, commasAnd, extractProperties, templateInterface } from "./helpers";
 
 export function generateClientTypes(
     widgetName: string,
@@ -13,31 +13,29 @@ export function generateClientTypes(
 
     const isLabeled = systemProperties.some(p => p.$.key === "Label");
     const results = Array.of<string>();
+    const propertyTypes = generateClientTypeProperties(properties, isNative, results, resolveProp);
     results.push(
         isNative
-            ? `export interface ${widgetName}Props<Style> {
-    name: string;
-    style: Style[];
-${generateClientTypeBody(properties, true, results, resolveProp)}
-}`
-            : `export interface ${widgetName}ContainerProps {
-    name: string;${
-        !isLabeled
-            ? `
-    class: string;
-    style?: CSSProperties;`
-            : ""
-    }
-    tabIndex?: number;${
-        isLabeled
-            ? `
-    id: string;`
-            : ""
-    }
-${generateClientTypeBody(properties, false, results, resolveProp)}
-}`
+            ? generateNativeProps(widgetName, propertyTypes)
+            : generateWebProps(widgetName, isLabeled, propertyTypes)
     );
     return results;
+}
+
+function generateWebProps(widgetName: string, isLabeled: boolean, propertyTypes: string[]) {
+    return templateInterface(
+        `${widgetName}ContainerProps`,
+        "name: string;",
+        !isLabeled ? `class: string;` : "",
+        !isLabeled ? `style?: CSSProperties;` : "",
+        `tabIndex?: number;`,
+        isLabeled ? `id: string;` : "",
+        ...propertyTypes
+    );
+}
+
+function generateNativeProps(widgetName: string, propertyTypes: string[]) {
+    return templateInterface(`${widgetName}Props<Style>`, "name: string;", "style: Style[];", ...propertyTypes);
 }
 
 function isEmbeddedOnChangeAction(propertyPath: string, properties: Property[]): boolean {
@@ -54,12 +52,12 @@ function isEmbeddedOnChangeAction(propertyPath: string, properties: Property[]):
     });
 }
 
-function generateClientTypeBody(
+function generateClientTypeProperties(
     properties: Property[],
     isNative: boolean,
     generatedTypes: string[],
     resolveProp: (key: string) => Property | undefined
-) {
+): string[] {
     return properties
         .filter(prop => {
             if (prop.$.type === "action" && isEmbeddedOnChangeAction(prop.$.key, properties)) {
@@ -70,16 +68,11 @@ function generateClientTypeBody(
             }
             return true;
         })
-        .map(
-            prop =>
-                `    ${prop.$.key}${isOptionalProp(prop, resolveProp) ? "?" : ""}: ${toClientPropType(
-                    prop,
-                    isNative,
-                    generatedTypes,
-                    resolveProp
-                )};`
-        )
-        .join("\n");
+        .map(prop => {
+            const optional = isOptionalProp(prop, resolveProp) ? "?" : "";
+            const type = toClientPropType(prop, isNative, generatedTypes, resolveProp);
+            return `${prop.$.key}${optional}: ${type};`;
+        });
 }
 
 function isOptionalProp(prop: Property, resolveProp: (key: string) => Property | undefined) {
@@ -216,9 +209,10 @@ function toClientPropType(
                 key.startsWith("../") ? resolveProp(key.substring(3)) : childProperties.find(p => p.$.key === key);
 
             generatedTypes.push(
-                `export interface ${childType} {
-${generateClientTypeBody(childProperties, isNative, generatedTypes, resolveChildProp)}
-}`
+                templateInterface(
+                    childType,
+                    ...generateClientTypeProperties(childProperties, isNative, generatedTypes, resolveChildProp)
+                )
             );
             return prop.$.isList === "true" ? `${childType}[]` : childType;
         case "widgets":
