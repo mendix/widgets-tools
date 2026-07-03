@@ -1,4 +1,5 @@
 import { ActionVariableTypes, Property, ReturnType, SystemProperty } from "./WidgetXml";
+import { systemTextsProperty } from "./generateSystemTexts";
 import { capitalizeFirstLetter, commasAnd, extractProperties, templateInterface } from "./helpers";
 
 export function generateClientTypes(
@@ -12,17 +13,18 @@ export function generateClientTypes(
     }
 
     const isLabeled = systemProperties.some(p => p.$.key === "Label");
+    const hasTranslations = systemProperties.some(p => p.$.key === "Text");
     const results = Array.of<string>();
     const propertyTypes = generateClientTypeProperties(properties, isNative, results, resolveProp);
     results.push(
         isNative
-            ? generateNativeProps(widgetName, propertyTypes)
-            : generateWebProps(widgetName, isLabeled, propertyTypes)
+            ? generateNativeProps(widgetName, hasTranslations, propertyTypes)
+            : generateWebProps(widgetName, isLabeled, hasTranslations, propertyTypes)
     );
     return results;
 }
 
-function generateWebProps(widgetName: string, isLabeled: boolean, propertyTypes: string[]) {
+function generateWebProps(widgetName: string, isLabeled: boolean, hasTranslations: boolean, propertyTypes: string[]) {
     return templateInterface(
         `${widgetName}ContainerProps`,
         "name: string;",
@@ -30,12 +32,19 @@ function generateWebProps(widgetName: string, isLabeled: boolean, propertyTypes:
         !isLabeled ? `style?: CSSProperties;` : "",
         `tabIndex?: number;`,
         isLabeled ? `id: string;` : "",
+        hasTranslations ? systemTextsProperty : "",
         ...propertyTypes
     );
 }
 
-function generateNativeProps(widgetName: string, propertyTypes: string[]) {
-    return templateInterface(`${widgetName}Props<Style>`, "name: string;", "style: Style[];", ...propertyTypes);
+function generateNativeProps(widgetName: string, hasTranslations: boolean, propertyTypes: string[]) {
+    return templateInterface(
+        `${widgetName}Props<Style>`,
+        "name: string;",
+        "style: Style[];",
+        hasTranslations ? systemTextsProperty : "",
+        ...propertyTypes
+    );
 }
 
 function isEmbeddedOnChangeAction(propertyPath: string, properties: Property[]): boolean {
