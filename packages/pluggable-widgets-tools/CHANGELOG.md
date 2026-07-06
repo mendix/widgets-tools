@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   We added built-in support for the `mendix` module in Jest tests, so widgets that import from it no longer require manual mocking.
+
 ## [11.12.0] - 2026-06-30
 
 ### Changed
