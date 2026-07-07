@@ -13,7 +13,7 @@
   "scripts": {
     "prepack": "shx rm -rf dist && tsc",
     "typecheck:test-config": "tsc -p test-config/tsconfig.json",
-    "test": "tsc -p test-config/tsconfig.json && jest"
+    "test": "pnpm typecheck:test-config && jest"
   },
   "files": [
     "bin",
