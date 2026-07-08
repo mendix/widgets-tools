@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
--   We added a built-in Jest mock for the `mendix` module, so widgets that import runtime values from it (e.g. `ValueStatus`, `FormatterType`) in unit tests no longer fail with "This package should not be used in the runtime".
+-   We fixed an issue with the Jest configuration affecting unit tests for widgets importing enums from the mendix package (e.g. ValueStatus, FormatterType). It would cause tests to fail with the error "This package should not be used in the runtime".
 
 ## [11.12.0] - 2026-06-30
 
