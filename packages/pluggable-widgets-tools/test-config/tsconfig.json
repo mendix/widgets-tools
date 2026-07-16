@@ -1,0 +1,10 @@
+{
+    "extends": "../configs/tsconfig.base",
+    "compilerOptions": {
+        "noEmit": true,
+        "allowJs": true,
+        "checkJs": true,
+        "moduleResolution": "bundler"
+    },
+    "include": ["__mocks__/mendix.js"]
+}
