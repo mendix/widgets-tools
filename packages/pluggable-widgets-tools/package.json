@@ -50,8 +50,8 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/react-native": "^13.3.3",
     "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "@types/semver": "^7.7.1",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
@@ -84,7 +84,7 @@
     "postcss-import": "^14.0.2",
     "postcss-url": "^10.1.4",
     "prettier": "^2.5.1",
-    "react-test-renderer": "^19.2.5",
+    "react-test-renderer": "^18.3.1",
     "recursive-copy": "^2.0.11",
     "resolve": "^1.22.12",
     "rollup": "^4.60.2",
@@ -110,9 +110,9 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^16.18.126",
     "@types/xml2js": "^0.4.5",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-native": "~0.78.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "~0.77.3"
   },
   "keywords": [
     "typings",

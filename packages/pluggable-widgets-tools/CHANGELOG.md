@@ -32,8 +32,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We updated outdated and vulnerable dependencies. This required major upgrades of several dependencies, including eslint@9, jest@30, and rollup@4.
 
--   We upgraded the Pluggable Widgets Tools to React 19 and React Native 0.78.2. After installation upgrade all dependencies by running `npm run build`.
-
 -   **Breaking:** We removed Enzyme testing library and associated dependencies from pluggable-widgets-tools. Tests using Enzyme should be updated to use React Testing Library. See the [migration guide](https://testing-library.com/docs/react-testing-library/migrate-from-enzyme) for more information. The `test:unit:web:enzyme-free` command has been removed; use `test:unit:web` instead.
 
 -   We fixed an issue where `require` was not transformed to `import` for the `es` output format which could result in an error when the widget was used in a project with React client enabled.
