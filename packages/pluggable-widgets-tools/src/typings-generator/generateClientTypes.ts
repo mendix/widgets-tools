@@ -144,7 +144,7 @@ function toClientPropType(
         case "file":
             return prop.$.allowUpload ? "EditableFileValue" : "DynamicValue<FileValue>";
         case "datasource":
-            return prop.$.isList === "true" ? "ListValue" : "DynamicValue<ObjectItem>";
+            return "ListValue";
         case "attribute": {
             if (!prop.attributeTypes?.length) {
                 throw new Error("[XML] Attribute property requires attributeTypes element");

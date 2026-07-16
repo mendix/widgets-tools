@@ -25,7 +25,6 @@ const importableModules = [
         "ListWidgetValue",
         "NativeIcon",
         "NativeImage",
-        "ObjectItem",
         "Option",
         "ReferenceSetValue",
         "ReferenceValue",

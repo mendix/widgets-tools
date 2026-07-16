@@ -50,11 +50,6 @@ import {
 } from "./outputs/list-action-with-variables";
 import { imageWebInput, imageNativeInput } from "./inputs/image";
 import { imageWebOutput, imageNativeOutput } from "./outputs/image";
-import { singleObjectDatasourceInput, singleObjectDatasourceInputNative } from "./inputs/single-object-datasource";
-import {
-    singleObjectDatasourceNativeOutput,
-    singleObjectDatasourceWebOutput
-} from "./outputs/single-object-datasource";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -255,16 +250,6 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using images", () => {
         const newContent = generateNativeTypesFor(imageNativeInput);
         expect(newContent).toBe(imageNativeOutput);
-    });
-
-    it("Generates a parsed typing from XML for web using single object datasource", () => {
-        const newContent = generateFullTypesFor(singleObjectDatasourceInput);
-        expect(newContent).toBe(singleObjectDatasourceWebOutput);
-    });
-
-    it("Generates a parsed typing from XML for native using single object datasource", () => {
-        const newContent = generateNativeTypesFor(singleObjectDatasourceInputNative);
-        expect(newContent).toBe(singleObjectDatasourceNativeOutput);
     });
 });
 
