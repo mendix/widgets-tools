@@ -2,12 +2,16 @@ name: Run unit tests
 
 on:
   push:
-    branches: [master]
+    branches:
+      - 'master'
+      - 'version/10.24'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
   pull_request:
-    branches: [master]
+    branches:
+      - 'master'
+      - 'version/10.24'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'

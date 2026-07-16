@@ -3,7 +3,8 @@ name: Script tests
 on:
   push:
     branches:
-      - master
+      - 'master'
+      - 'version/10.24'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/generator-widget/**'
@@ -11,7 +12,8 @@ on:
       - 'packages/command-tests/**'
   pull_request:
     branches:
-      - master
+      - 'master'
+      - 'version/10.24'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/generator-widget/**'
