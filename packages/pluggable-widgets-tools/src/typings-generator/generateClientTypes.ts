@@ -139,10 +139,9 @@ function toClientPropType(
         case "icon":
             return isNative ? "DynamicValue<NativeIcon>" : "DynamicValue<WebIcon>";
         case "image":
-            const imageType = isNative ? "NativeImage" : "WebImage";
-            return `${prop.$.allowUpload === "true" ? "EditableImageValue" : "DynamicValue"}<${imageType}>`;
+            return isNative ? "DynamicValue<NativeImage>" : "DynamicValue<WebImage>";
         case "file":
-            return prop.$.allowUpload ? "EditableFileValue" : "DynamicValue<FileValue>";
+            return "DynamicValue<FileValue>";
         case "datasource":
             return "ListValue";
         case "attribute": {

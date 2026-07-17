@@ -10,8 +10,6 @@ const importableModules = [
         "AssociationMetaData",
         "AttributeMetaData",
         "DynamicValue",
-        "EditableFileValue",
-        "EditableImageValue",
         "EditableListValue",
         "EditableValue",
         "FileValue",

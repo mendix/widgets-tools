@@ -10,13 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with the Jest configuration affecting unit tests for widgets importing enums from the mendix package (e.g. ValueStatus, FormatterType). It would cause tests to fail with the error "This package should not be used in the runtime".
 
--   We added support for the `allowUpload` attribute on image properties in native widgets, generating `EditableImageValue<NativeImage>` when enabled, introduced in Mendix 11.11.
-
--   We added support for single object datasource properties, introduced in Mendix 11.11.
-
 -   We added the `audit` command. It will scan the dependencies of pluggable-widgets-tools for vulnerable packages and suggest overrides. Currently only npm is supported.
-
--   We added support for editable image and file properties, introduced in Mendix 11.8.
 
 ### Changed
 

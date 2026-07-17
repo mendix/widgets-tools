@@ -3,7 +3,7 @@ export const imageWebOutput = `/**
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix Widgets Framework Team
  */
-import { ActionValue, DynamicValue, EditableImageValue, EditableValue, WebImage } from "mendix";
+import { ActionValue, DynamicValue, EditableValue, WebImage } from "mendix";
 
 export interface MyWidgetContainerProps {
     name: string;
@@ -11,7 +11,6 @@ export interface MyWidgetContainerProps {
     id: string;
     image: DynamicValue<WebImage>;
     image2?: DynamicValue<WebImage>;
-    image3: EditableImageValue<WebImage>;
     description: EditableValue<string>;
     action?: ActionValue;
 }
@@ -22,7 +21,6 @@ export interface MyWidgetPreviewProps {
     translate: (text: string) => string;
     image: { type: "static"; imageUrl: string; } | { type: "dynamic"; entity: string; } | null;
     image2: { type: "static"; imageUrl: string; } | { type: "dynamic"; entity: string; } | null;
-    image3: { type: "static"; imageUrl: string; } | { type: "dynamic"; entity: string; } | null;
     description: string;
     action: {} | null;
 }
@@ -32,7 +30,6 @@ export const imageNativeOutput = `export interface MyWidgetProps<Style> {
     style: Style[];
     image: DynamicValue<NativeImage>;
     image2?: DynamicValue<NativeImage>;
-    image3: EditableImageValue<NativeImage>;
     description: EditableValue<string>;
     action?: ActionValue;
 }`;
