@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - 'master'
-      - 'version/10.24'
+      - 'version/*'
   pull_request:
     branches:
       - 'master'
-      - 'version/10.24'
+      - 'version/*'
 
 jobs:
   harden_security:

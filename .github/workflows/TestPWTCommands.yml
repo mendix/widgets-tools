@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'master'
-      - 'version/10.24'
+      - 'version/*'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/generator-widget/**'
@@ -13,7 +13,7 @@ on:
   pull_request:
     branches:
       - 'master'
-      - 'version/10.24'
+      - 'version/*'
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/generator-widget/**'
