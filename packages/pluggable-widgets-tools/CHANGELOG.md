@@ -10,7 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with the Jest configuration affecting unit tests for widgets importing enums from the mendix package (e.g. ValueStatus, FormatterType). It would cause tests to fail with the error "This package should not be used in the runtime".
 
-## [11.12.0] - 2026-06-30
+-   We added support for the `allowUpload` attribute on image properties in native widgets, generating `EditableImageValue<NativeImage>` when enabled, introduced in Mendix 11.11.
+
+-   We added support for single object datasource properties, introduced in Mendix 11.11.
+
+-   We added the `audit` command. It will scan the dependencies of pluggable-widgets-tools for vulnerable packages and suggest overrides. Currently only npm is supported.
+
+-   We added support for editable image and file properties, introduced in Mendix 11.8.
 
 ### Changed
 
@@ -20,6 +26,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   **Breaking:** Consumers who extended the base config with `globals['ts-jest']` options must migrate those settings to the `@swc/jest` transform config.
 
+-   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
+
+-   We silenced the Sass legacy JS API deprecation warning that appeared during widget bundling.
+
+-   We updated outdated and vulnerable dependencies. This required major upgrades of several dependencies, including eslint@9, jest@30, and rollup@4.
+
+-   We upgraded the Pluggable Widgets Tools to React 19 and React Native 0.78.2. After installation upgrade all dependencies by running `npm run build`.
+
+-   **Breaking:** We removed Enzyme testing library and associated dependencies from pluggable-widgets-tools. Tests using Enzyme should be updated to use React Testing Library. See the [migration guide](https://testing-library.com/docs/react-testing-library/migrate-from-enzyme) for more information. The `test:unit:web:enzyme-free` command has been removed; use `test:unit:web` instead.
+
+-   We fixed an issue where `require` was not transformed to `import` for the `es` output format which could result in an error when the widget was used in a project with React client enabled.
+
+-   We now enforce the same validation for the `widgetName` in the widget bundler as we do in the generator. Validation is now also enforced for the organization name (`packagePath`).
+
+-   We added @d11/react-native-fast-image as an external native dependency in rollup config.
+
 ### Fixed
 
 -   We fixed an issue on Windows where the generated `.mpk` was missing the widget's `.xml` files and icon/tile PNGs.
@@ -28,65 +50,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We updated the type generator to format types according to prettier. Inconsistencies would block the `release` command.
 
-## [11.11.0] - 2026-06-04
-
-### Added
-
--   We added support for the `allowUpload` attribute on image properties in native widgets, generating `EditableImageValue<NativeImage>` when enabled, introduced in Mendix 11.11.
-
--   We added support for single object datasource properties, introduced in Mendix 11.11.
-
--   We added the `audit` command. It will scan the dependencies of pluggable-widgets-tools for vulnerable packages and suggest overrides. Currently only npm is supported.
-
-### Changed
-
--   We changed the order of imports in generated widget prop types to match that of the eslint sort-imports rule.
-
--   We silenced the Sass legacy JS API deprecation warning that appeared during widget bundling.
-
--   We updated outdated and vulnerable dependencies. This required major upgrades of several dependencies, including eslint@9, jest@30, and rollup@4.
-
-## [11.8.1] - 2026-03-16
-
-### Fixed
-
 -   We fixed the bundling of Javascript widgets which broke in 11.6.0 after migrating to [React 17's JSX Transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#how-to-upgrade-to-the-new-jsx-transform). (Ticket 270777)
-
-## [11.8.0] - 2026-03-06
-
-### Added
-
--   We added support for editable image and file properties, introduced in Mendix 11.8.
-
-### Changed
-
--   We updated the Mendix package to 11.8.
-
-## [11.6.0] - 2026-03-04
-
-### Changed
-
--   We upgraded the Pluggable Widgets Tools to React 19 and React Native 0.78.2. After installation upgrade all dependencies by running `npm run build`.
-
--   We updated the Mendix package to 11.6.
-
-## [11.3.1] - 2026-02-04
-
-### Breaking changes
-
--   We removed Enzyme testing library and associated dependencies from pluggable-widgets-tools. Tests using Enzyme should be updated to use React Testing Library. See the [migration guide](https://testing-library.com/docs/react-testing-library/migrate-from-enzyme) for more information. The `test:unit:web:enzyme-free` command has been removed; use `test:unit:web` instead.
-
-### Changed
-
--   We fixed an issue where `require` was not transformed to `import` for the `es` output format which could result in an error when the widget was used in a project with React client enabled.
-
--   We now enforce the same validation for the `widgetName` in the widget bundler as we do in the generator. Validation is now also enforced for the organization name (`packagePath`).
-
-## [11.3.0] - 2025-11-12
-
-### Changed
-
--   We added @d11/react-native-fast-image as an external native dependency in rollup config.
 
 ## [10.24.0] - 2025-09-24
 
