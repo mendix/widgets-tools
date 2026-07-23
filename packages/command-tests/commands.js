@@ -353,7 +353,7 @@ async function main() {
 }
 
 function getWidgetName(platform, boilerplate, lang, version) {
-    return `[generated_${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}]`;
+    return `[${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}]`;
 }
 
 function getWidgetLogger(index, platform, boilerplate, lang, version) {
