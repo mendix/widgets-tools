@@ -9,6 +9,7 @@ import kill from "tree-kill";
 import { promisify } from "util";
 import chalk from "chalk";
 import helpers from "yeoman-test";
+import { createInterface } from "readline/promises";
 
 const { copy, existsSync, readJson, writeJson } = fsExtra;
 const { ls, mkdir, rm, tempdir } = shelljs;
@@ -46,12 +47,17 @@ if (LIMIT_TESTS) {
     CONFIGS.splice(1, CONFIGS.length - 2); // Remove all configs except the first and the last
 }
 
+const readline = createInterface(process.stdin, process.stdout);
 const yeomanMutex = new Mutex();
 
-main().catch(e => {
-    console.error(e);
-    process.exit(1);
-});
+main()
+    .catch(e => {
+        console.error(e);
+        process.exitCode = 1;
+    })
+    .finally(() => {
+        readline.close();
+    });
 
 async function main() {
     console.log("Preparing...");
@@ -63,6 +69,7 @@ async function main() {
     const toolsPackagePath = join(pluggableWidgetsToolsPath, packOutput.trim().split(/\n/g).pop());
 
     const workDirs = [];
+    const configWorkDirs = {};
     const workDirSemaphore = new Semaphore(PARALLELISM);
     const failures = (
         await Promise.all(
@@ -80,31 +87,64 @@ async function main() {
                         );
                         mkdir("-p", workDir);
                     }
+                    configWorkDirs[workDir] = config;
                     await runTest(workDir, logger, ...config);
+                    workDirs.push(workDir);
                     return undefined;
-                } catch (e) {
+                } catch (error) {
                     logger(chalk.bold.red("Stopped with error"));
-                    e.toString()
+                    error
+                        .toString()
                         .split("\n")
                         .forEach(l => logger(chalk.red(l)));
                     logger(chalk.bold.red(`Widget Directory ${workDir}`));
-                    return [config, e];
+                    return { config, error, workDir };
                 } finally {
-                    workDirs.push(workDir);
                     release();
                 }
             })
         )
     ).filter(f => f);
 
-    console.log("Cleaning up temporary files");
-    try {
-        rm("-rf", toolsPackagePath, ...workDirs);
-    } catch (error) {
-        console.warn(chalk.yellow(`Unable to remove temporary files: ${error.message}`));
+    console.log(
+        "\nFinished Testing: " +
+        chalk.bold(chalk[failures.length > 0 ? "red" : "green"]("%d Failed, ") + chalk.green("%d Successful")),
+        failures.length,
+        CONFIGS.length - failures.length
+    );
+
+    console.log(chalk.green("\nCreated %d temporary directories for test widgets"), workDirs.length);
+    let maxLength = 0;
+    Object.entries(configWorkDirs)
+        .map(([dir, config]) => {
+            const name = getWidgetName(...config);
+            maxLength = Math.max(maxLength, name.length);
+            return [dir, name];
+        })
+        .forEach(([dir, name]) =>
+            console.log(
+                "  %s\t%s\t%s",
+                name + repeat(" ", maxLength - name.length),
+                dir,
+                failures.some(f => f.workDir === dir) ? chalk.bold.red("❌ Error") : ""
+            )
+        );
+
+    if (
+        !readline.terminal || // If non-interactive, just clean up without asking.
+        /^y?e?s?$/i.test(await readline.question(chalk.cyan("Clean up test widgets? ") + chalk.gray("(YES/no)")))
+    ) {
+        console.log("Cleaning up temporary files");
+        try {
+            rm("-rf", toolsPackagePath, ...workDirs);
+        } catch (error) {
+            console.warn(chalk.yellow(`Unable to remove temporary files: ${error.message}`));
+        }
+    } else {
+        console.log("Leaving temporary files");
     }
 
-    console.log("All done! Failed: %d Successful: %d", failures.length, CONFIGS.length - failures.length);
+    console.log(chalk.bold.green("\nAll done!"));
 
     async function runTest(workDir, logger, platform, boilerplate, lang, version) {
         const isNative = platform === "native";
@@ -258,8 +298,8 @@ async function main() {
                     ? "@mendix/pluggable-widgets-tools"
                     : null
                 : boilerplate === "full"
-                  ? "classnames"
-                  : null;
+                    ? "classnames"
+                    : null;
 
             if (
                 packageName &&
@@ -396,3 +436,11 @@ async function execFailedAsync(command, workDir) {
     throw new Error(`Expected '${command}' to fail, but it didn't!`);
 }
 
+function repeat(element, amount) {
+    let result = element;
+    while (amount > 0) {
+        result += element;
+        amount--;
+    }
+    return result;
+}
