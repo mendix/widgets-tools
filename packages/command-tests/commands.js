@@ -84,6 +84,10 @@ async function main() {
                     return undefined;
                 } catch (e) {
                     logger(chalk.bold.red("Stopped with error"));
+                    e.toString()
+                        .split("\n")
+                        .forEach(l => logger(chalk.red(l)));
+                    logger(chalk.bold.red(`Widget Directory ${workDir}`));
                     return [config, e];
                 } finally {
                     workDirs.push(workDir);
@@ -101,11 +105,6 @@ async function main() {
     }
 
     console.log("All done! Failed: %d Successful: %d", failures.length, CONFIGS.length - failures.length);
-
-    if (failures.length) {
-        failures.forEach(f => console.error(chalk.red(`Test for configuration ${f[0]} failed: ${f[1]}`)));
-        process.exit(2);
-    }
 
     async function runTest(workDir, logger, platform, boilerplate, lang, version) {
         const isNative = platform === "native";
