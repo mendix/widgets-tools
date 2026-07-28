@@ -10,11 +10,11 @@ const COLORS: TextStyles[] = [
     "blue",
     "magenta",
     "cyan",
-    "bgGreen",
-    "bgYellow",
-    "bgBlue",
-    "bgMagenta",
-    "bgCyan"
+    ["bold", "green"],
+    ["bold", "yellow"],
+    ["bold", "blue"],
+    ["bold", "magenta"],
+    ["bold", "cyan"]
 ];
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
