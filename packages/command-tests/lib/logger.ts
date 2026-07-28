@@ -41,7 +41,15 @@ export function styled(strings: TemplateStringsArray, ...styles: TextStyles[]) {
     let style: TextStyles = "reset";
     for (let i = 0; i < strings.length; i++) {
         result += styleText(style, strings[i]);
-        style = styles[i] ?? "reset";
+        const nextStyle = styles[i] ?? "reset";
+        if (
+            typeof nextStyle === "string" ||
+            (typeof nextStyle === "object" && "every" in nextStyle && nextStyle.every(x => typeof x === "string"))
+        ) {
+            style = nextStyle;
+        } else {
+            throw Error(`Expected a TextStyle argument, but received "${nextStyle}"`);
+        }
     }
     return result;
 }
