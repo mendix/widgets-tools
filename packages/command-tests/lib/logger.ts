@@ -29,3 +29,19 @@ export function getWidgetLogger(index: number, ...[platform, boilerplate, lang, 
             format(template, ...msgs)
         );
 }
+
+/***
+ * Template that applies the provided ansi-styles to the text.
+ * See `node:util.styleText` for more information.
+ * @example
+ * styled`Hi, ${"cyan"}Joe${"reset"}! You have ${"bold"}3 ${["bold", "yellow"]}pending${"reset"} messages.`
+ */
+export function styled(strings: TemplateStringsArray, ...styles: TextStyles[]) {
+    let result = "";
+    let style: TextStyles = "reset";
+    for (let i = 0; i < strings.length; i++) {
+        result += styleText(style, strings[i]);
+        style = styles[i] ?? "reset";
+    }
+    return result;
+}

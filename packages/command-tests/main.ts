@@ -7,12 +7,11 @@ import shelljs from "shelljs";
 import { createInterface } from "readline/promises";
 import { execAsync } from "./lib/exec.ts";
 import { ensure, isDefined } from "./lib/option.ts";
-import { getWidgetLogger } from "./lib/logger.ts";
+import { getWidgetLogger, styled } from "./lib/logger.ts";
 import { type Config, getWidgetName } from "./lib/config.ts";
 import { repeat } from "./lib/strings.ts";
 import { runTest } from "./tests/testRunner.ts";
 import { ensureError } from "./lib/errors.ts";
-import { styleText } from "node:util";
 
 const { readJson } = fsExtra;
 const { mkdir, rm, tempdir } = shelljs;
@@ -91,13 +90,13 @@ async function main() {
                     workDirs.push(workDir);
                     return undefined;
                 } catch (e) {
-                    logger(styleText(["bold", "red"], "Stopped with error"));
+                    logger(styled`${["bold", "red"]}Stopped with error`);
                     const error = ensureError(e);
                     error
                         .toString()
                         .split("\n")
-                        .forEach(l => logger(styleText("red", l)));
-                    logger(styleText(["bold", "red"], `Widget Directory ${workDir}`));
+                        .forEach(l => logger(styled`${"red"}%s`, l));
+                    logger(styled`${["bold", "red"]} Widget Directory %s`, workDir);
                     return { config, error, workDir: workDir ?? "<no-directory>" };
                 } finally {
                     release();
@@ -107,16 +106,12 @@ async function main() {
     ).filter(isDefined);
 
     console.log(
-        "\nFinished Testing: " +
-            styleText(
-                "bold",
-                styleText(failures.length > 0 ? "red" : "green", "%d Failed, ") + styleText("green", "%d Successful")
-            ),
+        styled`\nFinished Testing: ${["bold", failures.length > 0 ? "red" : "green"]}%d Failed, ${["bold", "green"]}%d Successful`,
         failures.length,
         CONFIGS.length - failures.length
     );
 
-    console.log(styleText("green", "\nCreated %d temporary directories during testing"), workDirs.length);
+    console.log(styled`${"green"}\nCreated %d temporary directories during testing`, workDirs.length);
     let maxDirLength = 0,
         maxNameLength = 0;
     Object.entries(configWorkDirs)
@@ -131,25 +126,23 @@ async function main() {
                 "  %s  %s  %s",
                 dir + repeat(" ", maxDirLength - dir.length),
                 name + repeat(" ", maxNameLength - name.length),
-                failures.some(f => f.workDir === dir) ? styleText(["bold", "red"], "❌ Error") : ""
+                failures.some(f => f.workDir === dir) ? styled`${["bold", "red"]}❌ Error` : ""
             )
         );
 
     if (
         !readline.terminal || // If non-interactive, just clean up without asking.
-        /^y?e?s?$/i.test(
-            await readline.question(styleText("cyan", "Clean up test widgets? ") + styleText("gray", "(YES/no)"))
-        )
+        /^y?e?s?$/i.test(await readline.question(styled`${"cyan"}Clean up test widgets? ${"gray"}(YES/no)`))
     ) {
         console.log("Cleaning up temporary files");
         try {
             rm("-rf", widgetsToolsPackagePath, ...workDirs);
         } catch (error) {
-            console.warn(styleText("yellow", `Unable to remove temporary files: ${ensureError(error).message}`));
+            console.warn(styled`${"yellow"}Unable to remove temporary files: %s`, ensureError(error).message);
         }
     } else {
         console.log("Leaving temporary files");
     }
 
-    console.log(styleText(["bold", "green"], "\nAll done!"));
+    console.log(styled`\n${["bold", "green"]}All done!`);
 }
