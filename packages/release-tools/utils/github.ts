@@ -21,7 +21,7 @@ interface GitHubPRInfo {
     repo?: string;
 }
 
-export class GitHub {
+class GitHub {
     authSet = false;
 
     private async ensureAuth(): Promise<void> {
