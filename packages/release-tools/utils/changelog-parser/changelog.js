@@ -36,7 +36,7 @@ function peg$padEnd(str, targetLength, padString) {
     return str + padString.slice(0, targetLength);
 }
 
-peg$SyntaxError.prototype.format = function (sources) {
+peg$SyntaxError.prototype.format = function(sources) {
     var str = "Error: " + this.message;
     if (this.location) {
         var src = null;
@@ -75,29 +75,29 @@ peg$SyntaxError.prototype.format = function (sources) {
     return str;
 };
 
-peg$SyntaxError.buildMessage = function (expected, found) {
+peg$SyntaxError.buildMessage = function(expected, found) {
     var DESCRIBE_EXPECTATION_FNS = {
-        literal: function (expectation) {
+        literal: function(expectation) {
             return '"' + literalEscape(expectation.text) + '"';
         },
 
-        class: function (expectation) {
-            var escapedParts = expectation.parts.map(function (part) {
+        class: function(expectation) {
+            var escapedParts = expectation.parts.map(function(part) {
                 return Array.isArray(part) ? classEscape(part[0]) + "-" + classEscape(part[1]) : classEscape(part);
             });
 
             return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
         },
 
-        any: function () {
+        any: function() {
             return "any character";
         },
 
-        end: function () {
+        end: function() {
             return "end of input";
         },
 
-        other: function (expectation) {
+        other: function(expectation) {
             return expectation.description;
         }
     };
@@ -114,10 +114,10 @@ peg$SyntaxError.buildMessage = function (expected, found) {
             .replace(/\t/g, "\\t")
             .replace(/\n/g, "\\n")
             .replace(/\r/g, "\\r")
-            .replace(/[\x00-\x0F]/g, function (ch) {
+            .replace(/[\x00-\x0F]/g, function(ch) {
                 return "\\x0" + hex(ch);
             })
-            .replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
+            .replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) {
                 return "\\x" + hex(ch);
             });
     }
@@ -132,10 +132,10 @@ peg$SyntaxError.buildMessage = function (expected, found) {
             .replace(/\t/g, "\\t")
             .replace(/\n/g, "\\n")
             .replace(/\r/g, "\\r")
-            .replace(/[\x00-\x0F]/g, function (ch) {
+            .replace(/[\x00-\x0F]/g, function(ch) {
                 return "\\x0" + hex(ch);
             })
-            .replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
+            .replace(/[\x10-\x1F\x7F-\x9F]/g, function(ch) {
                 return "\\x" + hex(ch);
             });
     }
@@ -236,46 +236,46 @@ function peg$parse(input, options) {
     var peg$e19 = peg$otherExpectation("whitespace");
     var peg$e20 = peg$classExpectation([" ", "\t", "\n", "\r"], false, false);
 
-    var peg$f0 = function (header, content) {
+    var peg$f0 = function(header, content) {
         return { header, content };
     };
-    var peg$f1 = function (header, sections) {
+    var peg$f1 = function(header, sections) {
         return { ...header, sections };
     };
-    var peg$f2 = function (version, date) {
+    var peg$f2 = function(version, date) {
         return { type: "normal", version, date };
     };
-    var peg$f3 = function () {
+    var peg$f3 = function() {
         return { type: "unreleased" };
     };
-    var peg$f4 = function (title, txt) {
+    var peg$f4 = function(title, txt) {
         return { type: "note", title, text: txt };
     };
-    var peg$f5 = function (type, logs) {
+    var peg$f5 = function(type, logs) {
         return { type, logs };
     };
-    var peg$f6 = function (log) {
+    var peg$f6 = function(log) {
         return log;
     };
-    var peg$f7 = function (txt) {
+    var peg$f7 = function(txt) {
         return txt;
     };
-    var peg$f8 = function () {
+    var peg$f8 = function() {
         return text().trim();
     };
-    var peg$f9 = function () {
+    var peg$f9 = function() {
         return text();
     };
-    var peg$f10 = function (major, minor, patch) {
+    var peg$f10 = function(major, minor, patch) {
         return options.Version.fromParts(major, minor, patch);
     };
-    var peg$f11 = function (year, month, day) {
+    var peg$f11 = function(year, month, day) {
         return new Date(year, month - 1, day);
     };
-    var peg$f12 = function (txt) {
+    var peg$f12 = function(txt) {
         return txt.join("").trim();
     };
-    var peg$f13 = function () {
+    var peg$f13 = function() {
         return parseInt(text(), 10);
     };
 
@@ -1167,7 +1167,5 @@ function peg$parse(input, options) {
     }
 }
 
-module.exports = {
-    SyntaxError: peg$SyntaxError,
-    parse: peg$parse
-};
+export const SyntaxError = peg$SyntaxError;
+export const parse = peg$parse;

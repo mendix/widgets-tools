@@ -1,6 +1,6 @@
-import { ChangelogFileWrapper } from ".";
-import { resolve } from "path";
-import * as process from "process";
+import { ChangelogFileWrapper } from "./index.ts";
+import { resolve } from "node:path";
+import * as process from "node:process";
 
 function reformat(filePath: string): void {
     try {

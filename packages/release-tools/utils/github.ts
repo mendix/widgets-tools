@@ -1,7 +1,7 @@
-import { execShellCommand } from "./shell";
-import { fetch } from "./fetch";
-import { mkdtemp, writeFile } from "fs/promises";
-import { join } from "path";
+import { execShellCommand } from "./shell.ts";
+import { fetch } from "./fetch.ts";
+import { mkdtemp, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 interface GitHubReleaseInfo {
     title: string;

@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { mkdir, rm } from "fs/promises";
-import { execShellCommand } from "./shell";
+import { execSync } from "node:child_process";
+import { mkdir, rm } from "node:fs/promises";
+import { execShellCommand } from "./shell.ts";
 
 function getGHRepoAuthUrl(repoUrl: string): string {
     const url = new URL(repoUrl);

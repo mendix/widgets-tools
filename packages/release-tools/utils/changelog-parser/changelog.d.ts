@@ -1,4 +1,4 @@
-import { ChangelogFile } from "./types";
+import type { ChangelogFile } from "./types.ts";
 
 declare interface Location {
     line: number;

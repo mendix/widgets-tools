@@ -1,6 +1,6 @@
-import { exec } from "child_process";
-import { readdir } from "fs/promises";
-import { extname, resolve } from "path";
+import { exec } from "node:child_process";
+import { readdir } from "node:fs/promises";
+import { extname, resolve } from "node:path";
 
 export function execShellCommand(cmd: string | string[], workingDirectory: string = process.cwd()): Promise<string> {
     const command = Array.isArray(cmd) ? cmd.join(" && ") : cmd;
