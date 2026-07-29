@@ -8,32 +8,43 @@ import {
     type PackageInfo,
     ChangelogFileWrapper
 } from "./utils/index.ts";
+import { ArgumentError, handleError } from "./utils/errors.ts";
+import { format } from "node:util";
+
+const packages = new Map([
+    [
+        "pwt",
+        {
+            name: "pluggable-widgets-tools",
+            fullName: "Pluggable Widgets Tools"
+        }
+    ],
+    [
+        "gw",
+        {
+            name: "generator-widget",
+            fullName: "Pluggable Widgets Generator"
+        }
+    ]
+]);
 
 main().catch(e => {
-    console.error(e);
-    process.exit(-1);
+    handleError(
+        e,
+        format(
+            "\nUsage: %s <package> <branch>\n\nRequired environment variables: GH_NAME, GH_EMAIL, GH_USERNAME, GH_PAT",
+            process.argv[1]
+        )
+    );
+    process.exit(1);
 });
 
 async function main(): Promise<void> {
-    const packages = new Map([
-        [
-            "pwt",
-            {
-                name: "pluggable-widgets-tools",
-                fullName: "Pluggable Widgets Tools"
-            }
-        ],
-        [
-            "gw",
-            {
-                name: "generator-widget",
-                fullName: "Pluggable Widgets Generator"
-            }
-        ]
-    ]);
     const arg = process.argv[2];
     const mendixPackage = packages.get(arg);
-    if (!mendixPackage) throw new Error(`Argument "${arg}" is not a valid package name`);
+    if (!mendixPackage) throw new ArgumentError("package name", arg);
+    const branch = process.argv[3];
+    if (!branch) throw new ArgumentError("branch", branch);
 
     const dirname = new URL("./", import.meta.url).pathname;
     const pwtPath = join(dirname, "../", mendixPackage.name);
@@ -57,8 +68,7 @@ async function main(): Promise<void> {
     // 2.2. Check if there is something to release (entries under "Unreleased" section)
     if (!changelog.hasUnreleasedLogs()) {
         throw new Error(
-            `No unreleased changes found in the CHANGELOG.md for ${
-                packageInfo.packageName
+            `No unreleased changes found in the CHANGELOG.md for ${packageInfo.packageName
             } ${packageInfo.version.format()}.`
         );
     }
