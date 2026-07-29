@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { Version } from "../version.ts";
 import { parse as parseChangelogFile } from "./changelog.js";
 import type { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, ChangelogFile } from "./types.ts";
+import { ChangelogError, ensureError } from "../errors.ts";
 
 function formatHeader(header: string): string[] {
     return [
@@ -94,6 +95,13 @@ export class ChangelogFileWrapper {
     }
 
     static fromFile(filePath: string): ChangelogFileWrapper {
-        return new ChangelogFileWrapper(parseChangelogFile(readFileSync(filePath).toString(), { Version }), filePath);
+        try {
+            return new ChangelogFileWrapper(
+                parseChangelogFile(readFileSync(filePath).toString(), { Version, grammarSource: filePath }),
+                filePath
+            );
+        } catch (e) {
+            throw new ChangelogError(filePath, ensureError(e));
+        }
     }
 }
