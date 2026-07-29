@@ -11,6 +11,7 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
+    "lint:changelog": "../release-tools/utils/changelog-parser/cli.ts parse ./CHANGELOG.md",
     "prepack": "shx rm -rf dist && tsc",
     "typecheck:test-config": "tsc -p test-config/tsconfig.json",
     "test": "pnpm typecheck:test-config && jest"

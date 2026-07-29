@@ -40,3 +40,18 @@ jobs:
 
       - name: "Linting packages"
         run: pnpm lint
+
+      - name: "Linting changelogs"
+        run: |
+          failures=0
+          for changelog in $(find . -type f -name CHANGELOG.md -mindepth 3 -maxdepth 3); do
+            echo "Parsing $changelog"
+            if pnpm exec changelog-parser parse $changelog; then
+              :
+            else
+              : $((failures++))
+            fi
+          done
+          if [[ $failures -gt 0 ]]; then
+            exit 1;
+          fi

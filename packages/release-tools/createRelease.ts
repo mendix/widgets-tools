@@ -68,7 +68,8 @@ async function main(): Promise<void> {
     // 2.2. Check if there is something to release (entries under "Unreleased" section)
     if (!changelog.hasUnreleasedLogs()) {
         throw new Error(
-            `No unreleased changes found in the CHANGELOG.md for ${packageInfo.packageName
+            `No unreleased changes found in the CHANGELOG.md for ${
+                packageInfo.packageName
             } ${packageInfo.version.format()}.`
         );
     }
