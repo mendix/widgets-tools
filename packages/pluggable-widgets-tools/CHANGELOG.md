@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with the Jest configuration affecting unit tests for widgets importing enums from the mendix package (e.g. ValueStatus, FormatterType). It would cause tests to fail with the error "This package should not be used in the runtime".
 
+### Changed
+
+-   We increased the minimum node version to 22.
+
 ## [11.12.0] - 2026-06-30
 
 ### Changed

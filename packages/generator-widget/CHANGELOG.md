@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We cleaned up a template with unused imports.
+-   We increased the minimum node version to 22.
 
 ## [11.11.0] - 2026-06-04
 
