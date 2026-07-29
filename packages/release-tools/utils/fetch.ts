@@ -1,4 +1,4 @@
-import nodefetch, { BodyInit, RequestInit } from "node-fetch";
+import nodefetch, { type BodyInit, type RequestInit } from "node-fetch";
 
 const config = {
     appStoreUrl: "https://appstore.home.mendix.com/rest/packagesapi/v2"

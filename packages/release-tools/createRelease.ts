@@ -1,12 +1,13 @@
-import { join } from "path";
+#! /usr/bin/env node --experimental-strip-types
+import { join } from "node:path";
 import {
     addRemoteWithAuthentication,
     execShellCommand,
     getPackageInfo,
     gh,
-    PackageInfo,
+    type PackageInfo,
     ChangelogFileWrapper
-} from "./utils";
+} from "./utils/index.ts";
 
 main().catch(e => {
     console.error(e);
@@ -34,7 +35,8 @@ async function main(): Promise<void> {
     const mendixPackage = packages.get(arg);
     if (!mendixPackage) throw new Error(`Argument "${arg}" is not a valid package name`);
 
-    const pwtPath = join(__dirname, "../", mendixPackage.name);
+    const dirname = new URL("./", import.meta.url).pathname;
+    const pwtPath = join(dirname, "../", mendixPackage.name);
 
     // 1. Get release info
     console.log(`Getting the release information for ${mendixPackage.name}...`);
