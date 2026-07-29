@@ -5,7 +5,7 @@ import { isVersionString, Version, type VersionString } from "./version.ts";
 // Disable changelog parser for now
 // import { ChangelogFileWrapper } from "./changelog-parser";
 
-export interface PackageJsonFileContent {
+interface PackageJsonFileContent {
     name?: string;
     version?: VersionString;
 

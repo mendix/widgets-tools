@@ -1,5 +1,3 @@
-import { execSync } from "node:child_process";
-import { mkdir, rm } from "node:fs/promises";
 import { execShellCommand } from "./shell.ts";
 
 function getGHRepoAuthUrl(repoUrl: string): string {
@@ -15,26 +13,7 @@ function getGHRepoAuthUrl(repoUrl: string): string {
     return url.toString();
 }
 
-export async function cloneRepo(githubUrl: string, localFolder: string): Promise<void> {
-    // clean up local folder
-    await rm(localFolder, { recursive: true, force: true });
-    await mkdir(localFolder, { recursive: true });
-
-    // clone and set local credentials
-    await execSync(`git clone ${getGHRepoAuthUrl(githubUrl)} ${localFolder}`, { stdio: "inherit" });
-
-    // set credentials
-    await setLocalGitUserInfo(localFolder);
-}
-
-export async function cloneRepoShallow(remoteUrl: string, branch: string, localFolder: string): Promise<void> {
-    await execSync(
-        `git clone ${getGHRepoAuthUrl(remoteUrl)} --branch=${branch} --depth=1 --single-branch ${localFolder}`,
-        { stdio: "inherit" }
-    );
-}
-
-export async function setLocalGitUserInfo(workingDirectory?: string): Promise<void> {
+async function setLocalGitUserInfo(workingDirectory?: string): Promise<void> {
     const { GH_NAME, GH_EMAIL } = process.env;
     if (!GH_NAME || !GH_EMAIL) {
         throw new Error("Required GH_NAME and GH_EMAIL env vars are not set.");
