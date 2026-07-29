@@ -8,7 +8,7 @@
   "scripts": {
     "release:pwt": "node --experimental-strip-types ./createRelease.ts pwt",
     "release:gw": "node --experimental-strip-types ./createRelease.ts gw",
-    "build:release:parser": "peggy -o ./utils/changelog-parser/changelog.js ./utils/changelog-parser/changelog.pegjs",
+    "build:release:parser": "peggy -o ./utils/changelog-parser/changelog.js --dts --format es ./utils/changelog-parser/changelog.pegjs",
     "test": "tsc --noEmit"
   },
   "engines": {
@@ -17,9 +17,9 @@
   "devDependencies": {
     "@tsconfig/node-ts": "^23.6.4",
     "@tsconfig/node22": "^22.0.5",
-    "@types/node": "^16.11.19",
+    "@types/node": "^22.18.0",
     "@types/node-fetch": "2.6.13",
-    "peggy": "^1.2.0",
+    "peggy": "^5.1.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
