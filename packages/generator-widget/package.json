@@ -4,7 +4,7 @@
   "description": "Mendix Pluggable Widgets Generator",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0"
   },
   "bin": "./bin.js",
   "main": "generators/app/index.js",

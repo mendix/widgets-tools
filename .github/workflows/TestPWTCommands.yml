@@ -22,11 +22,10 @@ on:
 
 jobs:
   test:
-    name: "Script tests (Node ${{ matrix.node }}, ${{ matrix.os }})"
+    name: "Script tests (${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [20]
         os: [windows-latest, ubuntu-latest]
     steps:
       - name: "Checking-out code"
