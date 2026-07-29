@@ -9,7 +9,8 @@
   "bin": "./bin.js",
   "main": "generators/app/index.js",
   "scripts": {
-    "test": "jest --config ./jest.config.js"
+    "test": "jest --config ./jest.config.js",
+    "lint:changelog": "../release-tools/utils/changelog-parser/cli.ts parse ./CHANGELOG.md"
   },
   "files": [
     "generators"

@@ -1,10 +1,14 @@
 {
-  "name": "release-tools",
+  "name": "@mendix/release-tools",
   "version": "1.0.0",
   "description": "Scripts used for release management of the widgets tools packages.",
   "private": true,
   "main": "./createRelease.ts",
   "type": "module",
+  "bin": {
+    "create-release": "./createRelease.ts",
+    "changelog-parser": "./utils/changelog-parser/cli.ts"
+  },
   "scripts": {
     "release:pwt": "node --experimental-strip-types ./createRelease.ts pwt",
     "release:gw": "node --experimental-strip-types ./createRelease.ts gw",

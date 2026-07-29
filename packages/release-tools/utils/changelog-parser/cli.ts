@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-strip-types
+#!/usr/bin/env -S node --experimental-strip-types
 import { ChangelogFileWrapper } from "./index.ts";
 import { resolve } from "node:path";
 import * as process from "node:process";
@@ -36,8 +36,11 @@ function main(): void {
                 throw new ArgumentError("command of reformat", process.argv[2]);
         }
     } catch (e) {
-        handleError(e, format("Usage: %s\n\treformat <filePath>\n\tparse <filePath>", process.argv[1]));
-        process.exit();
+        handleError(
+            e,
+            format("Usage: %s <command>\n\nCommands:\n\treformat <filePath>\n\tparse <filePath>", process.argv[1])
+        );
+        process.exit(1);
     }
 }
 
