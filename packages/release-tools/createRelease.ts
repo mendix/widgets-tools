@@ -1,4 +1,4 @@
-#! /usr/bin/env node --experimental-strip-types
+#! /usr/bin/env -S node --experimental-strip-types
 import { join } from "node:path";
 import {
     addRemoteWithAuthentication,
@@ -13,14 +13,14 @@ import { format } from "node:util";
 
 const packages = new Map([
     [
-        "pwt",
+        "pluggable-widgets-tools",
         {
             name: "pluggable-widgets-tools",
             fullName: "Pluggable Widgets Tools"
         }
     ],
     [
-        "gw",
+        "generator-widget",
         {
             name: "generator-widget",
             fullName: "Pluggable Widgets Generator"
@@ -32,7 +32,7 @@ main().catch(e => {
     handleError(
         e,
         format(
-            "\nUsage: %s <package> <branch>\n\nRequired environment variables: GH_NAME, GH_EMAIL, GH_USERNAME, GH_PAT",
+            "\nUsage: %s <package-name> <branch-name>\nRequired environment variables: GH_NAME, GH_EMAIL, GH_USERNAME, GH_PAT",
             process.argv[1]
         )
     );
@@ -42,23 +42,29 @@ main().catch(e => {
 async function main(): Promise<void> {
     const arg = process.argv[2];
     const mendixPackage = packages.get(arg);
-    if (!mendixPackage) throw new ArgumentError("package name", arg);
+    if (!mendixPackage)
+        throw new ArgumentError(format("package name of (%s)", packages.keys().toArray().join(", ")), arg);
     const branch = process.argv[3];
-    if (!branch) throw new ArgumentError("branch", branch);
+    if (!branch || !/^(master|version\/.*)$/.test(branch))
+        throw new ArgumentError("branch name of (master, version/*)", branch);
 
     const dirname = new URL("./", import.meta.url).pathname;
     const pwtPath = join(dirname, "../", mendixPackage.name);
 
     // 1. Get release info
-    console.log(`Getting the release information for ${mendixPackage.name}...`);
-    console.log(`directory:`, pwtPath);
+    console.log("Gathering release information");
+    console.log("  Package:   %s", mendixPackage.name);
+    console.log("  Directory: %s", pwtPath);
+    console.log("  Branch:    %s", branch);
 
     const packageInfo = await getPackageInfo(pwtPath);
     packageInfo.packageName = mendixPackage.name;
     packageInfo.packageFullName = mendixPackage.fullName;
     const releaseTag = `${packageInfo.packageName}-v${packageInfo.version.format()}`;
-    const changelog = ChangelogFileWrapper.fromFile(`${pwtPath}/CHANGELOG.md`);
 
+    console.log("  Version:   %s", packageInfo.version.format());
+
+    const changelog = ChangelogFileWrapper.fromFile(`${pwtPath}/CHANGELOG.md`);
     // 2. Check prerequisites
     // 2.1. Check if current version is already in CHANGELOG
     if (changelog.hasVersion(packageInfo.version)) {
@@ -90,7 +96,7 @@ async function main(): Promise<void> {
 
     // 4.2 Update CHANGELOG.md and create PR
     console.log("Creating PR with updated CHANGELOG.md file...");
-    await updateChangelogsAndCreatePR(packageInfo, changelog, releaseTag, remoteName);
+    await updateChangelogsAndCreatePR(packageInfo, changelog, releaseTag, remoteName, branch);
 
     // 4.3 Create release
     console.log("Creating Github release...");
@@ -112,7 +118,8 @@ async function updateChangelogsAndCreatePR(
     packageInfo: PackageInfo,
     changelog: ChangelogFileWrapper,
     releaseTag: string,
-    remoteName: string
+    remoteName: string,
+    branch: string
 ): Promise<void> {
     const releaseBranchName = `${releaseTag}-update-changelog`;
 
@@ -134,7 +141,7 @@ async function updateChangelogsAndCreatePR(
     await gh.createGithubPRFrom({
         title: `${packageInfo.packageFullName} v${packageInfo.version.format()}: Update changelog`,
         body: "This is an automated PR that merges changelog update to master.",
-        base: "master",
+        base: branch,
         head: releaseBranchName,
         repo: packageInfo.repositoryUrl
     });

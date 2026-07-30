@@ -10,8 +10,8 @@
     "changelog-parser": "./utils/changelog-parser/cli.ts"
   },
   "scripts": {
-    "release:pwt": "node --experimental-strip-types ./createRelease.ts pwt",
-    "release:gw": "node --experimental-strip-types ./createRelease.ts gw",
+    "release:pwt": "./createRelease.ts pluggable-widgets-tools",
+    "release:gw": "./createRelease.ts generator-widget",
     "build:release:parser": "peggy -o ./utils/changelog-parser/changelog.js --dts --format es ./utils/changelog-parser/changelog.pegjs",
     "test": "tsc --noEmit"
   },
