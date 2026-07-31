@@ -1,11 +1,11 @@
-import { join } from "path";
-import { access } from "fs/promises";
-import { Version, VersionString } from "./version";
+import { join } from "node:path";
+import { readFile } from "node:fs/promises";
+import { isVersionString, Version, type VersionString } from "./version.ts";
 // FIXME: Uncomment when md parser is 100% ready.
 // Disable changelog parser for now
 // import { ChangelogFileWrapper } from "./changelog-parser";
 
-export interface PackageJsonFileContent {
+interface PackageJsonFileContent {
     name?: string;
     version?: VersionString;
 
@@ -28,24 +28,15 @@ export interface PackageInfo {
     changelog: string;
 }
 
-export async function getPackageFileContent(dirPath: string): Promise<PackageJsonFileContent> {
-    const pkgPath = join(dirPath, `package.json`);
-    try {
-        await access(pkgPath);
-        const result = (await import(pkgPath)) as PackageJsonFileContent;
-        return result;
-    } catch (error) {
-        console.log(error);
-        console.error(`ERROR: Path does not exist: ${pkgPath}`);
-        throw new Error("Error while reading package info at " + dirPath);
-    }
+async function readPackageJSON(filePath: string): Promise<PackageJsonFileContent> {
+    const raw = await readFile(filePath, "utf-8");
+    return JSON.parse(raw);
 }
 
 export async function getPackageInfo(path: string): Promise<PackageInfo> {
     const pkgPath = join(path, `package.json`);
     try {
-        await access(pkgPath);
-        const { name, version, repository } = (await import(pkgPath)) as PackageJsonFileContent;
+        const { name, version, repository } = await readPackageJSON(pkgPath);
         return {
             packageName: ensureString(name, "name"),
             packageFullName: "",
@@ -72,8 +63,8 @@ function ensureString(str: string | undefined, fieldName: string): string {
     return str;
 }
 
-function ensureVersion(version: VersionString | undefined): Version {
-    if (version && /\d+\.\d+\.\d+/.test(version)) {
+function ensureVersion(version: string | undefined): Version {
+    if (isVersionString(version)) {
         return Version.fromString(version);
     }
 

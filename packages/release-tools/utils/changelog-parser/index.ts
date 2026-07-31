@@ -1,7 +1,8 @@
-import { readFileSync, writeFileSync } from "fs";
-import { Version } from "../version";
-import { parse as parseChangelogFile } from "./changelog";
-import { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, ChangelogFile } from "./types";
+import { readFileSync, writeFileSync } from "node:fs";
+import { Version } from "../version.ts";
+import { parse as parseChangelogFile } from "./changelog.js";
+import type { LogSection, ReleasedVersionEntry, UnreleasedVersionEntry, VersionEntry, ChangelogFile } from "./types.ts";
+import { ChangelogError, ensureError } from "../errors.ts";
 
 function formatHeader(header: string): string[] {
     return [
@@ -41,12 +42,11 @@ function formatDate(date: Date): string {
 
 export class ChangelogFileWrapper {
     changelog: ChangelogFile;
+    changelogPath: string;
 
-    private constructor(
-        changelog: ChangelogFile,
-        public changelogPath: string
-    ) {
+    private constructor(changelog: ChangelogFile, changelogPath: string) {
         this.changelog = Object.freeze(changelog);
+        this.changelogPath = changelogPath;
     }
 
     save(): void {
@@ -95,6 +95,13 @@ export class ChangelogFileWrapper {
     }
 
     static fromFile(filePath: string): ChangelogFileWrapper {
-        return new ChangelogFileWrapper(parseChangelogFile(readFileSync(filePath).toString(), { Version }), filePath);
+        try {
+            return new ChangelogFileWrapper(
+                parseChangelogFile(readFileSync(filePath).toString(), { Version, grammarSource: filePath }),
+                filePath
+            );
+        } catch (e) {
+            throw new ChangelogError(filePath, ensureError(e));
+        }
     }
 }

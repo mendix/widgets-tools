@@ -1,16 +1,9 @@
 {
-    "include": ["./"],
-    "compilerOptions": {
-        "strict": true,
-        "noEmitOnError": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": false,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "forceConsistentCasingInFileNames": true,
-        "types": ["node"],
-        "esModuleInterop": true
-    }
+  "extends": [
+    "@tsconfig/node22/tsconfig.json",
+    "@tsconfig/node-ts/tsconfig.json"
+  ],
+  "compilerOptions": {
+    "allowImportingTsExtensions": true
+  }
 }
