@@ -38,6 +38,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+-   We fixed an issue where images imported in widgets were not displayed correctly in the React client when deployed in the cloud.
+
 -   We fixed an issue on Windows where the generated `.mpk` was missing the widget's `.xml` files and icon/tile PNGs.
 
 -   We fixed an error thrown by the `audit` command on windows. It would fail when looking up available versions for vulnerable packages.
