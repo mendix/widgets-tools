@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We increased the minimum node version to 22.
 
+### Fixed
+
+-   We fixed an issue where images imported in widgets were not displayed correctly in the React client when deployed in the cloud.
+
 ## [11.12.0] - 2026-06-30
 
 ### Changed
