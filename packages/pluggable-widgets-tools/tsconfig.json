@@ -3,8 +3,8 @@
     "include": ["./src"],
     "compilerOptions": {
         "module": "commonjs",
-        "lib": ["es2015"],
-        "target": "es2015",
+        "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"],
+        "target": "es2022",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,

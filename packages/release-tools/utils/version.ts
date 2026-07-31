@@ -1,12 +1,21 @@
 export type VersionString = `${number}.${number}.${number}` | `${number}.${number}.${number}.${number}`;
 
+export function isVersionString(input: unknown): input is VersionString {
+    return typeof input === "string" && /\d+\.\d+\.\d+/.test(input);
+}
+
 export class Version {
-    constructor(
-        public readonly major: number,
-        public readonly minor: number,
-        public readonly patch: number,
-        public readonly build: number | undefined
-    ) {}
+    public readonly major: number;
+    public readonly minor: number;
+    public readonly patch: number;
+    public readonly build: number | undefined;
+
+    constructor(major: number, minor: number, patch: number, build?: number) {
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+        this.build = build;
+    }
 
     bumpPatch(): Version {
         return new Version(this.major, this.minor, this.patch + 1, undefined);

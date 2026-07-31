@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+-   We increased the minimum node version to 22.
+
 -   We replaced `ts-jest` with `@swc/jest` as the Jest transform (3–5× faster for TSX-heavy test suites) and switched the test runner from `jest-jasmine2` to `jest-circus`.
 
 -   **Breaking:** The `jest-jasmine2` runner has been removed. Tests using Jasmine-specific globals (`jasmine.createSpy()`, `jasmine.objectContaining()`, etc.) will throw `ReferenceError: jasmine is not defined`. Replace with Jest equivalents: `jest.fn()`, `expect.objectContaining()`.

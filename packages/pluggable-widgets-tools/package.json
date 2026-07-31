@@ -3,7 +3,7 @@
   "version": "10.24.1",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,6 +11,7 @@
     "pluggable-widgets-tools": "bin/mx-scripts.js"
   },
   "scripts": {
+    "lint:changelog": "../release-tools/utils/changelog-parser/cli.ts parse ./CHANGELOG.md",
     "prepack": "shx rm -rf dist && tsc",
     "typecheck:test-config": "tsc -p test-config/tsconfig.json",
     "test": "pnpm typecheck:test-config && jest"
@@ -108,7 +109,7 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^16.18.126",
+    "@types/node": "^22.18.0",
     "@types/xml2js": "^0.4.5"
   },
   "peerDependencies": {

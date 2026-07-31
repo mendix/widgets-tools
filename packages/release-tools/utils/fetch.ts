@@ -1,19 +1,4 @@
-import nodefetch, { BodyInit, RequestInit } from "node-fetch";
-
-const config = {
-    appStoreUrl: "https://appstore.home.mendix.com/rest/packagesapi/v2"
-};
-
-export async function fetchMarketplace<T extends object>(
-    method: "GET" | "POST" | "PUT" | "DELETE",
-    url: string,
-    body: BodyInit
-): Promise<Promise<T>> {
-    return fetch<T>(method, `${config.appStoreUrl}/${url}`, body, {
-        "Mendix-Username": process.env.MARKETPLACE_USERNAME,
-        "Mendix-ApiKey": process.env.MARKETPLACE_API_KEY
-    });
-}
+import nodefetch, { type BodyInit, type RequestInit } from "node-fetch";
 
 export async function fetch<T extends object>(
     method: "GET" | "POST" | "PUT" | "DELETE",

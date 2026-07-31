@@ -8,7 +8,8 @@ import prettierRecommended from "eslint-plugin-prettier/recommended";
 export default defineConfig(
     globalIgnores([
         "packages/generator-widget/generators/app/templates/**",
-        "packages/pluggable-widgets-tools/dist/**"
+        "packages/pluggable-widgets-tools/dist/**",
+        "packages/release-tools/utils/changelog-parser/changelog.*"
     ]),
     {
         files: ["**/*.js", "**/*.mjs"],
