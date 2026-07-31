@@ -63,6 +63,7 @@ jobs:
         run: pnpm -r pack
 
       - name: "Prepare artifacts"
+        id: prepare-artifacts
         run: |
           mkdir artifacts
           sha_short=$(echo "$GITHUB_SHA" | head -c 7)
@@ -70,10 +71,14 @@ jobs:
             revisioned=$(echo "$package" | sed -e "s/^\(.*\)\(.tgz\)/\1-$sha_short\2/")
             mv $package ./artifacts/$revisioned
           done
+          SAFE_GIT_REF="$(echo '${{github.ref_name}}' | sed -e 's/^\(.*\)\/merge$/pr\1/' -e 's/\//__/g')"
+          printf 'PACKAGES_NAME=widgets-tools.%s.%s' "$SAFE_GIT_REF" "${{ github.run_number }}" >> "$GITHUB_OUTPUT"
 
       - name: "Archive artifacts"
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: archive-artifacts
         with:
-          name: packages
+          name: ${{ steps.prepare-artifacts.outputs.PACKAGES_NAME }}
           path: artifacts/*.tgz
           retention-days: 5
+
