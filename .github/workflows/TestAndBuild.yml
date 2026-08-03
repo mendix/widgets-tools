@@ -6,11 +6,13 @@ on:
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.github/workflows/TestAndBuild.yml'
   pull_request:
     branches: [master]
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.github/workflows/TestAndBuild.yml'
 
 jobs:
   test-build:
