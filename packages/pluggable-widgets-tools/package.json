@@ -81,7 +81,7 @@
     "make-dir": "^5.1.0",
     "mendix": "^10.24.73019",
     "mime": "^4.1.0",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.18",
     "postcss-import": "^14.0.2",
     "postcss-url": "^10.1.4",
     "prettier": "^2.5.1",
