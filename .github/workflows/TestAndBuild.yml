@@ -1,4 +1,4 @@
-name: Run unit tests
+name: Test & Build
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.github/workflows/TestAndBuild.yml'
   pull_request:
     branches:
       - 'master'
@@ -15,12 +16,12 @@ on:
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.github/workflows/TestAndBuild.yml'
 
 jobs:
-  test:
-    name: "Unit tests"
+  test-build:
+    name: "Quality Checks & Build"
     runs-on: ubuntu-latest
-
     steps:
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
@@ -59,3 +60,27 @@ jobs:
           if [[ $failures -gt 0 ]]; then
             exit 1;
           fi
+
+      - name: "Build packages"
+        run: pnpm -r pack
+
+      - name: "Prepare artifacts"
+        id: prepare-artifacts
+        run: |
+          mkdir artifacts
+          sha_short=$(echo "$GITHUB_SHA" | head -c 7)
+          for package in $(ls *.tgz); do
+            revisioned=$(echo "$package" | sed -e "s/^\(.*\)\(.tgz\)/\1-$sha_short\2/")
+            mv $package ./artifacts/$revisioned
+          done
+          SAFE_GIT_REF="$(echo '${{github.ref_name}}' | sed -e 's/^\(.*\)\/merge$/pr\1/' -e 's/\//__/g')"
+          printf 'PACKAGES_NAME=widgets-tools.%s.%s' "$SAFE_GIT_REF" "${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: "Archive artifacts"
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: archive-artifacts
+        with:
+          name: ${{ steps.prepare-artifacts.outputs.PACKAGES_NAME }}
+          path: artifacts/*.tgz
+          retention-days: 5
+
