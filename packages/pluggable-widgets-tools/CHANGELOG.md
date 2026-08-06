@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+-   We added support for [System texts](https://docs.mendix.com/refguide/system-texts/), introduced to Pluggable Widgets in Mendix 11.13. Texts [defined in the Widget's XML file](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-property-types/#text) are included in Studio Pro's System text editor. Texts can be defined with parameters and default translations or can be a reference to an external System text.
+
 -   We fixed an issue with the Jest configuration affecting unit tests for widgets importing enums from the mendix package (e.g. ValueStatus, FormatterType). It would cause tests to fail with the error "This package should not be used in the runtime".
 
 ### Changed

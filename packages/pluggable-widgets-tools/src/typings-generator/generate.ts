@@ -1,6 +1,7 @@
 import { generateClientTypes } from "./generateClientTypes";
 import { generateImports, ImportableModule } from "./generateImports";
 import { generatePreviewTypes } from "./generatePreviewTypes";
+import { generateTranslations } from "./generateSystemTexts";
 import { extractProperties, extractSystemProperties } from "./helpers";
 import { WidgetXml } from "./WidgetXml";
 
@@ -52,13 +53,15 @@ export function generateForWidget(widgetXml: WidgetXml, widgetName: string) {
     const properties = extractProperties(propElements).filter(prop => prop?.$?.key);
     const systemProperties = extractSystemProperties(propElements).filter(prop => prop?.$?.key);
 
+    const translations = generateTranslations(systemProperties);
     const clientTypes = generateClientTypes(widgetName, properties, systemProperties, isNative);
     const modelerTypes = generatePreviewTypes(widgetName, properties, systemProperties);
 
     const generatedTypesCode = clientTypes
         .slice(0, clientTypes.length - 1) // all client auxiliary types
         .concat(modelerTypes.slice(0, modelerTypes.length - 1)) // all preview auxiliary types
-        .concat([clientTypes[clientTypes.length - 1], modelerTypes[modelerTypes.length - 1]])
+        .concat([translations, clientTypes[clientTypes.length - 1], modelerTypes[modelerTypes.length - 1]])
+        .filter(t => t !== "")
         .join("\n\n");
 
     const imports = generateImports(importableModules, generatedTypesCode);

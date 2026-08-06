@@ -1,5 +1,5 @@
 import { Property, SystemProperty } from "./WidgetXml";
-import { capitalizeFirstLetter, extractProperties } from "./helpers";
+import { capitalizeFirstLetter, extractProperties, templateInterface } from "./helpers";
 import { hasOptionalDataSource, toUniqueUnionType } from "./generateClientTypes";
 
 export function generatePreviewTypes(
@@ -14,38 +14,38 @@ export function generatePreviewTypes(
         return properties.find(p => p.$.key === key);
     }
 
-    results.push(`export interface ${widgetName}PreviewProps {${
-        !isLabeled
-            ? `
-    /**
-     * @deprecated Deprecated since version 9.18.0. Please use class property instead.
-     */
-    className: string;
-    class: string;
-    style: string;
-    styleObject?: CSSProperties;`
-            : ""
-    }
-    readOnly: boolean;
-    renderMode: "design" | "xray" | "structure";
-    translate: (text: string) => string;
-${generatePreviewTypeBody(properties, results, resolveProp)}
-}`);
+    results.push(
+        templateInterface(
+            `${widgetName}PreviewProps`,
+            isLabeled ? "" : containerStylingProps,
+            "readOnly: boolean;",
+            `renderMode: "design" | "xray" | "structure";`,
+            "translate: (text: string) => string;",
+            ...generatePreviewTypeBody(properties, results, resolveProp)
+        )
+    );
     return results;
 }
+
+const containerStylingProps = `/**
+ * @deprecated Deprecated since version 9.18.0. Please use class property instead.
+ */
+className: string;
+class: string;
+style: string;
+styleObject?: CSSProperties;`;
 
 function generatePreviewTypeBody(
     properties: Property[],
     generatedTypes: string[],
     resolveProp: (key: string) => Property | undefined
-) {
+): string[] {
     return properties
         .filter(prop => {
             if (prop.$.type === "datasource" && prop.$.isLinked) return false;
             return true;
         })
-        .map(prop => `    ${prop.$.key}: ${toPreviewPropType(prop, generatedTypes, resolveProp)};`)
-        .join("\n");
+        .map(prop => `${prop.$.key}: ${toPreviewPropType(prop, generatedTypes, resolveProp)};`);
 }
 
 function toPreviewPropType(
@@ -91,9 +91,10 @@ function toPreviewPropType(
                 key.startsWith("../") ? resolveProp(key.substring(3)) : childProperties.find(p => p.$.key === key);
 
             generatedTypes.push(
-                `export interface ${childType} {
-${generatePreviewTypeBody(childProperties, generatedTypes, resolveChildProp)}
-}`
+                templateInterface(
+                    childType,
+                    ...generatePreviewTypeBody(childProperties, generatedTypes, resolveChildProp)
+                )
             );
             return prop.$.isList === "true" ? `${childType}[]` : childType;
         case "widgets":

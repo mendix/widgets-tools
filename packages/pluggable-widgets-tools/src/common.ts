@@ -1,4 +1,4 @@
-export function ensure<T>(arg?: T, label: string = "argument"): T {
+export function ensure<T>(arg: T | undefined | null, label: string = "argument"): T {
     if (arg === null || arg === undefined) {
         throw new Error(`Did not expect ${label} to be ${arg}`);
     }

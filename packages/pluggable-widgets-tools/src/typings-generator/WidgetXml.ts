@@ -106,6 +106,56 @@ export interface SystemProperty {
     };
 }
 
+export interface TextSystemProperty {
+    $: {
+        key: "Text";
+    };
+    text: SystemText[];
+    externalTexts: ExternalSystemTextNamespace[];
+}
+
+export interface SystemText {
+    $: {
+        key: string;
+    };
+    caption: string;
+    translations: SystemTextTranslationCollection[];
+    parameters: SystemTextParameterCollection[];
+}
+
+export interface SystemTextParameterCollection {
+    parameter: SystemTextParameter[];
+}
+
+export interface SystemTextTranslationCollection {
+    translation: SystemTextTranslation[];
+}
+
+export interface SystemTextTranslation {
+    $: {
+        lang: string;
+    };
+}
+
+export interface SystemTextParameter {
+    $: {
+        caption: string;
+    };
+}
+
+export interface ExternalSystemTextNamespace {
+    $: {
+        widgetId: string;
+    };
+    text: ExternalSystemText[];
+}
+
+export interface ExternalSystemText {
+    $: {
+        key: string;
+    };
+}
+
 export interface Enumeration {
     enumerationValue: EnumerationValue[];
 }

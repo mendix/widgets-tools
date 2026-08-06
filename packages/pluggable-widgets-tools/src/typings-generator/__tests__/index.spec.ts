@@ -55,6 +55,8 @@ import {
     singleObjectDatasourceNativeOutput,
     singleObjectDatasourceWebOutput
 } from "./outputs/single-object-datasource";
+import { systemTextsInput, systemTextsInputNative } from "./inputs/systemtexts";
+import { systemTextsNativeOutput, systemTextsOutput } from "./outputs/systemtexts";
 
 describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native", () => {
@@ -265,6 +267,16 @@ describe("Generating tests", () => {
     it("Generates a parsed typing from XML for native using single object datasource", () => {
         const newContent = generateNativeTypesFor(singleObjectDatasourceInputNative);
         expect(newContent).toBe(singleObjectDatasourceNativeOutput);
+    });
+
+    it("Generates a parsed typing from XML for web using system texts", () => {
+        const newContent = generateFullTypesFor(systemTextsInput);
+        expect(newContent).toBe(systemTextsOutput);
+    });
+
+    it("Generates a parsed typing from XML for native using system texts", () => {
+        const newContent = generateNativeTypesFor(systemTextsInputNative);
+        expect(newContent).toBe(systemTextsNativeOutput);
     });
 });
 

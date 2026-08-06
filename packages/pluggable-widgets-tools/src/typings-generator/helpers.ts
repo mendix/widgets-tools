@@ -18,6 +18,10 @@ export function capitalizeFirstLetter(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+export function lowercaseFirstLetter(text: string): string {
+    return text.charAt(0).toLowerCase() + text.slice(1);
+}
+
 export function commasAnd(arr: string[]) {
     return arr.slice(0, -1).join(", ") + (arr.length > 1 ? " and " : "") + arr[arr.length - 1];
 }
@@ -36,4 +40,13 @@ export function groupBy<T, Groups extends string>(groupSelector: (item: T) => Gr
         const group = groupSelector(item);
         return { ...reduction, [group]: [...(reduction[group] ?? []), item] };
     };
+}
+
+export function templateInterface(name: string, ...properties: string[]): string {
+    return `export interface ${name} {
+    ${properties
+        .filter(x => x !== "")
+        .map(p => p.replace(/\n/g, "\n    "))
+        .join("\n    ")}
+}`;
 }
