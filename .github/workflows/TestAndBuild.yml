@@ -2,13 +2,17 @@ name: Test & Build
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - version/*
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
       - '.github/workflows/TestAndBuild.yml'
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - version/*
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
