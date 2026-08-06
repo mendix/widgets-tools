@@ -105,7 +105,11 @@ export default async args => {
                 url({
                     include: imagesAndFonts,
                     limit: 0,
-                    publicPath: `${join("widgets", outAssetsDir)}/`, // Prefix for the actual import, relative to Mendix web server root
+                    // Prefix for the actual import, relative to Mendix web server root
+                    // dojo uses: "widgets/<widget-path>/assets/123abc.png"
+                    // react uses:   "dist/<widget-path>/assets/123abc.png"
+                    publicPath:
+                        outputFormat === "es" ? `${join("dist", outAssetsDir)}/` : `${join("widgets", outAssetsDir)}/`,
                     destDir: absoluteOutAssetsDir
                 }),
                 postCssPlugin(outputFormat, production),
