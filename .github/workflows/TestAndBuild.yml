@@ -3,16 +3,16 @@ name: Test & Build
 on:
   push:
     branches:
-      - 'master'
-      - 'version/*'
+      - master
+      - version/*
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
       - '.github/workflows/TestAndBuild.yml'
   pull_request:
     branches:
-      - 'master'
-      - 'version/*'
+      - master
+      - version/*
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
