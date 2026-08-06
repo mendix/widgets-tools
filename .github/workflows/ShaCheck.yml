@@ -2,9 +2,13 @@ name: Ensure SHA pinned actions
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - version/*
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - version/*
 
 jobs:
   harden_security:
