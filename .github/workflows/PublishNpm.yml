@@ -91,9 +91,9 @@ jobs:
           printf 'release_tag=%s' "$tag" >> "$GITHUB_ENV"
 
       - name: Publish package
-        working-directory: ./packages/${{ matrix.release.package }}
+        working-directory: 
         run: |
-          cmd="npm publish --tag $release_tag mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz"
+          cmd="npm publish --tag $release_tag ./packages/${{ matrix.release.package }}/mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz"
           if [[ "${{ matrix.release.package }}" == "test" ]]; then
             echo "$cmd"
           else
