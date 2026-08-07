@@ -1,10 +1,14 @@
 name: Publish npm packages
 
+# To test this flow, push a `test-v*` tag. 
+# This will check against the real npmjs.com/package/test package, but won't actually publish.
+
 on:
   push:
     tags:
       - "pluggable-widgets-tools-v*"
       - "generator-widget-v*"
+      - "test-v*"
 
 permissions:
   id-token: write  # Required for OIDC
@@ -61,10 +65,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        working-directory: ./packages/${{ matrix.release.package }}
         run: pnpm install
 
       - name: Pack package
+        if: ${{ matrix.release.package != 'test' }}
         working-directory: ./packages/${{ matrix.release.package }}
         run: pnpm pack
 
@@ -74,20 +78,24 @@ jobs:
           node-version: '24' # Includes a version of npm higher than 11.5.1, which is needed for OIDC
 
       - name: Release Tag
-        id: tag
         run: |
+          package="$(echo "${{matrix.release.package}}" | sed -E '/^test$/! s/^/@mendix\//')" # Prefix all packages except test
           release="${{ matrix.release.version }}"
-          latest="$(npm view @mendix/${{ matrix.release.package }} dist-tags.latest)"
+          latest="$(npm view $package dist-tags.latest)"
           older="$(npx semver@7.8.5 "$latest" "$release" 2>/dev/null | head -n 1)"
           tag="latest"
           if [[ "$latest" != "$older" ]]; then
             tag="$(echo "$release" | sed -E 's/^([0-9]+\.[0-9]+).[0-9]+$/\1-latest/')"
           fi
-          printf 'RELEASE_TAG=%s' "$tag" >> "$GITHUB_OUTPUT"
-
+          printf 'Using release tag %s' "$tag"
+          printf 'release_tag=%s' "$tag" >> "$GITHUB_ENV"
 
       - name: Publish package
-        working-directory: ./packages/${{ matrix.release.package }}
-        run: npm publish --tag ${{ vars.tag }} mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz
-        variables:
-          tag: ${{ steps.tag.outputs.RELEASE_TAG }}
+        working-directory: 
+        run: |
+          cmd="npm publish --tag $release_tag ./packages/${{ matrix.release.package }}/mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz"
+          if [[ "${{ matrix.release.package }}" == "test" ]]; then
+            echo "$cmd"
+          else
+            $cmd
+          fi
