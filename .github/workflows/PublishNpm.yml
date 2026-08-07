@@ -79,8 +79,9 @@ jobs:
 
       - name: Release Tag
         run: |
+          package="$(echo "${{matrix.release.package}}" | sed -E '/^test$/! s/^/@mendix\//')" # Prefix all packages except test
           release="${{ matrix.release.version }}"
-          latest="$(npm view @mendix/${{ matrix.release.package }} dist-tags.latest)"
+          latest="$(npm view $package dist-tags.latest)"
           older="$(npx semver@7.8.5 "$latest" "$release" 2>/dev/null | head -n 1)"
           tag="latest"
           if [[ "$latest" != "$older" ]]; then
