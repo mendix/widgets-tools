@@ -65,10 +65,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        working-directory: ./packages/${{ matrix.release.package }}
         run: pnpm install
 
       - name: Pack package
+        if: ${{ matrix.release.package != 'test' }}
         working-directory: ./packages/${{ matrix.release.package }}
         run: pnpm pack
 
