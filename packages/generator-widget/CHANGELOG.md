@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [10.24.1] - 2026-08-07
+
 ### Changed
 
 -   We cleaned up a template with unused imports.
+
 -   We increased the minimum node version to 22.
 
 -   We updated the version of cypress when e2e tests are generated.
