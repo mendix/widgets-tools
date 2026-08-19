@@ -4,7 +4,7 @@ import { SystemProperty, TextSystemProperty } from "./WidgetXml";
 
 const STAR = "*" as const;
 type Star = typeof STAR;
-type Text = { key: string; parameters: string[] } | { widgetId: string; key: Star | string[] };
+type Text = { key: string; parameters: string[] } | { namespace: string; key: Star | string[] };
 
 function textsFromSystemProperty(node: SystemProperty): Text[] {
     if (!isTextSystemProperty(node)) return [];
@@ -16,7 +16,7 @@ function textsFromSystemProperty(node: SystemProperty): Text[] {
         })),
         ...(node.externalTexts ?? []).map(e => {
             return {
-                widgetId: e.$.widgetId,
+                namespace: e.$.namespace,
                 key: e.text === undefined ? STAR : e.text.map(t => t.$.key)
             };
         })
@@ -28,11 +28,11 @@ function isTextSystemProperty(node: SystemProperty): node is TextSystemProperty 
 }
 
 function generateTextType(t: Text): string {
-    if ("widgetId" in t) {
+    if ("namespace" in t) {
         if (t.key === STAR) {
-            return `"${t.widgetId}": [key: string, params?: string[]]`;
+            return `"${t.namespace}": [key: string, params?: string[]]`;
         }
-        return `"${t.widgetId}": [key: ${t.key.map(key => `"${key}"`).join(" | ")}, params?: string[]]`;
+        return `"${t.namespace}": [key: ${t.key.map(key => `"${key}"`).join(" | ")}, params?: string[]]`;
     }
 
     const parameterTypes = t.parameters.map(p => `${normalizeParameterName(p)}: string`);
