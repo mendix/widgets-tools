@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.13.0] - 2026-08-28
+
 ### Added
 
 -   We added support for [System texts](https://docs.mendix.com/refguide/system-texts/), introduced to Pluggable Widgets in Mendix 11.13. Texts [defined in the Widget's XML file](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-property-types/#text) are included in Studio Pro's System text editor. Texts can be defined with parameters and default translations or can be a reference to an external System text.
