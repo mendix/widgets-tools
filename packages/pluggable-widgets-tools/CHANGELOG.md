@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- We updated the transpilation targets for babel to target more recent browsers.
+
+### Fixed
+
+- We fixed an issue with object destructuring assignments caused by a polyfill. (Issue #176)
+
 ## [11.13.0] - 2026-08-28
 
 ### Added
