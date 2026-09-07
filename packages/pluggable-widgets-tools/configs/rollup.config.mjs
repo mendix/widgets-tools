@@ -123,7 +123,7 @@ export default async args => {
                     extensions,
                     transpile: production,
                     babelConfig: {
-                        presets: [["@babel/preset-env", { targets: { safari: "12" } }]],
+                        presets: ["@babel/preset-env"],
                         allowAllFormats: true
                     },
                     external: outputFormat === "es" ? [] : webExternal,
@@ -161,7 +161,7 @@ export default async args => {
                     sourceMaps: !production,
                     extensions,
                     transpile: production,
-                    babelConfig: { presets: [["@babel/preset-env", { targets: { safari: "12" } }]] },
+                    babelConfig: { presets: ["@babel/preset-env"] },
                     external: commonExternalLibs
                 })
             ],
