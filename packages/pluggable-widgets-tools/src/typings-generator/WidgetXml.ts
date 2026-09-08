@@ -145,7 +145,7 @@ export interface SystemTextParameter {
 
 export interface ExternalSystemTextNamespace {
     $: {
-        widgetId: string;
+        namespace: string;
     };
     text: ExternalSystemText[];
 }

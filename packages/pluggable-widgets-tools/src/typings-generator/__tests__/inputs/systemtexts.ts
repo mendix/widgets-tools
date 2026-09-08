@@ -16,11 +16,11 @@ const systemProperty = `<systemProperty key="Text">
             <parameter caption="Count" />
         </parameters>
     </text>
-    <externalTexts widgetId="mendix.textbox.TextBox">
+    <externalTexts namespace="mendix.textbox.TextBox">
         <text key="label" />
         <text key="placeholder" />
     </externalTexts>
-    <externalTexts widgetId="mendix.datagrid.DataGrid" />
+    <externalTexts namespace="mendix.datagrid.DataGrid" />
 </systemProperty>`;
 
 export const systemTextsInput = `<?xml version="1.0" encoding="utf-8"?>

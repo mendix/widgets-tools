@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 -   We increased the minimum node version to 22.
+-   We changed [System Text XML](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-property-types/#text) type to use `namespace` instead of `widgetId`, since we now allow Pluggable Widgets to refer to all system texts.
 
 ### Fixed
 
