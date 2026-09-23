@@ -1,6 +1,5 @@
-![Unit tests](https://github.com/mendix/widgets-tools/actions/workflows/UnitTests.yml/badge.svg?branch=master)
+![Unit tests](https://github.com/mendix/widgets-tools/actions/workflows/TestAndBuild.yml/badge.svg?branch=master)
 ![PWT Commands Tests](https://github.com/mendix/widgets-tools/actions/workflows/TestPWTCommands.yml/badge.svg?branch=master)
-![Publisn NPM](https://github.com/mendix/widgets-tools/actions/workflows/PublishNpm.yml/badge.svg?branch=master)
 
 # Widgets tools
 
