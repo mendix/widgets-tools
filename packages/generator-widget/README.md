@@ -1,11 +1,9 @@
 # Mendix Pluggable Widgets Generator
 
 ![npm version](https://badge.fury.io/js/%40mendix%2Fgenerator-widget.svg)
-![Mendix 8](https://img.shields.io/badge/mendix-8.0.0-brightgreen.svg)
-![Build Status](https://travis-ci.org/mendix/widgets-tools.svg?branch=master)
 ![npm](https://img.shields.io/npm/dm/@mendix/generator-widget)
-![GitHub release](https://img.shields.io/github/release/mendix/widgets-tools)
-![GitHub issues](https://img.shields.io/github/issues/mendix/widgets-tools)
+![GitHub Release](https://img.shields.io/github/v/release/mendix/widgets-tools?sort=semver&filter=generator-widget-v*&link=https%3A%2F%2Fgithub.com%2Fmendix%2Fwidgets-tools%2Freleases)
+![GitHub Issues](https://img.shields.io/github/issues/mendix/widgets-tools?link=https%3A%2F%2Fgithub.com%2Fmendix%2Fwidgets-tools%2Fissues)
 
 ## About
 
