@@ -6,18 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.15.0] - 2026-09-30
+
 ### Changed
 
-- We updated the transpilation targets for babel to target more recent browsers.
+-   We updated the transpilation targets for babel to target more recent browsers.
 
 -   We changed [System Text XML](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-property-types/#text) type to use `namespace` instead of `widgetId`, since we now allow Pluggable Widgets to refer to all system texts.
 
 -   We updated the Mendix package to 11.15.
 
-
 ### Fixed
 
-- We fixed an issue with object destructuring assignments caused by a polyfill. (Issue #176)
+-   We fixed an issue with object destructuring assignments caused by a polyfill. (Issue #176)
 
 ## [11.13.0] - 2026-08-28
 
