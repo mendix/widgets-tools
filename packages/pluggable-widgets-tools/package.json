@@ -1,6 +1,6 @@
 {
   "name": "@mendix/pluggable-widgets-tools",
-  "version": "11.13.0",
+  "version": "11.15.0",
   "description": "Mendix Pluggable Widgets Tools",
   "engines": {
     "node": "^22.18.0"
@@ -46,6 +46,8 @@
     "@rollup/plugin-typescript": "^12.1.1",
     "@rollup/plugin-url": "^8.0.2",
     "@rollup/pluginutils": "^5.3.0",
+    "@swc/core": "^1.10.0",
+    "@swc/jest": "^0.2.37",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -79,7 +81,7 @@
     "jest-jasmine2": "~30.5.0",
     "jest-junit": "^17.0.0",
     "make-dir": "^5.1.0",
-    "mendix": "^11.8.0",
+    "mendix": "^11.15.0",
     "mime": "^4.1.0",
     "postcss": "^8.5.18",
     "postcss-import": "^14.0.2",
@@ -99,8 +101,6 @@
     "semver": "^7.3.2",
     "shelljs": "^0.10.0",
     "shx": "^0.4.0",
-    "@swc/core": "^1.10.0",
-    "@swc/jest": "^0.2.37",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",

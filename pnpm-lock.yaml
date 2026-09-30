@@ -301,8 +301,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       mendix:
-        specifier: ^11.8.0
-        version: 11.10.0
+        specifier: ^11.15.0
+        version: 11.15.0
       mime:
         specifier: ^4.1.0
         version: 4.1.0
@@ -5249,8 +5249,8 @@ packages:
   memoize-one@5.2.1:
     resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
 
-  mendix@11.10.0:
-    resolution: {integrity: sha512-OsLdgNJfhwG4/TcOIMMk0gu0ewHq3Xlv2CNW1YJy2ujqD19ngFvBVB9YTjYxmf+RMn1EG0FQYrn6zCSFzmbL4A==}
+  mendix@11.15.0:
+    resolution: {integrity: sha512-LX0sreXwbRF/9cGbDwaRHBGkcjdweQsoyWPmVnCS96VpeSLm2tcg0bJUDCEAkkxyJ+GG+DMTRUxRilYtG6Fyeg==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -13351,7 +13351,7 @@ snapshots:
 
   memoize-one@5.2.1: {}
 
-  mendix@11.10.0:
+  mendix@11.15.0:
     dependencies:
       '@types/big.js': 6.2.2
       '@types/react': 19.2.14
