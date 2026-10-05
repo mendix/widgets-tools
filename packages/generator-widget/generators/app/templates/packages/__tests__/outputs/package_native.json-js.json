@@ -28,13 +28,13 @@
 
   },
   "resolutions": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-native": "~0.78.2"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-native": "~0.88.0-rc.3"
   },
   "overrides": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-native": "~0.78.2"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-native": "~0.88.0-rc.3"
   }
 }

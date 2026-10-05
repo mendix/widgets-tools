@@ -52,9 +52,10 @@ const nativeExternal = [
     /^react($|\/)/,
     /^react-native-gesture-handler($|\/)/,
     /^react-native-reanimated($|\/)/,
+    /^react-native-worklets($|\/)/,
     /^react-native-fast-image($|\/)/,
     /^react-native-svg($|\/)/,
-    /^react-native-vector-icons($|\/)/,
+    /^@react-native-vector-icons\/common($|\/)/,
     /^@?react-navigation($|\/)/,
     /^react-native-safe-area-context($|\/)/,
     /^@d11\/react-native-fast-image($|\/)/
@@ -222,7 +223,7 @@ export default async args => {
                   })
                 : null,
             image(),
-            production ? terser({ mangle: false }) : null,
+            production ? terser({ mangle: false, compress: { directives: false } }) : null,
             // We need to create .mpk and copy results to test project after bundling is finished.
             // In case of a regular build is it is on `writeBundle` of the last config we define
             // (since rollup processes configs sequentially). But in watch mode rollup re-bundles only

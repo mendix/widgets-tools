@@ -6,7 +6,7 @@
         "target": "es6",
         "lib": ["esnext", "dom"],
         "types": ["jest", "node"],
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "declaration": false,
         "noLib": false,
         "forceConsistentCasingInFileNames": true,

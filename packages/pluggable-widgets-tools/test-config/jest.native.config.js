@@ -1,9 +1,9 @@
-const { join } = require("path");
+const { dirname, join } = require("path");
 
 const projectDir = process.cwd();
 
 module.exports = {
-    preset: "react-native",
+    preset: dirname(require.resolve("@react-native/jest-preset")),
     testRunner: "jest-jasmine2",
     clearMocks: true,
     haste: {
@@ -18,6 +18,7 @@ module.exports = {
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
     transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
     transform: {
+        "^.+\\.(ttf|otf|woff2?|eot)$": require.resolve("@react-native/jest-preset/jest/assetFileTransformer.js"),
         "^.+\\.tsx?$": [
             "ts-jest",
             {
