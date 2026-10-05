@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   **Breaking:** We removed the deprecated `react-native-vector-icons` package from the external dependencies of native widgets, in favor of the scoped `@react-native-vector-icons/*` packages. Widgets still importing the old package should migrate to the scoped packages.
 
+### Fixed
+
+-   We fixed an issue where building a TypeScript widget could fail with "Could not find module 'tslib'" since `tslib`, which is required by `@rollup/plugin-typescript`, was not declared as a dependency.
+
 ### Removed
 
 -   We removed `@types/react-native` from the dependencies managed by the migration script, since React Native now ships its own types.
