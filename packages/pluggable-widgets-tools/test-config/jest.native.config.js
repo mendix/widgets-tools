@@ -1,9 +1,9 @@
-const { dirname, join } = require("path");
+const { join } = require("path");
 
 const projectDir = process.cwd();
 
 module.exports = {
-    preset: dirname(require.resolve("@react-native/jest-preset")),
+    preset: "@react-native/jest-preset",
     testRunner: "jest-jasmine2",
     clearMocks: true,
     haste: {

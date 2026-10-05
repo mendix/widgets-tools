@@ -13,7 +13,6 @@
         "declaration": true,
         "sourceMap": false,
         "paths": {
-            "react-hot-loader/root": ["./configs/hot-typescript.ts"],
             "react-native": ["./node_modules/react-native/types_generated/index.d.ts"]
         }
     }
