@@ -1,6 +1,6 @@
 import { Mutex, Semaphore } from "async-mutex";
 import { exec } from "child_process";
-import { readFileSync, realpathSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import fsExtra from "fs-extra";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -17,10 +17,6 @@ const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
 
 const DIR_COMMAND_TESTS = dirname(fileURLToPath(import.meta.url));
-
-// Resolve the temp directory to its real path. On Windows runners it can be an 8.3 short path (e.g. RUNNER~1), which
-// makes Node and Jest resolve the same module to different paths and load React twice.
-const TEMP_DIR = realpathSync.native(tempdir());
 
 const CONFIGS = [
     ["web", "full", "js", "latest"],
@@ -79,7 +75,7 @@ async function main() {
                     workDir = workDirs.pop();
                     if (!workDir) {
                         workDir = join(
-                            index === 0 ? join(TEMP_DIR, "spaced folder") : TEMP_DIR,
+                            index === 0 ? join(tempdir(), "spaced folder") : tempdir(),
                             `pwt_test_${Math.round(Math.random() * 10000)}`
                         );
                         mkdir("-p", workDir);
