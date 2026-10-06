@@ -8,7 +8,7 @@ import { createInterface } from "readline/promises";
 import { execAsync } from "./lib/exec.ts";
 import { ensure, isDefined } from "./lib/option.ts";
 import { getWidgetLogger, styled } from "./lib/logger.ts";
-import { type Config, getWidgetName } from "./lib/config.ts";
+import { type WidgetConfig, getWidgetName } from "./lib/widget.ts";
 import { repeat } from "./lib/strings.ts";
 import { runTest } from "./tests/testRunner.ts";
 import { ensureError } from "./lib/errors.ts";
@@ -21,7 +21,7 @@ const PARALLELISM = 4;
 
 const DIR_COMMAND_TESTS = dirname(fileURLToPath(import.meta.url));
 
-const CONFIGS: Config[] = [
+const CONFIGS: WidgetConfig[] = [
     ["web", "full", "js", "latest"],
     ["web", "full", "ts", "latest"],
     ["native", "full", "js", "latest"],
@@ -60,9 +60,9 @@ async function main() {
     const widgetsToolsPackagePath = join(pluggableWidgetsToolsPath, ensure(packOutput.trim().split(/\n/g).pop()));
 
     const workDirs: string[] = [];
-    const configWorkDirs: Record<string, Config> = {};
+    const configWorkDirs: Record<string, WidgetConfig> = {};
     const workDirSemaphore = new Semaphore(PARALLELISM);
-    const failures: Array<{ config: Config; error: Error; workDir: string }> = (
+    const failures: Array<{ config: WidgetConfig; error: Error; workDir: string }> = (
         await Promise.all(
             CONFIGS.map(async (config, index) => {
                 const logger = getWidgetLogger(index, ...config);

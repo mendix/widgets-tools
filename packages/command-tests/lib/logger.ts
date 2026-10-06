@@ -1,5 +1,5 @@
 import { format, styleText } from "node:util";
-import { type Config, getWidgetName } from "./config.ts";
+import { type WidgetConfig, getWidgetName } from "./widget.ts";
 
 type Arguments<F> = F extends (...args: infer Args) => unknown ? Args : never;
 type TextStyles = Arguments<typeof styleText>[0];
@@ -20,7 +20,7 @@ const COLORS: TextStyles[] = [
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export type Logger = (template: string, ...msgs: any[]) => void;
 
-export function getWidgetLogger(index: number, ...[platform, boilerplate, lang, version]: Config): Logger {
+export function getWidgetLogger(index: number, ...[platform, boilerplate, lang, version]: WidgetConfig): Logger {
     const colorName = COLORS[index % COLORS.length];
     return (template, ...msgs) =>
         console.log(

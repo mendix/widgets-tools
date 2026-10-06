@@ -1,6 +1,5 @@
 import shelljs from "shelljs";
 import kill from "tree-kill";
-import { type Config, getWidgetName } from "../lib/config.ts";
 import { type Logger } from "../lib/logger.ts";
 import { join } from "node:path";
 import { resolveModule } from "../lib/node.ts";
@@ -10,12 +9,13 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { Mutex } from "async-mutex";
 import helpers from "yeoman-test";
+import { type WidgetPackageJson, type WidgetConfig, getWidgetName } from "../lib/widget.ts";
 
 const { copy, existsSync, readFileSync, readJson, writeFileSync, writeJson } = fsExtra;
 const { ls, rm } = shelljs;
 
 export async function runTest(
-    config: Config,
+    config: WidgetConfig,
     {
         logger,
         yeomanMutex,
@@ -169,7 +169,7 @@ export async function runTest(
         }
     }
 
-    async function checkDependenciesFiles(isNative: boolean, boilerplate: Config[1], version: Config[3]) {
+    async function checkDependenciesFiles(isNative: boolean, boilerplate: WidgetConfig[1], version: WidgetConfig[3]) {
         const dependenciesJSONFile = join(workDir, "dist", "tmp", "widgets", "dependencies.json");
         const dependenciesTxtFile = join(workDir, "dist", "tmp", "widgets", "dependencies.txt");
 
@@ -186,8 +186,8 @@ export async function runTest(
                 ? "@mendix/pluggable-widgets-tools"
                 : null
             : boilerplate === "full"
-              ? "classnames"
-              : null;
+                ? "classnames"
+                : null;
 
         if (
             packageName &&
