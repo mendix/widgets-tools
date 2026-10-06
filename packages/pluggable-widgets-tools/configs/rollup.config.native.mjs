@@ -55,6 +55,7 @@ const nativeExternal = [
     /^react-native-worklets($|\/)/,
     /^react-native-fast-image($|\/)/,
     /^react-native-svg($|\/)/,
+    /^react-native-vector-icons($|\/)/,
     /^@react-native-vector-icons\/common($|\/)/,
     /^@?react-navigation($|\/)/,
     /^react-native-safe-area-context($|\/)/,
