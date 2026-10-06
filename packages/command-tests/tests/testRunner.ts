@@ -35,11 +35,9 @@ export async function runTest(
     const [platform, boilerplate, lang, version] = config;
     const isNative = platform === "native";
     const widgetName = getWidgetName(platform, boilerplate, lang, version);
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    let widgetPackageJson: any;
 
     logger(`Preparing widget...`);
-    await prepareWidget();
+    const widgetPackageJson = await prepareWidget();
     logger(`Ready to test!`);
 
     logger(`Testing linting...`);
@@ -74,7 +72,7 @@ export async function runTest(
 
     logger(`Tested!`);
 
-    async function prepareWidget() {
+    async function prepareWidget(): Promise<WidgetPackageJson> {
         const filesToRemove = ls(workDir)
             .filter(file => file !== "node_modules")
             .map(file => join(workDir, file));
@@ -116,12 +114,14 @@ export async function runTest(
         }
 
         logger("Preparing widget: Installing");
-        widgetPackageJson = await readJson(join(workDir, "package.json"));
+        const widgetPackageJson = await readJson(join(workDir, "package.json")) as WidgetPackageJson;
         widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = widgetsToolsPackagePath;
 
         await writeJson(join(workDir, "package.json"), widgetPackageJson);
 
         await execAsync("npm install --loglevel=error", workDir, logger);
+
+        return widgetPackageJson;
     }
 
     async function testLint() {
