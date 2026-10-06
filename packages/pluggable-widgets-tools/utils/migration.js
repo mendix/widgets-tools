@@ -50,17 +50,16 @@ const dependencies = [
     { name: "react-native-webview", version: "11.26.1", check: CheckType.MAJOR_MINOR }
 ];
 
-const reactPackage = { version: "19.0.0", check: CheckType.MAJOR_MINOR };
-const reactDomPackage = { version: "19.0.0", check: CheckType.MAJOR_MINOR };
-const reactNativePackage = { version: "0.78.2", check: CheckType.MINOR };
+const reactPackage = { version: "19.3.0", check: CheckType.MAJOR_MINOR };
+const reactDomPackage = { version: "19.3.0", check: CheckType.MAJOR_MINOR };
+const reactNativePackage = { version: "0.88.0-rc.3", check: CheckType.MINOR };
 
 const resolutionsOverrides = [
     { name: "react", ...reactPackage },
     { name: "react-dom", ...reactDomPackage },
     { name: "react-native", ...reactNativePackage },
     { name: "@types/react", ...reactPackage },
-    { name: "@types/react-dom", ...reactDomPackage },
-    { name: "@types/react-native", ...reactNativePackage }
+    { name: "@types/react-dom", ...reactDomPackage }
 ];
 
 function extractVersions(version) {
@@ -171,9 +170,7 @@ async function getExtraDependencies(packageJson, key) {
 
     let extraDependencies = resolutionsOverrides.filter(ov => !packageJson[key] || !packageJson[key][ov.name]);
     if (!supportedPlatforms.includes("Native"))
-        extraDependencies = extraDependencies.filter(
-            d => d.name !== "react-native" && d.name !== "@types/react-native"
-        );
+        extraDependencies = extraDependencies.filter(d => d.name !== "react-native");
     if (!supportedPlatforms.includes("Web"))
         extraDependencies = extraDependencies.filter(d => d.name !== "react-dom" && d.name !== "@types/react-dom");
 

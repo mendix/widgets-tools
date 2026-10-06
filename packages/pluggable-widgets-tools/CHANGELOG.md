@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We upgraded the Pluggable Widgets Tools to React 19.3 and React Native 0.88.
+
+-   We switched the native Jest preset to `@react-native/jest-preset`, since React Native no longer ships its own Jest preset.
+
+-   We changed the `moduleResolution` in the base `tsconfig` to `bundler`, since React Native 0.88 only exposes its TypeScript types through package `exports`.
+
+-   We added `react-native-worklets` and `@react-native-vector-icons/common` to the external dependencies of native widgets, and disabled the removal of directives when minifying native widgets.
+
+### Fixed
+
+-   We fixed an issue where building a TypeScript widget could fail with "Could not find module 'tslib'" since `tslib`, which is required by `@rollup/plugin-typescript`, was not declared as a dependency.
+
+### Removed
+
+-   We removed `@types/react-native` from the dependencies managed by the migration script, since React Native now ships its own types.
+
 ## [11.15.0] - 2026-09-30
 
 ### Changed
