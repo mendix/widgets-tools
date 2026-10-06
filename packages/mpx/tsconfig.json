@@ -1,0 +1,9 @@
+{
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "exclude": ["input"],
+    "include": ["src/**/*"],
+    "compilerOptions": {
+        "noEmit": true,
+        "resolveJsonModule": true
+    }
+}
