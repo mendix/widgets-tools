@@ -35,8 +35,8 @@
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
     "@prettier/plugin-xml": "^1.2.0",
-    "@react-native/babel-preset": "0.88.0-rc.3",
-    "@react-native/jest-preset": "0.88.0-rc.3",
+    "@react-native/babel-preset": "0.88.0",
+    "@react-native/jest-preset": "0.88.0",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^29.0.2",
@@ -115,7 +115,7 @@
     "@types/xml2js": "^0.4.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-native": "~0.88.0-rc.3"
+    "react-native": "~0.88.0"
   },
   "keywords": [
     "typings",

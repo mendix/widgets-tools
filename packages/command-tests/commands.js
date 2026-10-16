@@ -410,7 +410,7 @@ function fixPackageJson(json) {
     const overrides = {
         react: "^19.3.0",
         "react-dom": "^19.3.0",
-        "react-native": "0.88.0-rc.3"
+        "react-native": "0.88.0"
     };
 
     Object.keys(devDependencies)
