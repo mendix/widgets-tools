@@ -16,7 +16,7 @@ module.exports = {
         ...(hasDependency("react-native-gesture-handler") ? ["react-native-gesture-handler/jestSetup.js"] : [])
     ],
     testMatch: ["<rootDir>/**/*.spec.{js,jsx,ts,tsx}"],
-    transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-)/)"],
+    transformIgnorePatterns: ["node_modules/(?!(.*react-native.*|victory-|@shopify/flash-list)/)"],
     transform: {
         "^.+\\.(ttf|otf|woff2?|eot)$": require.resolve("@react-native/jest-preset/jest/assetFileTransformer.js"),
         "^.+\\.tsx?$": [
