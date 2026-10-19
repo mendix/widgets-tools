@@ -1,8 +1,7 @@
 import fg from "fast-glob";
 import fsExtra from "fs-extra";
-import { existsSync, readFileSync, writeFileSync } from "fs";
-import { dirname, join, parse } from "path";
-import copy from "recursive-copy";
+import { cpSync, existsSync, readFileSync, realpathSync, writeFileSync } from "fs";
+import { dirname, join, parse, relative } from "path";
 import { promisify } from "util";
 import resolve from "resolve";
 import _ from "lodash";
@@ -125,7 +124,14 @@ async function resolvePackage(target, sourceDir, optional = false) {
 }
 
 async function hasNativeCode(dir) {
-    return (await fg(["**/{android,ios}/*", "**/*.podspec"], { cwd: dir })).length > 0;
+    return (
+        (
+            await fg(["**/{android,ios}/*", "**/*.podspec"], {
+                cwd: dir,
+                ignore: ["**/example*/**", "**/__tests__/**", "**/docs/**"]
+            })
+        ).length > 0
+    );
 }
 
 async function getTransitiveDependencies(packagePath, isExternal) {
@@ -169,14 +175,19 @@ async function copyJsModule(moduleSourcePath, to) {
     if (existsSync(to)) {
         return;
     }
-    return promisify(copy)(moduleSourcePath, to, {
-        filter: [
-            "**/*.*",
-            LICENSE_GLOB,
-            "!**/{android,ios,windows,mac,jest,github,gradle,__*__,docs,jest,example*}/**/*",
-            "!**/*.{config,setup}.*",
-            "!**/*.{podspec,flow}"
-        ]
+    // Package managers like pnpm link packages into node_modules, so copy the contents of the link target.
+    const sourcePath = realpathSync(moduleSourcePath);
+    cpSync(sourcePath, to, {
+        recursive: true,
+        dereference: true,
+        filter: source => {
+            const relativePath = relative(sourcePath, source);
+            return (
+                !/(^|[\\/])(android|ios|windows|mac|jest|github|gradle|__.*__|docs|example.*)([\\/]|$)/.test(
+                    relativePath
+                ) && !/\.(config|setup)\.|\.(podspec|flow)$/.test(relativePath)
+            );
+        }
     });
 }
 
