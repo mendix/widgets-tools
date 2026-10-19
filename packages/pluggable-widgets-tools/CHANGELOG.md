@@ -8,15 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--   We upgraded the Pluggable Widgets Tools to React 19.3 and React Native 0.88.
+-   We upgraded the Pluggable Widgets Tools to React 19.3 and React Native 0.88. The base `tsconfig` now uses the `bundler` module resolution, since React Native 0.88 only exposes its TypeScript types through package `exports`. Native unit tests now use the `@react-native/jest-preset` Jest preset and `ts-jest` 29.4.11 or newer, and also transform `@shopify/flash-list`.
 
--   We switched the native Jest preset to `@react-native/jest-preset`, since React Native no longer ships its own Jest preset.
+-   We added `react-native-worklets`, `@react-native-vector-icons/common` and `mendix-native` to the external dependencies of native widgets, and disabled the removal of directives when minifying native widgets.
 
--   We changed the `moduleResolution` in the base `tsconfig` to `bundler`, since React Native 0.88 only exposes its TypeScript types through package `exports`.
-
--   We added `react-native-worklets` and `@react-native-vector-icons/common` to the external dependencies of native widgets, and disabled the removal of directives when minifying native widgets.
+-   We now allow any Node.js version from 22.18 onwards.
 
 ### Fixed
+
+-   We fixed how native dependencies are added to the widget package. Their JavaScript code was missing when they were installed with pnpm or another package manager that links packages into `node_modules`, their `android` and `ios` folders were included, and JavaScript-only dependencies were treated as native when their example apps, tests or docs contain `android` or `ios` folders.
 
 -   We fixed an issue where building a TypeScript widget could fail with "Could not find module 'tslib'" since `tslib`, which is required by `@rollup/plugin-typescript`, was not declared as a dependency.
 
