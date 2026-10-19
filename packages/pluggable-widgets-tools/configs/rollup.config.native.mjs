@@ -57,6 +57,7 @@ const nativeExternal = [
     /^react-native-svg($|\/)/,
     /^react-native-vector-icons($|\/)/,
     /^@react-native-vector-icons\/common($|\/)/,
+    /^mendix-native($|\/)/,
     /^@?react-navigation($|\/)/,
     /^react-native-safe-area-context($|\/)/,
     /^@d11\/react-native-fast-image($|\/)/
