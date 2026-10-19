@@ -22,7 +22,7 @@ module.exports = {
         "^.+\\.tsx?$": [
             "ts-jest",
             {
-                tsconfig: { module: "commonjs", target: "ES2019" }
+                tsconfig: { module: "commonjs", target: "ES2019", noEmitOnError: false }
             }
         ],
         "^.+\\.jsx?$": join(__dirname, "transform-native.js")
