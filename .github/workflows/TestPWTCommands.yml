@@ -22,11 +22,12 @@ on:
 
 jobs:
   test:
-    name: "Script tests (${{ matrix.os }})"
+    name: "Script tests (${{ matrix.os }}, node ${{ matrix.node }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
+        node: ['22', '24']
     steps:
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
@@ -39,6 +40,7 @@ jobs:
       - name: "Defining node version"
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
+          node-version: ${{ matrix.node }}
           cache: 'pnpm'
 
       - name: "Installing dependencies"
