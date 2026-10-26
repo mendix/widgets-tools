@@ -16,7 +16,7 @@
     "test": "tsc --noEmit"
   },
   "engines": {
-    "node": "^22.18.0"
+    "node": ">=22.18.0"
   },
   "devDependencies": {
     "@tsconfig/node-ts": "^23.6.4",
