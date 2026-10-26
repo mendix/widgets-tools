@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We added `react-native-worklets`, `@react-native-vector-icons/common` and `mendix-native` to the external dependencies of native widgets, and disabled the removal of directives when minifying native widgets.
 
--   We now allow any Node.js version from 22.18 onwards.
+-   We now allow any Node.js version from 22.18 onwards. (Issue #239)
 
 ### Fixed
 
