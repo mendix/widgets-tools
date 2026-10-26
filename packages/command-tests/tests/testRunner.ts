@@ -78,6 +78,7 @@ export async function runTest(
             .map(file => join(workDir, file));
 
         if (filesToRemove.length) {
+            logger("Preparing widget: Clearing workDir");
             rm("-r", ...filesToRemove);
         }
 
