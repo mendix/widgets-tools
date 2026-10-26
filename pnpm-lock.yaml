@@ -68,6 +68,9 @@ importers:
       '@types/xml2js':
         specifier: ^0.4.5
         version: 0.4.14
+      '@yeoman/adapter':
+        specifier: ^4.0.3
+        version: 4.0.3(@types/node@22.20.1)
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
@@ -106,10 +109,10 @@ importers:
         version: 4.9.5
       yeoman-environment:
         specifier: ^6.0.1
-        version: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+        version: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
       yeoman-test:
         specifier: ^11.3.1
-        version: 11.5.2(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)(yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))(yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))
+        version: 11.5.2(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)(yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))(yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))
 
   packages/generator-widget:
     dependencies:
@@ -124,10 +127,10 @@ importers:
         version: 7.8.0
       yeoman-environment:
         specifier: ^6.1.0
-        version: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+        version: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
       yeoman-generator:
         specifier: ^8.2.2
-        version: 8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+        version: 8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
     devDependencies:
       ejs:
         specifier: ^5.0.2
@@ -2883,8 +2886,8 @@ packages:
   '@xml-tools/parser@1.0.11':
     resolution: {integrity: sha512-aKqQ077XnR+oQtHJlrAflaZaL7qZsulWc/i/ZEooar5JiWj1eLt0+Wg28cpa+XLney107wXqneC+oG1IZvxkTA==}
 
-  '@yeoman/adapter@4.0.2':
-    resolution: {integrity: sha512-4uttbNuZ/guMBRhf7R6TCfnLT6XY1HGpxsq6vpHRM3AVr5G6Qz7xXqxG2kdMzBGtIuH5CkXz0k/Byl27GsvIkg==}
+  '@yeoman/adapter@4.0.3':
+    resolution: {integrity: sha512-cY1GoZmvv4e8SRuCgt2dI8QnJaxaSA0fWCGvu/IleLYBpAjWHjPUfVBbgG39Q6GkHokPsntaQTkAvNgMbPjJqA==}
     engines: {node: 20 || >=22}
 
   '@yeoman/conflicter@4.1.0':
@@ -10026,7 +10029,7 @@ snapshots:
     dependencies:
       chevrotain: 7.1.1
 
-  '@yeoman/adapter@4.0.2(@types/node@22.20.1)':
+  '@yeoman/adapter@4.0.3(@types/node@22.20.1)':
     dependencies:
       '@inquirer/core': 11.1.10(@types/node@22.20.1)
       '@inquirer/prompts': 8.4.3(@types/node@22.20.1)
@@ -10039,11 +10042,11 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@yeoman/conflicter@4.1.0(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)':
+  '@yeoman/conflicter@4.1.0(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)':
     dependencies:
       '@types/node': 22.20.1
       '@yeoman/transform': 2.1.1(@types/node@22.20.1)
-      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4)
+      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4)
       binary-extensions: 3.1.0
       cli-table: 0.3.11
       dateformat: 5.0.3
@@ -10068,11 +10071,11 @@ snapshots:
       '@types/node': 22.20.1
       minimatch: 9.0.9
 
-  '@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4)':
+  '@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4)':
     dependencies:
       '@types/node': 22.20.1
     optionalDependencies:
-      '@yeoman/adapter': 4.0.2(@types/node@22.20.1)
+      '@yeoman/adapter': 4.0.3(@types/node@22.20.1)
       mem-fs: 4.1.4
 
   abbrev@4.0.0: {}
@@ -15227,13 +15230,13 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4):
+  yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4):
     dependencies:
-      '@yeoman/adapter': 4.0.2(@types/node@22.20.1)
-      '@yeoman/conflicter': 4.1.0(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+      '@yeoman/adapter': 4.0.3(@types/node@22.20.1)
+      '@yeoman/conflicter': 4.1.0(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
       '@yeoman/namespace': 2.1.0
       '@yeoman/transform': 2.1.1(@types/node@22.20.1)
-      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4)
+      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4)
       arrify: 3.0.0
       chalk: 5.6.2
       commander: 14.0.3
@@ -15256,12 +15259,12 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4):
+  yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4):
     dependencies:
       '@types/debug': 4.1.13
       '@types/lodash-es': 4.17.12
       '@yeoman/namespace': 2.1.0
-      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4)
+      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4)
       chalk: 5.6.2
       debug: 4.4.3
       execa: 9.6.1
@@ -15283,18 +15286,18 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  yeoman-test@11.5.2(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)(yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))(yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)):
+  yeoman-test@11.5.2(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)(yeoman-environment@6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4))(yeoman-generator@8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)):
     dependencies:
-      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4)
+      '@yeoman/types': 1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4)
       lodash-es: 4.18.1
       mem-fs-editor: 12.0.4(@types/node@22.20.1)(mem-fs@4.1.4)
       signal-exit: 4.1.0
       type-fest: 5.6.0
     optionalDependencies:
-      '@yeoman/adapter': 4.0.2(@types/node@22.20.1)
+      '@yeoman/adapter': 4.0.3(@types/node@22.20.1)
       mem-fs: 4.1.4
-      yeoman-environment: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
-      yeoman-generator: 8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.2(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+      yeoman-environment: 6.1.0(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
+      yeoman-generator: 8.2.2(@types/node@22.20.1)(@yeoman/types@1.11.1(@types/node@22.20.1)(@yeoman/adapter@4.0.3(@types/node@22.20.1))(mem-fs@4.1.4))(mem-fs@4.1.4)
     transitivePeerDependencies:
       - '@types/node'
       - bare-abort-controller
