@@ -89,6 +89,7 @@
     "postcss-url": "^10.1.4",
     "prettier": "^2.5.1",
     "react-test-renderer": "^19.3.0",
+    "recursive-copy": "^2.0.11",
     "resolve": "^1.22.12",
     "rollup": "^4.60.2",
     "rollup-plugin-clear": "^2.0.7",

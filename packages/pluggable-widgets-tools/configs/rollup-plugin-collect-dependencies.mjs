@@ -1,7 +1,8 @@
 import fg from "fast-glob";
 import fsExtra from "fs-extra";
-import { cpSync, existsSync, readFileSync, realpathSync, writeFileSync } from "fs";
-import { dirname, join, parse, relative } from "path";
+import { existsSync, readFileSync, realpathSync, writeFileSync } from "fs";
+import { dirname, join, parse } from "path";
+import copy from "recursive-copy";
 import { promisify } from "util";
 import resolve from "resolve";
 import _ from "lodash";
@@ -176,18 +177,14 @@ async function copyJsModule(moduleSourcePath, to) {
         return;
     }
     // Package managers like pnpm link packages into node_modules, so copy the contents of the link target.
-    const sourcePath = realpathSync(moduleSourcePath);
-    cpSync(sourcePath, to, {
-        recursive: true,
-        dereference: true,
-        filter: source => {
-            const relativePath = relative(sourcePath, source);
-            return (
-                !/(^|[\\/])(android|ios|windows|mac|jest|github|gradle|__.*__|docs|example.*)([\\/]|$)/.test(
-                    relativePath
-                ) && !/\.(config|setup)\.|\.(podspec|flow)$/.test(relativePath)
-            );
-        }
+    return promisify(copy)(realpathSync(moduleSourcePath), to, {
+        filter: [
+            "**/*.*",
+            LICENSE_GLOB,
+            "!**/{android,ios,windows,mac,jest,github,gradle,__*__,docs,jest,example*}/**/*",
+            "!**/*.{config,setup}.*",
+            "!**/*.{podspec,flow}"
+        ]
     });
 }
 
