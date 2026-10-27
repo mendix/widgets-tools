@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+-   We updated the generated widget templates to React 19.3 and React Native 0.88.
+
 ## [11.13.0] - 2026-08-06
 
 ### Changed

@@ -1,6 +1,6 @@
 import fg from "fast-glob";
 import fsExtra from "fs-extra";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, realpathSync, writeFileSync } from "fs";
 import { dirname, join, parse } from "path";
 import copy from "recursive-copy";
 import { promisify } from "util";
@@ -125,7 +125,14 @@ async function resolvePackage(target, sourceDir, optional = false) {
 }
 
 async function hasNativeCode(dir) {
-    return (await fg(["**/{android,ios}/*", "**/*.podspec"], { cwd: dir })).length > 0;
+    return (
+        (
+            await fg(["**/{android,ios}/*", "**/*.podspec"], {
+                cwd: dir,
+                ignore: ["**/example*/**", "**/__tests__/**", "**/docs/**"]
+            })
+        ).length > 0
+    );
 }
 
 async function getTransitiveDependencies(packagePath, isExternal) {
@@ -169,7 +176,8 @@ async function copyJsModule(moduleSourcePath, to) {
     if (existsSync(to)) {
         return;
     }
-    return promisify(copy)(moduleSourcePath, to, {
+    // Package managers like pnpm link packages into node_modules, so copy the contents of the link target.
+    return promisify(copy)(realpathSync(moduleSourcePath), to, {
         filter: [
             "**/*.*",
             LICENSE_GLOB,
