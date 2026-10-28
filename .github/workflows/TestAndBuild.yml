@@ -8,6 +8,7 @@ on:
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.nvmrc'
       - '.github/workflows/TestAndBuild.yml'
   pull_request:
     branches:
@@ -16,12 +17,15 @@ on:
     paths:
       - 'pnpm-lock.yaml'
       - 'packages/**'
+      - '.nvmrc'
       - '.github/workflows/TestAndBuild.yml'
 
 jobs:
   test-build:
     name: "Quality Checks & Build"
     runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.prepare-artifacts.outputs.PACKAGES_NAME }}
     steps:
       - name: "Checking-out code"
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
@@ -84,3 +88,56 @@ jobs:
           path: artifacts/*.tgz
           retention-days: 5
 
+  command-tests:
+    name: "Command tests (${{ matrix.os }})"
+    needs: test-build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: "Checking-out code"
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2
+        with:
+          submodules: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda #v4.1.0
+
+      - name: "Defining node version"
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: 'pnpm'
+
+      - name: "Installing dependencies"
+        run: pnpm install --filter command-tests
+
+      - name: "Downloading artifacts"
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: ${{ needs.test-build.outputs.packages }}
+          path: artifacts
+
+      - name: Increase number of watchers
+        if: startsWith(matrix.os, 'ubuntu')
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: "Testing PWT commands"
+        working-directory: ./packages/command-tests
+        run: |
+          shopt -s nullglob
+          find_package() {
+            local matches=(../../artifacts/mendix-$1-*.tgz)
+            if [[ ${#matches[@]} -ne 1 ]]; then
+              echo "Expected exactly one artifact for $1, found ${#matches[@]}" >&2
+              return 1
+            fi
+            echo "${matches[0]}"
+          }
+          pwt=$(find_package pluggable-widgets-tools)
+          generator=$(find_package generator-widget)
+          pnpm start --pluggable-widgets-tools "$pwt" --generator-widget "$generator"
