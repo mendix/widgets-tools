@@ -19,14 +19,14 @@ const PARALLELISM = 4;
 const DIR_COMMAND_TESTS = dirname(fileURLToPath(import.meta.url));
 
 const CONFIGS: WidgetConfig[] = [
-    ["web", "full", "js", "latest"],
-    ["web", "full", "ts", "latest"],
-    ["native", "full", "js", "latest"],
-    ["native", "full", "ts", "latest"],
-    ["web", "empty", "js", "latest"],
-    ["web", "empty", "ts", "latest"],
-    ["native", "empty", "js", "latest"],
-    ["native", "empty", "ts", "latest"]
+    ["web", "full", "js"],
+    ["web", "full", "ts"],
+    ["native", "full", "js"],
+    ["native", "full", "ts"],
+    ["web", "empty", "js"],
+    ["web", "empty", "ts"],
+    ["native", "empty", "js"],
+    ["native", "empty", "ts"]
 ];
 
 if (LIMIT_TESTS) {
@@ -119,8 +119,7 @@ async function main(options: CommandTestOptions) {
                         workDir,
                         widgetsToolsPackagePath,
                         widgetGeneratorPath,
-                        isShortRun: LIMIT_TESTS,
-                        commandTestsDir: DIR_COMMAND_TESTS
+                        isShortRun: LIMIT_TESTS
                     });
                     workDirs.push(workDir);
                     return undefined;

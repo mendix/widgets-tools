@@ -20,12 +20,12 @@ const COLORS: TextStyles[] = [
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export type Logger = (template: string, ...msgs: any[]) => void;
 
-export function getWidgetLogger(index: number, ...[platform, boilerplate, lang, version]: WidgetConfig): Logger {
+export function getWidgetLogger(index: number, ...config: WidgetConfig): Logger {
     const colorName = COLORS[index % COLORS.length];
     return (template, ...msgs) =>
         console.log(
             "%s %s",
-            styleText(colorName, getWidgetName(platform, boilerplate, lang, version)),
+            styleText(colorName, getWidgetName(...config)),
             format(template, ...msgs)
         );
 }

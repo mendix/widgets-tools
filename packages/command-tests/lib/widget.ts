@@ -9,10 +9,9 @@ export interface WidgetPackageJson {
 export type WidgetConfig = [
     platform: "web" | "native",
     boilerplate: "full" | "empty",
-    language: "ts" | "js",
-    version: "latest"
+    language: "ts" | "js"
 ];
 
-export function getWidgetName(...[platform, boilerplate, lang, version]: WidgetConfig): string {
-    return `[${version.replace(".", "_")}_${lang}_${platform}_${boilerplate}]`;
+export function getWidgetName(...[platform, boilerplate, lang]: WidgetConfig): string {
+    return `[${lang}_${platform}_${boilerplate}]`;
 }

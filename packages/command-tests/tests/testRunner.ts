@@ -9,7 +9,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { Mutex } from "async-mutex";
 import helpers from "yeoman-test";
-import { type WidgetPackageJson, type WidgetConfig, getWidgetName } from "../lib/widget.ts";
+import { type WidgetPackageJson, type WidgetConfig } from "../lib/widget.ts";
 
 const { copy, existsSync, readFileSync, readJson, writeFileSync, writeJson } = fsExtra;
 const { ls, rm } = shelljs;
@@ -17,7 +17,6 @@ const { ls, rm } = shelljs;
 export async function runTest(
     config: WidgetConfig,
     {
-        commandTestsDir,
         isShortRun,
         logger,
         widgetGeneratorPath,
@@ -25,7 +24,6 @@ export async function runTest(
         workDir,
         yeomanMutex,
     }: {
-        commandTestsDir: string;
         isShortRun: boolean;
         logger: Logger;
         widgetGeneratorPath: string;
@@ -34,9 +32,8 @@ export async function runTest(
         yeomanMutex: Mutex;
     }
 ) {
-    const [platform, boilerplate, lang, version] = config;
+    const [platform, boilerplate, lang] = config;
     const isNative = platform === "native";
-    const widgetName = getWidgetName(platform, boilerplate, lang, version);
 
     logger(`Preparing widget...`);
     const widgetPackageJson = await prepareWidget();
@@ -61,7 +58,7 @@ export async function runTest(
     await testRelease();
 
     logger(`Checking dependencies files...`);
-    await checkDependenciesFiles(isNative, boilerplate, version);
+    await checkDependenciesFiles(isNative, boilerplate);
 
     logger(`Testing npm start...`);
     await testStart();
@@ -84,36 +81,32 @@ export async function runTest(
             rm("-r", ...filesToRemove);
         }
 
-        if (version === "latest") {
-            logger("Preparing widget: Generating");
-            const promptAnswers = {
-                name: "Generated",
-                description: "My widget description",
-                organization: "com.mendix",
-                copyright: "Mendix 2020",
-                license: "Apache-2.0",
-                version: "1.0.0",
-                author: "Widget Generator",
-                projectPath: "./dist/MxTestProject",
-                programmingLanguage: lang === "ts" ? "typescript" : "javascript",
-                platform,
-                boilerplate,
-                hasUnitTests: true,
-                hasE2eTests: false
-            };
-            const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
-            try {
-                const generatedWidget = await helpers
-                    .run(widgetGeneratorPath)
-                    .withAnswers(promptAnswers)
-                    .withArguments("Generated")
-                    .run();
-                await copy(join(generatedWidget.cwd, "generated"), workDir);
-            } finally {
-                release();
-            }
-        } else {
-            await copy(join(commandTestsDir, "projects", widgetName), workDir);
+        logger("Preparing widget: Generating");
+        const promptAnswers = {
+            name: "Generated",
+            description: "My widget description",
+            organization: "com.mendix",
+            copyright: "Mendix 2020",
+            license: "Apache-2.0",
+            version: "1.0.0",
+            author: "Widget Generator",
+            projectPath: "./dist/MxTestProject",
+            programmingLanguage: lang === "ts" ? "typescript" : "javascript",
+            platform,
+            boilerplate,
+            hasUnitTests: true,
+            hasE2eTests: false
+        };
+        const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
+        try {
+            const generatedWidget = await helpers
+                .run(widgetGeneratorPath)
+                .withAnswers(promptAnswers)
+                .withArguments("Generated")
+                .run();
+            await copy(join(generatedWidget.cwd, "generated"), workDir);
+        } finally {
+            release();
         }
 
         logger("Preparing widget: Installing");
@@ -172,7 +165,7 @@ export async function runTest(
         }
     }
 
-    async function checkDependenciesFiles(isNative: boolean, boilerplate: WidgetConfig[1], version: WidgetConfig[3]) {
+    async function checkDependenciesFiles(isNative: boolean, boilerplate: WidgetConfig[1]) {
         const dependenciesJSONFile = join(workDir, "dist", "tmp", "widgets", "dependencies.json");
         const dependenciesTxtFile = join(workDir, "dist", "tmp", "widgets", "dependencies.txt");
 
@@ -185,9 +178,7 @@ export async function runTest(
         const dependenciesText = readFileSync(dependenciesTxtFile, "utf8");
 
         const packageName = isNative
-            ? version === "latest"
-                ? "@mendix/pluggable-widgets-tools"
-                : null
+            ? "@mendix/pluggable-widgets-tools"
             : boilerplate === "full"
                 ? "classnames"
                 : null;
