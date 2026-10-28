@@ -44,6 +44,9 @@ const { values: options } = parseArgs({
         "generator-widget": {
             type: "string"
         },
+        filter: {
+            type: "string"
+        },
         clean: {
             type: "boolean"
         }
@@ -71,8 +74,8 @@ main(options)
 interface CommandTestOptions {
     "pluggable-widgets-tools"?: Option<string>;
     "generator-widget"?: Option<string>;
+    filter?: Option<string>;
 }
-
 
 async function main(options: CommandTestOptions) {
     console.log("Preparing...");
@@ -83,12 +86,23 @@ async function main(options: CommandTestOptions) {
     );
     const widgetGeneratorPath = await getWidgetGeneratorPath(DIR_COMMAND_TESTS, options["generator-widget"]);
 
+    let configsToTest = CONFIGS;
+    if (isDefined(options.filter)) {
+        const parsed = options.filter.split(",");
+        configsToTest = CONFIGS.filter((config: string[]) => parsed.every(option => config.includes(option)));
+        console.log(
+            styled`${"gray"}Preparing: Filter applied, running %d/%d test cases`,
+            configsToTest.length,
+            CONFIGS.length
+        );
+    }
+
     const workDirs: string[] = [];
     const configWorkDirs: Record<string, WidgetConfig> = {};
     const workDirSemaphore = new Semaphore(PARALLELISM);
     const failures: Array<{ config: WidgetConfig; error: Error; workDir: string }> = (
         await Promise.all(
-            CONFIGS.map(async (config, index) => {
+            configsToTest.map(async (config, index) => {
                 const logger = getWidgetLogger(index, ...config);
                 logger("Scheduled, waiting for lock");
                 const [, release] = await workDirSemaphore.acquire();
@@ -129,7 +143,7 @@ async function main(options: CommandTestOptions) {
     console.log(
         styled`\nFinished Testing: ${["bold", failures.length > 0 ? "red" : "green"]}%d Failed, ${["bold", "green"]}%d Successful`,
         failures.length,
-        CONFIGS.length - failures.length
+        configsToTest.length - failures.length
     );
 
     console.log(styled`${"green"}\nCreated %d temporary widget directories during testing`, workDirs.length);
