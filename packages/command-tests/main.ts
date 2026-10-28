@@ -1,20 +1,17 @@
 #! /usr/bin/env node --experimental-strip-types
 import { Mutex, Semaphore } from "async-mutex";
-import fsExtra from "fs-extra";
-import { join, dirname } from "node:path";
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import shelljs from "shelljs";
 import { createInterface } from "readline/promises";
-import { execAsync } from "./lib/exec.ts";
-import { ensure, isDefined } from "./lib/option.ts";
+import { isDefined, type Option } from "./lib/option.ts";
 import { getWidgetLogger, styled } from "./lib/logger.ts";
 import { type WidgetConfig, getWidgetName } from "./lib/widget.ts";
 import { repeat } from "./lib/strings.ts";
 import { runTest } from "./tests/testRunner.ts";
 import { ensureError } from "./lib/errors.ts";
-
-const { readJson } = fsExtra;
-const { mkdir, rm, tempdir } = shelljs;
+import { parseArgs } from "node:util";
+import { cleanTemporaryFiles, getTempDir } from "./lib/temp.ts";
+import { getWidgetGeneratorPath, getWidgetsToolsPackagePath } from "./lib/packages.ts";
 
 const LIMIT_TESTS = !!process.env.LIMIT_TESTS;
 const PARALLELISM = 4;
@@ -39,25 +36,52 @@ if (LIMIT_TESTS) {
 const readline = createInterface(process.stdin, process.stdout);
 const yeomanMutex = new Mutex();
 
-main()
+const { values: options } = parseArgs({
+    options: {
+        "pluggable-widgets-tools": {
+            type: "string"
+        },
+        "generator-widget": {
+            type: "string"
+        },
+        clean: {
+            type: "boolean"
+        }
+    }
+});
+
+main(options)
     .catch(e => {
         console.error(e);
         process.exitCode = 1;
     })
-    .finally(() => {
+    .finally(async () => {
+        if (
+            !readline.terminal || // If non-interactive, just clean up without asking.
+            !!options.clean ||
+            /^y?e?s?$/i.test(await readline.question(styled`${"cyan"}Clean up test widgets? ${"gray"}(YES/no)`))
+        ) {
+            await cleanTemporaryFiles();
+        } else {
+            console.log("Leaving temporary files");
+        }
         readline.close();
     });
 
-async function main() {
+interface CommandTestOptions {
+    "pluggable-widgets-tools"?: Option<string>;
+    "generator-widget"?: Option<string>;
+}
+
+
+async function main(options: CommandTestOptions) {
     console.log("Preparing...");
 
-    const pluggableWidgetsToolsPath = join(DIR_COMMAND_TESTS, "../pluggable-widgets-tools");
-    const pluggableWidgetsToolsVersion = (await readJson(join(pluggableWidgetsToolsPath, "package.json"))).version;
-    console.log("Preparing: Packaging @mendix/pluggable-widgets-tools version %s", pluggableWidgetsToolsVersion);
-    const { stdout: packOutput } = await execAsync("npm pack", pluggableWidgetsToolsPath, (m: string) =>
-        console.log(m)
+    const widgetsToolsPackagePath = await getWidgetsToolsPackagePath(
+        DIR_COMMAND_TESTS,
+        options["pluggable-widgets-tools"]
     );
-    const widgetsToolsPackagePath = join(pluggableWidgetsToolsPath, ensure(packOutput.trim().split(/\n/g).pop()));
+    const widgetGeneratorPath = await getWidgetGeneratorPath(DIR_COMMAND_TESTS, options["generator-widget"]);
 
     const workDirs: string[] = [];
     const configWorkDirs: Record<string, WidgetConfig> = {};
@@ -72,11 +96,7 @@ async function main() {
                 try {
                     workDir = workDirs.pop();
                     if (!workDir) {
-                        workDir = join(
-                            index === 0 ? join(tempdir(), "spaced folder") : tempdir(),
-                            `pwt_test_${Math.round(Math.random() * 10000)}`
-                        );
-                        mkdir("-p", workDir);
+                        workDir = await getTempDir(index === 0 ? "spaced folder" : undefined);
                     }
                     configWorkDirs[workDir] = config;
                     await runTest(config, {
@@ -84,6 +104,7 @@ async function main() {
                         yeomanMutex,
                         workDir,
                         widgetsToolsPackagePath,
+                        widgetGeneratorPath,
                         isShortRun: LIMIT_TESTS,
                         commandTestsDir: DIR_COMMAND_TESTS
                     });
@@ -111,7 +132,7 @@ async function main() {
         CONFIGS.length - failures.length
     );
 
-    console.log(styled`${"green"}\nCreated %d temporary directories during testing`, workDirs.length);
+    console.log(styled`${"green"}\nCreated %d temporary widget directories during testing`, workDirs.length);
     let maxDirLength = 0,
         maxNameLength = 0;
     Object.entries(configWorkDirs)
@@ -129,20 +150,6 @@ async function main() {
                 failures.some(f => f.workDir === dir) ? styled`${["bold", "red"]}❌ Error` : ""
             )
         );
-
-    if (
-        !readline.terminal || // If non-interactive, just clean up without asking.
-        /^y?e?s?$/i.test(await readline.question(styled`${"cyan"}Clean up test widgets? ${"gray"}(YES/no)`))
-    ) {
-        console.log("Cleaning up temporary files");
-        try {
-            rm("-rf", widgetsToolsPackagePath, ...workDirs);
-        } catch (error) {
-            console.warn(styled`${"yellow"}Unable to remove temporary files: %s`, ensureError(error).message);
-        }
-    } else {
-        console.log("Leaving temporary files");
-    }
 
     console.log(styled`\n${["bold", "green"]}All done!`);
 }

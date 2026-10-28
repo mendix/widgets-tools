@@ -17,19 +17,21 @@ const { ls, rm } = shelljs;
 export async function runTest(
     config: WidgetConfig,
     {
-        logger,
-        yeomanMutex,
-        workDir,
         commandTestsDir,
+        isShortRun,
+        logger,
+        widgetGeneratorPath,
         widgetsToolsPackagePath,
-        isShortRun
+        workDir,
+        yeomanMutex,
     }: {
-        logger: Logger;
-        yeomanMutex: Mutex;
-        workDir: string;
-        isShortRun: boolean;
         commandTestsDir: string;
+        isShortRun: boolean;
+        logger: Logger;
+        widgetGeneratorPath: string;
         widgetsToolsPackagePath: string;
+        workDir: string;
+        yeomanMutex: Mutex;
     }
 ) {
     const [platform, boilerplate, lang, version] = config;
@@ -102,7 +104,7 @@ export async function runTest(
             const release = await yeomanMutex.acquire(); // yeoman generator is no re-entrable :(
             try {
                 const generatedWidget = await helpers
-                    .run(resolveModule("@mendix/generator-widget"))
+                    .run(widgetGeneratorPath)
                     .withAnswers(promptAnswers)
                     .withArguments("Generated")
                     .run();

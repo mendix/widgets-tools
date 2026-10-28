@@ -47,12 +47,6 @@ importers:
 
   packages/command-tests:
     dependencies:
-      '@mendix/generator-widget':
-        specifier: workspace:*
-        version: link:../generator-widget
-      '@mendix/pluggable-widgets-tools':
-        specifier: workspace:*
-        version: link:../pluggable-widgets-tools
       '@prettier/plugin-xml':
         specifier: ^2.2.0
         version: 2.2.0
