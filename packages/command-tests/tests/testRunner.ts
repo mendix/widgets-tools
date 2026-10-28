@@ -22,7 +22,7 @@ export async function runTest(
         widgetGeneratorPath,
         widgetsToolsPackagePath,
         workDir,
-        yeomanMutex,
+        yeomanMutex
     }: {
         isShortRun: boolean;
         logger: Logger;
@@ -110,7 +110,7 @@ export async function runTest(
         }
 
         logger("Preparing widget: Installing");
-        const widgetPackageJson = await readJson(join(workDir, "package.json")) as WidgetPackageJson;
+        const widgetPackageJson = (await readJson(join(workDir, "package.json"))) as WidgetPackageJson;
         widgetPackageJson.devDependencies["@mendix/pluggable-widgets-tools"] = widgetsToolsPackagePath;
 
         await writeJson(join(workDir, "package.json"), widgetPackageJson);
@@ -177,11 +177,7 @@ export async function runTest(
         const dependenciesJSON: Dependency[] = JSON.parse(readFileSync(dependenciesJSONFile, "utf8"));
         const dependenciesText = readFileSync(dependenciesTxtFile, "utf8");
 
-        const packageName = isNative
-            ? "@mendix/pluggable-widgets-tools"
-            : boilerplate === "full"
-                ? "classnames"
-                : null;
+        const packageName = isNative ? "@mendix/pluggable-widgets-tools" : boilerplate === "full" ? "classnames" : null;
 
         if (
             packageName &&
