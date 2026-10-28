@@ -2,7 +2,6 @@ import shelljs from "shelljs";
 import kill from "tree-kill";
 import { type Logger } from "../lib/logger.ts";
 import { join } from "node:path";
-import { resolveModule } from "../lib/node.ts";
 import fsExtra from "fs-extra";
 import { execAsync, execFailedAsync } from "../lib/exec.ts";
 import { exec } from "node:child_process";

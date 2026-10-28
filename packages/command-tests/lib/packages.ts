@@ -1,7 +1,6 @@
 import { existsSync } from "node:fs";
 import { ensure, isDefined, type Option } from "./option.ts";
 import { isAbsolute, join, resolve } from "node:path";
-import { execAsync } from "./exec.ts";
 import { getTempDir, markPathTemporary } from "./temp.ts";
 import { styled } from "./logger.ts";
 import { promisify } from "node:util";
