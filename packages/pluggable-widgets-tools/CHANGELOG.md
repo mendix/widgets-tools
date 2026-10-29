@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We now allow any Node.js version from 22.18 onwards. (Issue #239)
 
+-   We moved the `shx` dependency to `devDependencies`, so it is no longer installed in widget projects. This also removes the outdated `shelljs@0.9.2` that `shx` pulled in.
+
 ### Fixed
 
 -   We fixed how native dependencies are added to the widget package. Their JavaScript code was missing when they were installed with pnpm or another package manager that links packages into `node_modules`, their `android` and `ios` folders were included, and JavaScript-only dependencies were treated as native when their example apps, tests or docs contain `android` or `ios` folders.
