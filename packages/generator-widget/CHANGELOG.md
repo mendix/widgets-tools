@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We updated the generated widget templates to React 19.3 and React Native 0.88.
 
+-   We updated the supported Node.js version to 22.18.0 and newer. (Issue #239, Ticket 290767)
+
 ## [11.13.0] - 2026-08-06
 
 ### Changed
