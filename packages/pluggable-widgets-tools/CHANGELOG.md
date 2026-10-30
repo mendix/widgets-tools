@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.16.0] - 2026-10-30
+
 ### Changed
 
 -   We upgraded the Pluggable Widgets Tools to React 19.3 and React Native 0.88. The base `tsconfig` now uses the `bundler` module resolution, since React Native 0.88 only exposes its TypeScript types through package `exports`. Native unit tests now use the `@react-native/jest-preset` Jest preset and `ts-jest` 29.4.11 or newer, and also transform `@shopify/flash-list`.
