@@ -20,7 +20,7 @@
     "mem-fs": "^4.1.4",
     "semver": "^7.3.2",
     "yeoman-environment": "^6.1.0",
-    "yeoman-generator": "^8.2.2"
+    "yeoman-generator": "^10.0.0"
   },
   "devDependencies": {
     "ejs": "^5.0.2",
