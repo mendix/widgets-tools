@@ -6,10 +6,12 @@ import {
     getPackageInfo,
     gh,
     type PackageInfo,
-    ChangelogFileWrapper
+    ChangelogFileWrapper,
+    parseArgument
 } from "./utils/index.ts";
-import { ArgumentError, handleError } from "./utils/errors.ts";
+import { handleError } from "./utils/errors.ts";
 import { format } from "node:util";
+import { ensure } from "./utils/assertions.ts";
 
 const packages = new Map([
     [
@@ -40,13 +42,15 @@ main().catch(e => {
 });
 
 async function main(): Promise<void> {
-    const arg = process.argv[2];
-    const mendixPackage = packages.get(arg);
-    if (!mendixPackage)
-        throw new ArgumentError(format("package name of (%s)", packages.keys().toArray().join(", ")), arg);
-    const branch = process.argv[3];
-    if (!branch || !/^(master|version\/.*)$/.test(branch))
-        throw new ArgumentError("branch name of (master, version/*)", branch);
+    const mendixPackage = parseArgument("package name", 2, input =>
+        ensure(packages.get(input), "Unknown package, must be one of " + packages.keys().toArray().join(", "))
+    );
+    const branch = parseArgument("branch name", 3, input => {
+        if (/^(master|version\/.*)$/.test(input)) {
+            return input;
+        }
+        throw new Error("Must match master, version/*");
+    });
 
     const dirname = new URL("./", import.meta.url).pathname;
     const pwtPath = join(dirname, "../", mendixPackage.name);
