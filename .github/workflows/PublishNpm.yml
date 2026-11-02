@@ -79,7 +79,7 @@ jobs:
 
       - name: Publish package
         run: |
-          dist_tag=$(./packages/release-tools @mendix/${{ matrix.release.package }} ${{ matrix.release.version }})
+          dist_tag=$(./packages/release-tools/releaseTags.ts @mendix/${{ matrix.release.package }} ${{ matrix.release.version }})
 
           cmd="npm publish --tag $dist_tag ./packages/${{ matrix.release.package }}/mendix-${{ matrix.release.package }}-${{matrix.release.version }}.tgz"
           if [[ "${{ matrix.release.package }}" == "test" ]]; then
