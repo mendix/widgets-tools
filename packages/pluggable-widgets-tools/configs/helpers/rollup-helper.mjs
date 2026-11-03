@@ -15,10 +15,10 @@ export async function copyLicenseFile(sourcePath, outDir) {
     }
 }
 
-export async function createMpkFile({ mpkDir, mpkFile, widgetTmpDir, isProduction, mxProjectPath, deploymentPath }) {
+export async function createMpkFile({ mpkDir, mpkFile, widgetTmpDir, mxProjectPath, deploymentPath }) {
     mkdirSync(mpkDir, { recursive: true });
     await zip(widgetTmpDir, mpkFile);
-    if (!isProduction && mxProjectPath) {
+    if (mxProjectPath) {
         const widgetsPath = join(mxProjectPath, "widgets");
         const absolutePath = join(mxProjectPath, deploymentPath);
         // Create folder if they do not exists or directories were cleaned
