@@ -9,8 +9,8 @@ export class UsageError extends Error {
 
 export class ArgumentError extends UsageError {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(argument: string, received: any) {
-        super(`Argument "${received}" is not a valid ${argument}`);
+    constructor(argument: string, received: any, reason?: string) {
+        super(`Argument "${received}" is not a valid ${argument}${reason ? `: ${reason}` : ""}`);
     }
 }
 

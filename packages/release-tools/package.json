@@ -6,8 +6,9 @@
   "main": "./createRelease.ts",
   "type": "module",
   "bin": {
+    "changelog-parser": "./utils/changelog-parser/cli.ts",
     "create-release": "./createRelease.ts",
-    "changelog-parser": "./utils/changelog-parser/cli.ts"
+    "release-tags": "./releaseTags.ts"
   },
   "scripts": {
     "release:pwt": "./createRelease.ts pluggable-widgets-tools",
@@ -23,11 +24,13 @@
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^22.18.0",
     "@types/node-fetch": "2.6.13",
+    "@types/semver": "^7.7.1",
     "peggy": "^5.1.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "semver": "^7.8.5"
   },
   "keywords": [],
   "author": "",
