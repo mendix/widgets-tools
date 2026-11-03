@@ -301,7 +301,6 @@ export default async args => {
                         mpkDir,
                         mpkFile,
                         widgetTmpDir: outDir,
-                        isProduction: production,
                         mxProjectPath: projectPath,
                         deploymentPath: "deployment/web/widgets"
                     })
