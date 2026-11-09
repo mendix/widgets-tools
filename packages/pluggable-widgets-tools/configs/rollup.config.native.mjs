@@ -66,7 +66,7 @@ const nativeExternal = [
 export default async args => {
     const production = Boolean(args.configProduction);
 
-    if (!production && projectPath) {
+    if (projectPath) {
         console.info(blue(`Project Path: ${projectPath}`));
     }
 

@@ -85,7 +85,7 @@ const cssUrlTransform = asset =>
 
 export default async args => {
     const production = Boolean(args.configProduction);
-    if (!production && projectPath) {
+    if (projectPath) {
         console.info(colors.blue(`Project Path: ${projectPath}`));
     }
 
@@ -320,7 +320,7 @@ export default async args => {
                     }
                 }
             ]),
-            args.watch && !production && projectPath ? livereload() : null
+            args.watch && projectPath ? livereload() : null
         ];
     }
 };
