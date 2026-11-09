@@ -66,7 +66,7 @@ const nativeExternal = [
 export default async args => {
     const production = Boolean(args.configProduction);
 
-    if (!production && projectPath) {
+    if (projectPath) {
         console.info(blue(`Project Path: ${projectPath}`));
     }
 
@@ -238,7 +238,6 @@ export default async args => {
                         mpkDir,
                         mpkFile,
                         widgetTmpDir: outDir,
-                        isProduction: production,
                         mxProjectPath: projectPath,
                         deploymentPath: "deployment/native/widgets"
                     })
