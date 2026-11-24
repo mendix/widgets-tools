@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [11.16.1] - 2026-11-24
+
 ### Changed
 
-- We now copy the final MPK file to the test project for release builds.
+-   We now copy the final MPK file to the test project for release builds.
 
 ## [11.16.0] - 2026-10-30
 
