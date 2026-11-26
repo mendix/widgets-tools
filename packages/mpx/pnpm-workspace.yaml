@@ -1,0 +1,6 @@
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+
+publicHoistPattern:
+  - '*rollup*'
+  - '*plugin*'
