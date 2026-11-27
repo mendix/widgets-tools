@@ -69,7 +69,7 @@ Or execute directly with `npx pluggable-widgets-tools task`.
     -   `.eslint.js` - configuration for ESLint. We recommend to just re-export `@mendix/pluggable-widgets-tools/configs/eslint.ts.base.json`
     -   `prettier.config.js` - configuration for Prettier. We recommend to just re-export `@mendix/pluggable-widgets-tools/configs/prettier.base.json`
     -   `tsconfig.json` - configuration for TypeScript. We recommend to just extend `@mendix/pluggable-widgets-tools/configs/tsconfig.base.json`
-    -   `rollup.config.[m]js` - (optional) custom configurations for [rollup](https://rollupjs.org/guide/en/) bundler. The standard configuration is passed as an argument named `configDefaultConfig`.
+    -   `rollup.config.[m]js` - (optional) custom configurations for [rollup](https://rollupjs.org/guide/en/) bundler. The standard configuration is passed as an argument named `configDefaultConfig`. In release builds, the packages bundled into any bundle written into `dist/tmp/widgets` are listed in the widget's `dependencies.txt` and `dependencies.json`, including bundles your configuration adds, such as a library shared by several widgets. Return such bundles before the standard configuration, since the widget package is created after each of the standard bundles.
     -   `package.json` - widget package definitions, including its dependencies, scripts, and basic configuration (`widgetName` and `config.projectPath` in particular)
 
 ## Migrating from previous versions

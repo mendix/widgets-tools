@@ -140,6 +140,11 @@ async function main() {
         logger(`Testing npm start...`);
         await testStart();
 
+        if (!isNative) {
+            logger(`Testing dependencies of custom bundles...`);
+            await testCustomBundleDependencies();
+        }
+
         // Check native dependency management
         if (isNative) {
             logger(`Testing native dependency management...`);
@@ -263,7 +268,7 @@ async function main() {
                     : null
                 : boilerplate === "full"
                   ? "classnames"
-                  : null;
+                  : "style-inject";
 
             if (
                 packageName &&
@@ -277,6 +282,54 @@ async function main() {
                     !(dependenciesText.includes("No third parties dependencies") || dependenciesText === ""))
             ) {
                 throw new Error("Unexpected content in dependencies files.");
+            }
+        }
+
+        // A custom rollup config can add bundles of its own (for example a library shared by several
+        // widgets); what they bundle ships in the MPK, so it must be listed in the dependencies files.
+        async function testCustomBundleDependencies() {
+            const customConfigFile = join(workDir, "rollup.config.mjs");
+            const extraEntryFile = join(workDir, "extra-bundle.js");
+            const extraBundleFile = join(workDir, "dist", "tmp", "widgets", "com", "mendix", "shared", "extra.mjs");
+            writeFileSync(extraEntryFile, `import colors from "ansi-colors";\nexport const red = colors.red;\n`);
+            writeFileSync(
+                customConfigFile,
+                [
+                    `import commonjs from "@rollup/plugin-commonjs";`,
+                    `import { nodeResolve } from "@rollup/plugin-node-resolve";`,
+                    `export default args => [`,
+                    `    {`,
+                    `        input: "extra-bundle.js",`,
+                    `        output: { format: "es", file: "dist/tmp/widgets/com/mendix/shared/extra.mjs" },`,
+                    `        plugins: [nodeResolve(), commonjs()]`,
+                    `    },`,
+                    `    ...args.configDefaultConfig`,
+                    `];`
+                ].join("\n")
+            );
+
+            try {
+                await testRelease();
+                if (!existsSync(extraBundleFile)) {
+                    throw new Error("Expected the custom bundle to be part of the widget package, but it wasn't.");
+                }
+                const dependenciesJSON = JSON.parse(
+                    readFileSync(join(workDir, "dist", "tmp", "widgets", "dependencies.json"), "utf8")
+                );
+                const dependenciesText = readFileSync(
+                    join(workDir, "dist", "tmp", "widgets", "dependencies.txt"),
+                    "utf8"
+                );
+                if (
+                    !dependenciesJSON.some(dependency => Object.keys(dependency)[0] === "ansi-colors") ||
+                    !dependenciesText.includes("Name: ansi-colors")
+                ) {
+                    throw new Error(
+                        "The package bundled by a custom bundle could not be found in the dependencies files."
+                    );
+                }
+            } finally {
+                rm("-f", customConfigFile, extraEntryFile);
             }
         }
 

@@ -100,6 +100,7 @@ export default async args => {
                         ? {
                               licenseOptions: {
                                   thirdParty: {
+                                      multipleVersions: true,
                                       output: [
                                           {
                                               file: join(outDir, "dependencies.txt")
