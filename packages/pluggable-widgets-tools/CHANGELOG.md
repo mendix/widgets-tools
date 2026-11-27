@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+-   We fixed the `dependencies.txt` and `dependencies.json` files of web widgets missing packages. They now list every version of a package when more than one version is bundled (also for native widgets), and also the packages bundled into the editor preview and editor configuration files, since those are part of the widget package too.
+
+-   We fixed the dependencies of bundles added by a custom `rollup.config.js` missing from `dependencies.txt` and `dependencies.json`. Packages bundled into any bundle written into the widget package are now listed, without a license plugin of your own.
+
+### Changed
+
+-   The `dependencies.txt` and `dependencies.json` files of web widgets no longer list packages marked as private (`"private": true` in their `package.json`), such as the workspace packages of a monorepo. The public packages they bring into the widget are still listed. Code copied into a private package from another project is not listed separately.
+
 ## [11.16.1] - 2026-11-24
 
 ### Changed

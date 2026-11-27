@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import alias from "@rollup/plugin-alias";
 import { getBabelInputPlugin, getBabelOutputPlugin } from "@rollup/plugin-babel";
@@ -21,7 +21,7 @@ import terser from "@rollup/plugin-terser";
 import shelljs from "shelljs";
 import { widgetTyping } from "./rollup-plugin-widget-typing.mjs";
 import { editorConfigEntry, isTypescript, previewEntry, projectPath, widgetEntry, onwarn } from "./shared.mjs";
-import { copyLicenseFile, createMpkFile, licenseCustomTemplate } from "./helpers/rollup-helper.mjs";
+import { copyLicenseFile, createDependenciesCollector, createMpkFile } from "./helpers/rollup-helper.mjs";
 import url from "./rollup-plugin-assets.mjs";
 import { widgetName, widgetOrganization, widgetVersion } from "../dist/widget/package.js";
 import { widgetRoot } from "../dist/widget/paths.js";
@@ -85,6 +85,7 @@ const cssUrlTransform = asset =>
 
 export default async args => {
     const production = Boolean(args.configProduction);
+    const collectDependencies = createDependenciesCollector(outDir);
     if (projectPath) {
         console.info(colors.blue(`Project Path: ${projectPath}`));
     }
@@ -127,7 +128,7 @@ export default async args => {
                         allowAllFormats: true
                     },
                     external: outputFormat === "es" ? [] : webExternal,
-                    licenses: production && outputFormat === "amd"
+                    licenses: production
                 })
             ],
             onwarn: onwarn(args)
@@ -162,7 +163,8 @@ export default async args => {
                     extensions,
                     transpile: production,
                     babelConfig: { presets: ["@babel/preset-env"] },
-                    external: commonExternalLibs
+                    external: commonExternalLibs,
+                    licenses: production
                 })
             ],
             onwarn: onwarn(args)
@@ -188,7 +190,8 @@ export default async args => {
                     extensions,
                     transpile: true,
                     babelConfig: { presets: [["@babel/preset-env", { targets: { ie: "11" } }]] },
-                    external: commonExternalLibs
+                    external: commonExternalLibs,
+                    licenses: production
                 }),
                 {
                     closeBundle() {
@@ -213,10 +216,39 @@ export default async args => {
     if (existingConfigPath != null) {
         const customConfig = await loadConfigFile(existingConfigPath, { ...args, configDefaultConfig: result });
         customConfig.warnings.flush();
-        return customConfig.options;
+        return production ? customConfig.options.map(withDependenciesListed) : customConfig.options;
     }
 
     return result;
+
+    function licensePlugin() {
+        return license({
+            thirdParty: {
+                multipleVersions: true,
+                output: collectDependencies
+            }
+        });
+    }
+
+    /**
+     * Custom configs can add bundles of their own, such as a library built once and shared by several
+     * widgets. Whatever they write into the widget package ships in the MPK, so it is listed too.
+     */
+    function withDependenciesListed(config) {
+        const plugins = (config.plugins || []).flat();
+        const outputs = [config.output].flat().filter(Boolean);
+        const hasLicensePlugin = plugins.some(plugin => plugin?.name === "rollup-plugin-license");
+        const shipsInPackage = outputs.some(output => isInsideOutDir(output.file ?? output.dir));
+        return hasLicensePlugin || !shipsInPackage ? config : { ...config, plugins: [...plugins, licensePlugin()] };
+    }
+
+    function isInsideOutDir(path) {
+        if (!path) {
+            return false;
+        }
+        const fromOutDir = relative(outDir, resolve(widgetRoot, path));
+        return !fromOutDir.startsWith("..") && !isAbsolute(fromOutDir);
+    }
 
     function getCommonPlugins(config) {
         return [
@@ -273,22 +305,7 @@ export default async args => {
                 : null,
             image(),
             production ? terser() : null,
-            config.licenses
-                ? license({
-                      thirdParty: {
-                          includePrivate: true,
-                          output: [
-                              {
-                                  file: join(outDir, "dependencies.txt")
-                              },
-                              {
-                                  file: join(outDir, "dependencies.json"),
-                                  template: licenseCustomTemplate
-                              }
-                          ]
-                      }
-                  })
-                : null,
+            config.licenses ? licensePlugin() : null,
             // We need to create .mpk and copy results to test project after bundling is finished.
             // In case of a regular build is it is on `writeBundle` of the last config we define
             // (since rollup processes configs sequentially). But in watch mode rollup re-bundles only
